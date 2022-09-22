@@ -1,5 +1,5 @@
 # **Bomberman**
-## Nhóm 1
+## Nhóm 14
 Thành viên: 
  - Lê Trọng Minh: Trưởng nhóm
  - Nguyễn Hoài Nam 
