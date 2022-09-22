@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.model.RectBoundedBox;
 
 public abstract class Entity {
     //Tọa độ X tính từ góc trái trên trong Canvas
@@ -13,7 +14,6 @@ public abstract class Entity {
 
     //Tọa độ Y tính từ góc trái trên trong Canvas
     protected int y;
-
     protected Image img;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
@@ -27,4 +27,5 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+    public abstract RectBoundedBox getBoundingBox();
 }
