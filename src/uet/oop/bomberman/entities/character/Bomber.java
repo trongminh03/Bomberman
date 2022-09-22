@@ -3,7 +3,9 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import uet.oop.bomberman.constants.BombStorage;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.Entity;
@@ -15,11 +17,19 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Bomber extends Character {
 
-    final static int velocity = 1;
+    /*final static int velocity = 1;
     final static int SPRITE_WIDTH = 24;
-    final static int SPRITE_HEIGHT = 32;
-//    private Point2D step;
-//    private int step;
+    final static int SPRITE_HEIGHT = 28;*/
+
+    final int SPRITE_WIDTH = 24;
+    final int SPRITE_HEIGHT = 28;
+
+    private int velocity = 1;
+    private int numBomb = 0;
+    private int limitBomb = 0;
+    private boolean speedBuff = false;
+    private boolean bombBuff = false;
+    private boolean flameBuff = false;
 
     KeyManager keyInput;
     Sprite currentSprite;
@@ -38,6 +48,7 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
+        handleEvent();
         move();
         animate();
     }
@@ -57,7 +68,7 @@ public class Bomber extends Character {
 
     public boolean checkCollision() {
         for (Entity entity : GameViewManager.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof StaticEntity || entity instanceof Bomb) {
                 if(isColliding(entity))
                     return true;
             }
@@ -91,6 +102,27 @@ public class Bomber extends Character {
             if (checkCollision()) moveLeft();
             direction = Direction.RIGHT;
             moving = true;
+        }
+    }
+
+    protected void handleEvent() {
+        if (keyInput.isPressed(KeyCode.SPACE)) {
+            this.createBomb();
+        }
+    }
+
+    private void createBomb() {
+        if (bombBuff) {
+            limitBomb = 2;
+        }else {
+            limitBomb = 100;
+        }
+        if (numBomb < limitBomb) {
+            int xUnit = this.x / Sprite.SCALED_SIZE;
+            int yUnit = this.y / Sprite.SCALED_SIZE;
+            Bomb bomb = new Bomb(x, y, Sprite.bomb_2.getFxImage());
+            BombStorage.addBomb(bomb);
+            numBomb = BombStorage.getNumOfBomb();
         }
     }
 
@@ -188,4 +220,6 @@ public class Bomber extends Character {
         return "Bomberman{x = " + x + ", y = " + y + ", width = "
                 + currentSprite.getSpriteWidth() + ", height = " + currentSprite.getSpriteHeight() + "}";
     }
+
+
 }
