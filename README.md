@@ -1,3 +1,5 @@
-# Bomberman
-**Nhóm 14:** 
-Thành viên: Lê Trọng Minh, Nguyễn Hoài Nam.
+# **Bomberman**
+## Nhóm 14
+Thành viên: 
+ - Lê Trọng Minh: Trưởng nhóm
+ - Nguyễn Hoài Nam 

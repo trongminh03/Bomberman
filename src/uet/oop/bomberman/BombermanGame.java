@@ -9,8 +9,6 @@ import uet.oop.bomberman.gui.MenuViewManager;
 public class BombermanGame extends Application {
     private static Stage stage;
 
-
-
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
