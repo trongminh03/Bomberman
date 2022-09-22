@@ -22,8 +22,7 @@ public class BombermanGame extends Application {
         stage.show();
 
     }
-
-//    Day la switch Scene.
+    
     public static void switchScene(Scene scene) {
         stage.setScene(scene);
     }
