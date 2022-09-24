@@ -28,7 +28,7 @@ public class GameViewManager {
 
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
+    private static List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
     private Stage mainStage;
     //    private Stage menuStage;
@@ -155,8 +155,8 @@ public class GameViewManager {
                         case '1':
                             character = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
                             object = new Grass(j, i, Sprite.grass.getFxImage());
-                            stillObjects.add(object);
                             entities.add(character);
+                            stillObjects.add(object);
                             break;
                         default:
                             object = new Grass(j, i, Sprite.grass.getFxImage());
@@ -234,6 +234,10 @@ public class GameViewManager {
 
     public static List<Entity> getStillObjects() {
         return stillObjects;
+    }
+
+    public static List<Entity> getEntities() {
+        return entities;
     }
 
 }

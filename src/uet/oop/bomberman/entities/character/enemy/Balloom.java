@@ -43,22 +43,22 @@ public class Balloom extends Character {
             switch (dir) {
                 case 0:
                     moveUp();
-                    if (checkCollision()) moveDown();
+                    if (checkSafeCollision()) moveDown();
                     direction = Direction.UP;
                     break;
                 case 1:
                     moveDown();
-                    if (checkCollision()) moveUp();
+                    if (checkSafeCollision()) moveUp();
                     direction = Direction.DOWN;
                     break;
                 case 2:
                     moveLeft();
-                    if (checkCollision()) moveRight();
+                    if (checkSafeCollision()) moveRight();
                     direction = Direction.LEFT;
                     break;
                 case 3:
                     moveRight();
-                    if (checkCollision()) moveLeft();
+                    if (checkSafeCollision()) moveLeft();
                     direction = Direction.RIGHT;
                     break;
             }
@@ -113,7 +113,7 @@ public class Balloom extends Character {
         return balloomBoundary.checkCollision(otherEntityBoundary);
     }
 
-    public boolean checkCollision() {
+    public boolean checkSafeCollision() {
         for (Entity entity : GameViewManager.getStillObjects()) {
             if (entity instanceof StaticEntity) {
                 if (isColliding(entity))
@@ -125,7 +125,8 @@ public class Balloom extends Character {
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        return null;
+        balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return balloomBoundary;
     }
 
     public void choosingSprite() {

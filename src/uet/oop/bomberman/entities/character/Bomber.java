@@ -1,20 +1,25 @@
 package uet.oop.bomberman.entities.character;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.StaticEntity;
+import uet.oop.bomberman.entities.character.enemy.Balloom;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.gui.MenuViewManager;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-public class Bomber extends Character {
+import java.util.TimerTask;
 
+public class Bomber extends Character {
     private final static int velocity = 2;
     private final static int SPRITE_WIDTH = 24;
     final static int SPRITE_HEIGHT = 32;
@@ -26,7 +31,7 @@ public class Bomber extends Character {
     private RectBoundedBox playerBoundary;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput) {
-        super( x, y, img);
+        super(x, y, img);
         this.keyInput = keyInput;
 //        prevPos = new Point2D(0, 0);
 //        step = new Point2D(0, 0);
@@ -40,6 +45,23 @@ public class Bomber extends Character {
     public void update() {
         move();
         animate();
+        if (checkFatalCollision()) {
+            alive = false;
+        }
+        if (!isAlive()) {
+            new AnimationTimer() {
+
+                @Override
+                public void handle(long l) {
+                    currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
+                            Sprite.player_dead3, animation, 60);
+
+                    
+                }
+            }.start();
+            MenuViewManager menuView = new MenuViewManager();
+            BombermanGame.switchScene(menuView.getMenuScene());
+        }
     }
 
     @Override
@@ -55,13 +77,25 @@ public class Bomber extends Character {
         return playerBoundary.checkCollision(otherEntityBoundary);
     }
 
-    public boolean checkCollision() {
+    public boolean checkSafeCollision() {
         for (Entity entity : GameViewManager.getStillObjects()) {
             if (entity instanceof StaticEntity) {
-                if(isColliding(entity))
+                if (isColliding(entity))
                     return true;
             }
         }
+        return false;
+    }
+
+    public boolean checkFatalCollision() {
+        for (Entity entity : GameViewManager.getEntities()) {
+            if (entity instanceof Balloom) {
+                if (isColliding(entity)) {
+                    return true;
+                }
+            }
+        }
+//        System.out.println("not balloom");
         return false;
     }
 
@@ -71,25 +105,25 @@ public class Bomber extends Character {
         moving = false;
         if (keyInput.isPressed(KeyCode.UP)) {
             moveUp();
-            if (checkCollision()) moveDown();
+            if (checkSafeCollision()) moveDown();
             direction = Direction.UP;
             moving = true;
         }
         if (keyInput.isPressed(KeyCode.DOWN)) {
             moveDown();
-            if (checkCollision()) moveUp();
+            if (checkSafeCollision()) moveUp();
             direction = Direction.DOWN;
             moving = true;
         }
         if (keyInput.isPressed(KeyCode.LEFT)) {
             moveLeft();
-            if (checkCollision()) moveRight();
+            if (checkSafeCollision()) moveRight();
             direction = Direction.LEFT;
             moving = true;
         }
         if (keyInput.isPressed(KeyCode.RIGHT)) {
             moveRight();
-            if (checkCollision()) moveLeft();
+            if (checkSafeCollision()) moveLeft();
             direction = Direction.RIGHT;
             moving = true;
         }
@@ -134,48 +168,50 @@ public class Bomber extends Character {
         return moving;
     }
 
-    private void setCurrentSprite(Sprite sprite) {
-        if (sprite != null) {
-            currentSprite = sprite;
-        } else {
-            System.out.println("Missing sprite");
-        }
-    }
+//    private void setCurrentSprite(Sprite sprite) {
+//        if (sprite != null) {
+//            currentSprite = sprite;
+//        } else {
+//            System.out.println("Missing sprite");
+//        }
+//    }
 
     private void chooseSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.player_up;
-                if (isMoving()) {
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.player_up;
+                    if (isMoving()) {
 //                    System.out.println("UP");
-                    currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
+                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
                                 Sprite.player_up_2, animation, 30);
-                }
-                break;
-            case DOWN:
-                currentSprite = Sprite.player_down;
-                if (isMoving()) {
+                    }
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.player_down;
+                    if (isMoving()) {
 //                    System.out.println("DOWN");
-                    currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
+                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
                                 Sprite.player_down_2, animation, 15);
-                }
-                break;
-            case LEFT:
-                currentSprite = Sprite.player_left;
-                if (isMoving()) {
+                    }
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.player_left;
+                    if (isMoving()) {
 //                    System.out.println("LEFT");
-                    currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
+                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
                                 Sprite.player_left_2, animation, 15);
-                }
-                break;
-            case RIGHT:
-                currentSprite = Sprite.player_right;
-                if (isMoving()) {
+                    }
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.player_right;
+                    if (isMoving()) {
 //                    System.out.println("RIGHT");
-                    currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
+                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
                                 Sprite.player_right_2, animation, 15);
-                }
-                break;
+                    }
+                    break;
+            }
         }
     }
 
