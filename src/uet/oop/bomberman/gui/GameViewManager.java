@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
+import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.character.enemy.Balloom;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -29,11 +31,17 @@ public class GameViewManager {
     private List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
     private Stage mainStage;
-//    private Stage menuStage;
+    //    private Stage menuStage;
     private Group root;
     private Scene scene;
 
     private AnimationTimer timer;
+    //    private Bomber bomberman;
+    private int L, R, C;
+
+    private double t = 0;
+    private final static double FPS = 62;
+
     private Bomber bomberman;
 
     private KeyManager keys = new KeyManager();
@@ -63,7 +71,7 @@ public class GameViewManager {
 //        this.menuStage = menuStage;
 //        this.menuStage.hide();
         createMap();
-        createBomberman();
+//        createBomberman();
         createGameLoop();
 //        mainStage.show();
     }
@@ -110,24 +118,51 @@ public class GameViewManager {
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
-            int L, R, C;
+//            int L, R, C;
             String[] parts = line.split(" ");
             L = Integer.parseInt(parts[0]);
             R = Integer.parseInt(parts[1]);
             C = Integer.parseInt(parts[2]);
             int i = 0;
+            Entity object;
+            Entity character;
             while (i < R) {
                 line = bf.readLine();
-                for (int j = 0; j < line.length(); j++) {
-                    Entity object;
-                    if (line.charAt(j) == '#') {
-                        object = new Wall(j, i, Sprite.wall.getFxImage());
-                    } else if (line.charAt(j) == '*') {
-                        object = new Brick(j, i, Sprite.brick.getFxImage());
-                    } else {
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
+                for (int j = 0; j < C; j++) {
+//                    Entity object;
+//                    if (line.charAt(j) == '#') {
+//                        object = new Wall(j, i, Sprite.wall.getFxImage());
+//                    } else if (line.charAt(j) == '*') {
+//                        object = new Brick(j, i, Sprite.brick.getFxImage());
+//                    } else {
+//                        object = new Grass(j, i, Sprite.grass.getFxImage());
+//                    }
+                    switch (line.charAt(j)) {
+                        case '#':
+                            object = new Wall(j, i, Sprite.wall.getFxImage());
+                            stillObjects.add(object);
+                            break;
+                        case '*':
+                            object = new Brick(j, i, Sprite.brick.getFxImage());
+                            stillObjects.add(object);
+                            break;
+                        case 'p':
+                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
+                            entities.add(bomberman);
+                            break;
+                        case '1':
+                            character = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
+                            entities.add(character);
+                            break;
+                        default:
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
+                            break;
                     }
-                    stillObjects.add(object);
                 }
                 i++;
             }
@@ -139,10 +174,10 @@ public class GameViewManager {
         }
     }
 
-    public void createBomberman() {
-        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys);
-        entities.add(bomberman);
-    }
+//    public void createBomberman() {
+//        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys);
+//        entities.add(bomberman);
+//    }
 
     public void update() {
         entities.forEach(Entity::update);
@@ -156,10 +191,34 @@ public class GameViewManager {
 
     private void createGameLoop() {
         AnimationTimer timer = new AnimationTimer() {
+            long lastTick = 0;
+
             @Override
             public void handle(long l) {
-                render();
-                update();
+                // Minh's laptop
+                if (lastTick == 0) {
+                    lastTick = l;
+                    render();
+                    update();
+                    return;
+                }
+
+                if (l - lastTick > 1000000000 / FPS) {
+                    lastTick = l;
+                    render();
+                    update();
+                }
+//                t += 0.016;
+//
+//                if (t > 0.02) {
+//                    render();
+//                    update();
+//                    t = 0;
+//                }
+
+                // Nam's Laptop
+//                render();
+//                update();
             }
         };
         timer.start();

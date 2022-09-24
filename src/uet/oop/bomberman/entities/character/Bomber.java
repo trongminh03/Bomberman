@@ -15,15 +15,15 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Bomber extends Character {
 
-    final static int velocity = 1;
-    final static int SPRITE_WIDTH = 24;
+    private final static int velocity = 2;
+    private final static int SPRITE_WIDTH = 24;
     final static int SPRITE_HEIGHT = 32;
 //    private Point2D step;
 //    private int step;
 
     KeyManager keyInput;
-    Sprite currentSprite;
-    RectBoundedBox playerBoundary;
+    private Sprite currentSprite;
+    private RectBoundedBox playerBoundary;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput) {
         super( x, y, img);
@@ -67,6 +67,7 @@ public class Bomber extends Character {
 
     @Override
     protected void move() {
+//        System.out.println(toString());
         moving = false;
         if (keyInput.isPressed(KeyCode.UP)) {
             moveUp();
@@ -116,16 +117,16 @@ public class Bomber extends Character {
         y += velocity;
     }
 
-    public void moveRight() {
-//        step = new Point2D(velocity, 0);
-//        x += step.getX();
-        x += velocity;
-    }
-
     public void moveLeft() {
 //        step = new Point2D(-velocity, 0);
 //        x += step.getX();
         x -= velocity;
+    }
+
+    public void moveRight() {
+//        step = new Point2D(velocity, 0);
+//        x += step.getX();
+        x += velocity;
     }
 
     @Override
@@ -156,7 +157,7 @@ public class Bomber extends Character {
                 if (isMoving()) {
 //                    System.out.println("DOWN");
                     currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
-                                Sprite.player_down_2, animation, 30);
+                                Sprite.player_down_2, animation, 15);
                 }
                 break;
             case LEFT:
@@ -164,7 +165,7 @@ public class Bomber extends Character {
                 if (isMoving()) {
 //                    System.out.println("LEFT");
                     currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
-                                Sprite.player_left_2, animation, 30);
+                                Sprite.player_left_2, animation, 15);
                 }
                 break;
             case RIGHT:
@@ -172,7 +173,7 @@ public class Bomber extends Character {
                 if (isMoving()) {
 //                    System.out.println("RIGHT");
                     currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
-                                Sprite.player_right_2, animation, 30);
+                                Sprite.player_right_2, animation, 15);
                 }
                 break;
         }
