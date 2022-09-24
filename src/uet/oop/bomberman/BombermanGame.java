@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uet.oop.bomberman.constants.GlobalConstants;
+import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.gui.MenuViewManager;
 
 public class BombermanGame extends Application {
@@ -16,9 +17,14 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        MenuViewManager menuView = new MenuViewManager();
+        /*MenuViewManager menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
+        stage.show();*/
+
+        GameViewManager gameView = new GameViewManager();
+        gameView.createNewGame();
+        stage.setScene(gameView.getScene());
         stage.show();
 
     }
@@ -26,4 +32,6 @@ public class BombermanGame extends Application {
     public static void switchScene(Scene scene) {
         stage.setScene(scene);
     }
+
+
 }

@@ -1,35 +1,33 @@
 package uet.oop.bomberman.constants;
 
 import uet.oop.bomberman.entities.Bomb;
+import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BombStorage {
+    public static LinkedList<Bomb> bombQueue = new LinkedList<>();
+    private static Iterator bombIterator = bombQueue.iterator();
 
-    public static List<Bomb> bombList = new ArrayList<>();
-
-    public static List<Bomb> getBombList() {
-        return bombList;
+    public static LinkedList getBombList() {
+        return bombQueue;
     }
 
     public static void addBomb(Bomb bomb) {
-        bombList.add(bomb);
-    }
-
-    public static Bomb getBomb(int index) {
-        return bombList.get(index);
-    }
-
-    public static void removeBomb(int index) {
-        bombList.remove(index);
+        bombQueue.offer(bomb);
     }
 
     public static void removeBomb(Bomb bomb) {
-        bombList.remove(bomb);
+        /*while (bombIterator.hasNext()) {
+            if (bombIterator.next() == bomb) {
+                bombIterator.remove();
+                break;
+            }
+        }*/
+        bombQueue.remove();
     }
 
-    public static int getNumOfBomb() {
-        return bombList.size();
+    public static int getNumBomb() {
+        return bombQueue.size();
     }
 }

@@ -28,4 +28,8 @@ public abstract class Entity {
     }
     public abstract void update();
     public abstract RectBoundedBox getBoundingBox();
+
+    public void setImg(Image img) {
+        this.img = img;
+    }
 }

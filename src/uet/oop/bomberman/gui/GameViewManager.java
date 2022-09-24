@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
+import uet.oop.bomberman.constants.BombStorage;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -26,8 +28,11 @@ public class GameViewManager {
 
     private GraphicsContext gc;
     private Canvas canvas;
+
     private List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
+    private static List<Bomb> bombList = BombStorage.getBombList();
+
     private Stage mainStage;
 //    private Stage menuStage;
     private Group root;
@@ -146,11 +151,13 @@ public class GameViewManager {
 
     public void update() {
         entities.forEach(Entity::update);
+        bombList.forEach(Bomb::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
+        bombList.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }
 
@@ -158,8 +165,8 @@ public class GameViewManager {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                render();
                 update();
+                render();
             }
         };
         timer.start();

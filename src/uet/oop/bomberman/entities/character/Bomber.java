@@ -3,13 +3,12 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import uet.oop.bomberman.constants.BombStorage;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -17,12 +16,9 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Bomber extends Character {
 
-    /*final static int velocity = 1;
+//    final static int velocity = 1;
     final static int SPRITE_WIDTH = 24;
-    final static int SPRITE_HEIGHT = 28;*/
-
-    final int SPRITE_WIDTH = 24;
-    final int SPRITE_HEIGHT = 28;
+    final static int SPRITE_HEIGHT = 28;
 
     private int velocity = 1;
     private int numBomb = 0;
@@ -30,6 +26,7 @@ public class Bomber extends Character {
     private boolean speedBuff = false;
     private boolean bombBuff = false;
     private boolean flameBuff = false;
+    private boolean flagBomb = false;
 
     KeyManager keyInput;
     Sprite currentSprite;
@@ -38,17 +35,13 @@ public class Bomber extends Character {
     public Bomber(int x, int y, Image img, KeyManager keyInput) {
         super( x, y, img);
         this.keyInput = keyInput;
-//        prevPos = new Point2D(0, 0);
-//        step = new Point2D(0, 0);
         direction = Direction.RIGHT;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     }
 
-
     @Override
     public void update() {
-        handleEvent();
         move();
         animate();
     }
@@ -103,11 +96,13 @@ public class Bomber extends Character {
             direction = Direction.RIGHT;
             moving = true;
         }
-    }
 
-    protected void handleEvent() {
-        if (keyInput.isPressed(KeyCode.SPACE)) {
-            this.createBomb();
+        if (keyInput.isPressed(KeyCode.SPACE) && !flagBomb) {
+            createBomb();
+            flagBomb = true;
+        }
+        if (!keyInput.isPressed(KeyCode.SPACE) && flagBomb) {
+            flagBomb = false;
         }
     }
 
@@ -118,11 +113,12 @@ public class Bomber extends Character {
             limitBomb = 100;
         }
         if (numBomb < limitBomb) {
-            int xUnit = this.x / Sprite.SCALED_SIZE;
-            int yUnit = this.y / Sprite.SCALED_SIZE;
-            Bomb bomb = new Bomb(x, y, Sprite.bomb_2.getFxImage());
+            int xUnit = (this.x + SPRITE_WIDTH / 2) / Sprite.SCALED_SIZE;
+            int yUnit = (this.y + SPRITE_HEIGHT / 2) / Sprite.SCALED_SIZE;
+            Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb_2.getFxImage());
             BombStorage.addBomb(bomb);
-            numBomb = BombStorage.getNumOfBomb();
+//            GameViewManager.getStillObjects().add(bomb);
+            numBomb = BombStorage.getNumBomb();
         }
     }
 
@@ -137,26 +133,18 @@ public class Bomber extends Character {
     }
 
     public void moveUp() {
-//        step = new Point2D(0, -velocity);
-//        y += step.getY();
         y -= velocity;
     }
 
     public void moveDown() {
-//        step = new Point2D(0, velocity);
-//        y += step.getY();
         y += velocity;
     }
 
     public void moveRight() {
-//        step = new Point2D(velocity, 0);
-//        x += step.getX();
         x += velocity;
     }
 
     public void moveLeft() {
-//        step = new Point2D(-velocity, 0);
-//        x += step.getX();
         x -= velocity;
     }
 
@@ -178,7 +166,6 @@ public class Bomber extends Character {
             case UP:
                 currentSprite = Sprite.player_up;
                 if (isMoving()) {
-//                    System.out.println("UP");
                     currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
                                 Sprite.player_up_2, animation, 30);
                 }
@@ -186,7 +173,6 @@ public class Bomber extends Character {
             case DOWN:
                 currentSprite = Sprite.player_down;
                 if (isMoving()) {
-//                    System.out.println("DOWN");
                     currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
                                 Sprite.player_down_2, animation, 30);
                 }
@@ -194,7 +180,6 @@ public class Bomber extends Character {
             case LEFT:
                 currentSprite = Sprite.player_left;
                 if (isMoving()) {
-//                    System.out.println("LEFT");
                     currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
                                 Sprite.player_left_2, animation, 30);
                 }
@@ -202,7 +187,6 @@ public class Bomber extends Character {
             case RIGHT:
                 currentSprite = Sprite.player_right;
                 if (isMoving()) {
-//                    System.out.println("RIGHT");
                     currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
                                 Sprite.player_right_2, animation, 30);
                 }
@@ -220,6 +204,5 @@ public class Bomber extends Character {
         return "Bomberman{x = " + x + ", y = " + y + ", width = "
                 + currentSprite.getSpriteWidth() + ", height = " + currentSprite.getSpriteHeight() + "}";
     }
-
 
 }
