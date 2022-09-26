@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.character;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -17,6 +18,7 @@ import uet.oop.bomberman.gui.MenuViewManager;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomber extends Character {
@@ -29,12 +31,11 @@ public class Bomber extends Character {
     KeyManager keyInput;
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
+    private boolean hitEnemy = false;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput) {
         super(x, y, img);
         this.keyInput = keyInput;
-//        prevPos = new Point2D(0, 0);
-//        step = new Point2D(0, 0);
         direction = Direction.RIGHT;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -46,21 +47,7 @@ public class Bomber extends Character {
         move();
         animate();
         if (checkFatalCollision()) {
-            alive = false;
-        }
-        if (!isAlive()) {
-            new AnimationTimer() {
-
-                @Override
-                public void handle(long l) {
-                    currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
-                            Sprite.player_dead3, animation, 60);
-
-                    
-                }
-            }.start();
-            MenuViewManager menuView = new MenuViewManager();
-            BombermanGame.switchScene(menuView.getMenuScene());
+            dead();
         }
     }
 
@@ -80,8 +67,10 @@ public class Bomber extends Character {
     public boolean checkSafeCollision() {
         for (Entity entity : GameViewManager.getStillObjects()) {
             if (entity instanceof StaticEntity) {
-                if (isColliding(entity))
+                if (isColliding(entity)) {
+//                    System.out.println("Collide");
                     return true;
+                }
             }
         }
         return false;
@@ -91,17 +80,16 @@ public class Bomber extends Character {
         for (Entity entity : GameViewManager.getEntities()) {
             if (entity instanceof Balloom) {
                 if (isColliding(entity)) {
+                    hitEnemy = true;
                     return true;
                 }
             }
         }
-//        System.out.println("not balloom");
         return false;
     }
 
     @Override
     protected void move() {
-//        System.out.println(toString());
         moving = false;
         if (keyInput.isPressed(KeyCode.UP)) {
             moveUp();
@@ -136,30 +124,31 @@ public class Bomber extends Character {
 
     @Override
     public void dead() {
+        TimerTask task = new TimerTask() {
 
+            @Override
+            public void run() {
+                alive = false;
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, 540);
     }
 
     public void moveUp() {
-//        step = new Point2D(0, -velocity);
-//        y += step.getY();
         y -= velocity;
     }
 
     public void moveDown() {
-//        step = new Point2D(0, velocity);
-//        y += step.getY();
         y += velocity;
     }
 
     public void moveLeft() {
-//        step = new Point2D(-velocity, 0);
-//        x += step.getX();
         x -= velocity;
     }
 
     public void moveRight() {
-//        step = new Point2D(velocity, 0);
-//        x += step.getX();
         x += velocity;
     }
 
@@ -177,7 +166,7 @@ public class Bomber extends Character {
 //    }
 
     private void chooseSprite() {
-        if (isAlive()) {
+        if (!hitEnemy) {
             switch (direction) {
                 case UP:
                     currentSprite = Sprite.player_up;
@@ -212,8 +201,13 @@ public class Bomber extends Character {
                     }
                     break;
             }
+        } else {
+            currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
+                    Sprite.player_dead3, animation, 180);
         }
     }
+
+
 
     @Override
     public void render(GraphicsContext gc) {

@@ -1,11 +1,13 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
 import uet.oop.bomberman.entities.static_objects.Brick;
@@ -16,9 +18,13 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
 
+import java.awt.*;
 import java.io.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameViewManager {
     public static final int WIDTH = 25;
@@ -36,7 +42,6 @@ public class GameViewManager {
     private Scene scene;
 
     private AnimationTimer timer;
-    //    private Bomber bomberman;
     private int L, R, C;
 
     private double t = 0;
@@ -68,6 +73,8 @@ public class GameViewManager {
     }
 
     public void createNewGame() {
+        entities = new ArrayList<>();
+        stillObjects = new ArrayList<>();
 //        this.menuStage = menuStage;
 //        this.menuStage.hide();
         createMap();
@@ -190,24 +197,27 @@ public class GameViewManager {
     }
 
     private void createGameLoop() {
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             long lastTick = 0;
 
             @Override
             public void handle(long l) {
                 // Minh's laptop
-                if (lastTick == 0) {
-                    lastTick = l;
-                    render();
-                    update();
-                    return;
-                }
+//                if (lastTick == 0) {
+//                    lastTick = l;
+//                    render();
+//                    update();
+//                }
 
                 if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     render();
                     update();
-                }
+                    if (!bomberman.isAlive()) {
+                        mainStage.close();
+                        timer.stop();
+                        BombermanGame.switchScene(MenuViewManager.getScene());
+                    }
 //                t += 0.016;
 //
 //                if (t > 0.02) {
@@ -216,28 +226,28 @@ public class GameViewManager {
 //                    t = 0;
 //                }
 
-                // Nam's Laptop
+                    // Nam's Laptop
 //                render();
 //                update();
+                }
             }
         };
         timer.start();
     }
+        public Scene getScene () {
+            return scene;
+        }
 
-    public Stage getMainStage() {
-        return mainStage;
+        public static List<Entity> getStillObjects () {
+            return stillObjects;
+        }
+
+        public static List<Entity> getEntities () {
+            return entities;
+        }
+
+        public Stage getMainStage () {
+            return mainStage;
+        }
+
     }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public static List<Entity> getStillObjects() {
-        return stillObjects;
-    }
-
-    public static List<Entity> getEntities() {
-        return entities;
-    }
-
-}

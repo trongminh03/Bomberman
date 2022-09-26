@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MenuViewManager {
     private AnchorPane menuPane;
-    private Scene menuScene;
+    private static Scene menuScene;
     private Stage menuStage;
 
     private final static int MENU_BUTTON_START_X = 30;
@@ -69,10 +69,10 @@ public class MenuViewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                GameViewManager gameManager = new GameViewManager();
-                gameManager.createNewGame();
-//                gameManager.createNewGame(menuStage);
-                BombermanGame.switchScene(gameManager.getScene());
+                GameViewManager gameView = new GameViewManager();
+                gameView.createNewGame();
+                menuStage.close();
+                BombermanGame.switchScene(gameView.getScene());
             }
         });
     }
@@ -97,5 +97,9 @@ public class MenuViewManager {
         BackgroundImage background = new BackgroundImage(backgroundImage, null,
                         null, BackgroundPosition.DEFAULT, null);
         menuPane.setBackground(new Background(background));
+    }
+
+    public static Scene getScene() {
+        return menuScene;
     }
 }
