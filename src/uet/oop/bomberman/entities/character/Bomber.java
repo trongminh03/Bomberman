@@ -1,20 +1,15 @@
 package uet.oop.bomberman.entities.character;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
-import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
-import uet.oop.bomberman.gui.MenuViewManager;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
@@ -32,10 +27,13 @@ public class Bomber extends Character {
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean hitEnemy = false;
+    private boolean resetAnimation = false;
+    private GameViewManager game;
 
-    public Bomber(int x, int y, Image img, KeyManager keyInput) {
+    public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
         super(x, y, img);
         this.keyInput = keyInput;
+        this.game = game;
         direction = Direction.RIGHT;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -65,7 +63,7 @@ public class Bomber extends Character {
     }
 
     public boolean checkSafeCollision() {
-        for (Entity entity : GameViewManager.getStillObjects()) {
+        for (Entity entity : game.getStillObjects()) {
             if (entity instanceof StaticEntity) {
                 if (isColliding(entity)) {
 //                    System.out.println("Collide");
@@ -77,12 +75,10 @@ public class Bomber extends Character {
     }
 
     public boolean checkFatalCollision() {
-        for (Entity entity : GameViewManager.getEntities()) {
-            if (entity instanceof Balloom) {
-                if (isColliding(entity)) {
-                    hitEnemy = true;
-                    return true;
-                }
+        for (Entity entity : game.getEnemies()) {
+            if (isColliding(entity)) {
+                hitEnemy = true;
+                return true;
             }
         }
         return false;
@@ -133,7 +129,7 @@ public class Bomber extends Character {
         };
 
         Timer timer = new Timer();
-        timer.schedule(task, 540);
+        timer.schedule(task, 1800);
     }
 
     public void moveUp() {
@@ -173,7 +169,7 @@ public class Bomber extends Character {
                     if (isMoving()) {
 //                    System.out.println("UP");
                         currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
-                                Sprite.player_up_2, animation, 30);
+                                Sprite.player_up_2, animation, 15);
                     }
                     break;
                 case DOWN:
@@ -202,11 +198,14 @@ public class Bomber extends Character {
                     break;
             }
         } else {
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
-                    Sprite.player_dead3, animation, 180);
+                    Sprite.player_dead3, animation, 60);
         }
     }
-
 
 
     @Override
@@ -218,5 +217,10 @@ public class Bomber extends Character {
     public String toString() {
         return "Bomberman{x = " + x + ", y = " + y + ", width = "
                 + currentSprite.getSpriteWidth() + ", height = " + currentSprite.getSpriteHeight() + "}";
+    }
+
+    public void setPosition(int xUnit, int yUnit) {
+        this.x = xUnit * Sprite.SCALED_SIZE;
+        this.y = yUnit * Sprite.SCALED_SIZE;
     }
 }

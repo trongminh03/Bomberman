@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
+import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -34,8 +35,9 @@ public class GameViewManager {
 
     private GraphicsContext gc;
     private Canvas canvas;
-    private static List<Entity> entities = new ArrayList<>();
-    private static List<Entity> stillObjects = new ArrayList<>();
+//    private List<Entity> entities = new ArrayList<>();
+    private List<Entity> enemies = new ArrayList<>();
+    private List<Entity> stillObjects = new ArrayList<>();
     private Stage mainStage;
     //    private Stage menuStage;
     private Group root;
@@ -46,10 +48,8 @@ public class GameViewManager {
 
     private double t = 0;
     private final static double FPS = 62;
-
-    private Bomber bomberman;
-
     private KeyManager keys = new KeyManager();
+    private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
         initializeStage();
@@ -73,7 +73,7 @@ public class GameViewManager {
     }
 
     public void createNewGame() {
-        entities = new ArrayList<>();
+        enemies = new ArrayList<>();
         stillObjects = new ArrayList<>();
 //        this.menuStage = menuStage;
 //        this.menuStage.hide();
@@ -132,7 +132,7 @@ public class GameViewManager {
             C = Integer.parseInt(parts[2]);
             int i = 0;
             Entity object;
-            Entity character;
+            Entity enemy;
             while (i < R) {
                 line = bf.readLine();
                 for (int j = 0; j < C; j++) {
@@ -154,17 +154,24 @@ public class GameViewManager {
                             stillObjects.add(object);
                             break;
                         case 'p':
-                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys);
+//                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys, this);
+                            bomberman.setPosition(j, i);
+//                            System.out.println("Create bomberman");
                             object = new Grass(j, i, Sprite.grass.getFxImage());
+//                            enemies.add(bomberman);
                             stillObjects.add(object);
-                            entities.add(bomberman);
                             break;
                         case '1':
-                            character = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
+                            enemy = new Balloom(j, i, Sprite.balloom_right1.getFxImage(), this);
                             object = new Grass(j, i, Sprite.grass.getFxImage());
-                            entities.add(character);
+                            enemies.add(enemy);
                             stillObjects.add(object);
                             break;
+                        case '2':
+                            enemy = new Oneal(j, i, Sprite.oneal_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
                         default:
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             stillObjects.add(object);
@@ -187,13 +194,16 @@ public class GameViewManager {
 //    }
 
     public void update() {
-        entities.forEach(Entity::update);
+        enemies.forEach(Entity::update);
+        bomberman.update();
+//        bomberman.toString();
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+        enemies.forEach(g -> g.render(gc));
+        bomberman.render(gc);
     }
 
     private void createGameLoop() {
@@ -238,16 +248,20 @@ public class GameViewManager {
             return scene;
         }
 
-        public static List<Entity> getStillObjects () {
+        public List<Entity> getStillObjects () {
             return stillObjects;
         }
 
-        public static List<Entity> getEntities () {
-            return entities;
+        public List<Entity> getEnemies () {
+            return enemies;
         }
 
         public Stage getMainStage () {
             return mainStage;
+        }
+
+        public Bomber getBomberman() {
+            return bomberman;
         }
 
     }
