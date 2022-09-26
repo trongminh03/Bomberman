@@ -19,6 +19,7 @@ import uet.oop.bomberman.input.KeyManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class GameViewManager {
     public static final int WIDTH = 25;
@@ -31,7 +32,7 @@ public class GameViewManager {
 
     private List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
-    private static List<Bomb> bombList = BombStorage.getBombList();
+    private static Vector<Bomb> bombVector = BombStorage.getBombVector();
 
     private Stage mainStage;
 //    private Stage menuStage;
@@ -151,13 +152,13 @@ public class GameViewManager {
 
     public void update() {
         entities.forEach(Entity::update);
-        bombList.forEach(Bomb::update);
+        bombVector.forEach(Bomb::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        bombList.forEach(g -> g.render(gc));
+        bombVector.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }
 
@@ -167,6 +168,7 @@ public class GameViewManager {
             public void handle(long l) {
                 update();
                 render();
+                BombStorage.clearGarbage();
             }
         };
         timer.start();

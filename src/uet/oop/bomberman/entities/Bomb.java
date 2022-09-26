@@ -57,15 +57,16 @@ public class Bomb extends AnimatedEntity {
         };
         Timer timer = new Timer("Timer");
         timer.schedule(timerFire, 2000);
-        timer.schedule(timerDestroy, 2100);
+        timer.schedule(timerDestroy, 2090);
         if (bombStatus == BombStatus.PLACED) {
             currentSprite = Sprite.movingSprite(Sprite.bomb_2, Sprite.bomb_1,
                     Sprite.bomb, animation, 90);
         }else if (bombStatus == BombStatus.EXPLODE){
             currentSprite = Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1,
                     Sprite.bomb_exploded2, animation, 30);
+            System.out.println(currentSprite.toString());
         }else {
-//            this.destroy();
+            this.destroy();
         }
     }
 
@@ -75,6 +76,6 @@ public class Bomb extends AnimatedEntity {
     }
 
     private void destroy() {
-        BombStorage.removeBomb(this);
+        BombStorage.addBombGarbage(this);
     }
 }
