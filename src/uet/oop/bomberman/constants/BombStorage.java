@@ -21,7 +21,7 @@ public class BombStorage {
     }
 
     public static void clearGarbage() {
-        bombVector.removeAll(bombGarbage);
+bombVector.removeAll(bombGarbage);
     }
 
     public static int getNumBomb() {

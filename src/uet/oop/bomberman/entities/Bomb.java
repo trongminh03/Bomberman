@@ -13,25 +13,28 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomb extends AnimatedEntity {
+    final static int BOMB_WIDTH = 30;
+    final static int BOMB_HEIGHT = 30;
     private int size = 1;
     private BombStatus bombStatus = BombStatus.PLACED;
+    /*
+    Check through bomb:   false: bomber and bomb can't go on top of each other
+                          true:bomber and bomb can go on top of each other
+    */
+    private boolean isThroughBomb = true;
 
     Sprite currentSprite;
-    RectBoundedBox playerBoundary;
+    RectBoundedBox bombBoundary;
 
     public Bomb(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
-    }
-
-    @Override
-    public void update() {
-        chooseSprite();
-        animate();
+        bombBoundary = new RectBoundedBox(x, y, BOMB_WIDTH, BOMB_HEIGHT);
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        return null;
+        bombBoundary.setPosition(x, y, BOMB_WIDTH, BOMB_HEIGHT);
+        return bombBoundary;
     }
 
     private void setCurrentSprite(Sprite sprite) {
@@ -57,22 +60,36 @@ public class Bomb extends AnimatedEntity {
         };
         Timer timer = new Timer("Timer");
         timer.schedule(timerFire, 2000);
-        timer.schedule(timerDestroy, 2090);
+        timer.schedule(timerDestroy, 2540);
         if (bombStatus == BombStatus.PLACED) {
             currentSprite = Sprite.movingSprite(Sprite.bomb_2, Sprite.bomb_1,
                     Sprite.bomb, animation, 90);
         }else if (bombStatus == BombStatus.EXPLODE){
             currentSprite = Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1,
-                    Sprite.bomb_exploded2, animation, 30);
+                    Sprite.bomb_exploded2, Sprite.bomb_exploded1, Sprite.bomb_exploded, animation, 30);
             System.out.println(currentSprite.toString());
         }else {
             this.destroy();
         }
     }
 
+    public boolean isThroughBomb() {
+        return isThroughBomb;
+    }
+
+    public void setThroughBomb(boolean throughBomb) {
+        isThroughBomb = throughBomb;
+    }
+
     @Override
     public void render(GraphicsContext gc) {
         gc.drawImage(currentSprite.getFxImage(), x, y);
+    }
+
+    @Override
+    public void update() {
+        chooseSprite();
+        animate();
     }
 
     private void destroy() {

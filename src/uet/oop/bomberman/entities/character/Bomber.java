@@ -3,7 +3,6 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import uet.oop.bomberman.constants.BombStorage;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
@@ -17,16 +16,20 @@ import uet.oop.bomberman.model.RectBoundedBox;
 public class Bomber extends Character {
 
 //    final static int velocity = 1;
-    final static int SPRITE_WIDTH = 24;
-    final static int SPRITE_HEIGHT = 28;
+    final static int BOMBER_WIDTH = 24;
+    final static int BOMBER_HEIGHT = 28;
 
-    private int velocity = 1;
+    private int velocity = 2;
     private int numBomb = 0;
     private int limitBomb = 0;
-    private boolean speedBuff = false;
-    private boolean bombBuff = false;
-    private boolean flameBuff = false;
-    private boolean flagBomb = false;
+    private boolean isSpeedBuff = false;
+    private boolean isBombBuff = false;
+    private boolean isFlameBuff = false;
+    /*
+    * Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
+    *                   false: bomber no bomb yet, can place bombs now
+    * */
+    private boolean isPlacedBomb = false;
 
     KeyManager keyInput;
     Sprite currentSprite;
@@ -37,7 +40,7 @@ public class Bomber extends Character {
         this.keyInput = keyInput;
         direction = Direction.RIGHT;
         currentSprite = Sprite.player_right;
-        playerBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
     }
 
     @Override
@@ -48,23 +51,27 @@ public class Bomber extends Character {
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        playerBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary.setPosition(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         return playerBoundary;
     }
 
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        playerBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary.setPosition(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         return playerBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkCollision() {
         for (Entity entity : GameViewManager.getStillObjects()) {
-            if (entity instanceof StaticEntity || entity instanceof Bomb) {
+            if (entity instanceof StaticEntity) {
                 if(isColliding(entity))
                     return true;
             }
+        }
+        for (Bomb bomb : BombStorage.getBombVector()) {
+            if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
+            if (!isColliding(bomb)) bomb.setThroughBomb(false);
         }
         return false;
     }
@@ -73,6 +80,7 @@ public class Bomber extends Character {
     protected void move() {
         moving = false;
         if (keyInput.isPressed(KeyCode.UP)) {
+            System.out.println(x + "\t" + y);
             moveUp();
             if (checkCollision()) moveDown();
             direction = Direction.UP;
@@ -97,27 +105,26 @@ public class Bomber extends Character {
             moving = true;
         }
 
-        if (keyInput.isPressed(KeyCode.SPACE) && !flagBomb) {
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb) {
             createBomb();
-            flagBomb = true;
+            isPlacedBomb = true;
         }
-        if (!keyInput.isPressed(KeyCode.SPACE) && flagBomb) {
-            flagBomb = false;
+        if (!keyInput.isPressed(KeyCode.SPACE) && isPlacedBomb) {
+            isPlacedBomb = false;
         }
     }
 
     private void createBomb() {
-        if (bombBuff) {
+        if (isBombBuff) {
             limitBomb = 2;
         }else {
             limitBomb = 100;
         }
         if (numBomb < limitBomb) {
-            int xUnit = (this.x + SPRITE_WIDTH / 2) / Sprite.SCALED_SIZE;
-            int yUnit = (this.y + SPRITE_HEIGHT / 2) / Sprite.SCALED_SIZE;
+            int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
+            int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
             Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb_2.getFxImage());
             BombStorage.addBomb(bomb);
-//            GameViewManager.getStillObjects().add(bomb);
             numBomb = BombStorage.getNumBomb();
         }
     }
