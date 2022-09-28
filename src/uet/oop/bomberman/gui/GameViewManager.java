@@ -185,5 +185,4 @@ public class GameViewManager {
     public static List<Entity> getStillObjects() {
         return stillObjects;
     }
-    ArrayList
 }
