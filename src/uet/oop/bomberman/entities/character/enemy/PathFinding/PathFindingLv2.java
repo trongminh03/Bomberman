@@ -23,6 +23,7 @@ public class PathFindingLv2 extends RandomMove {
     }
 
     public EnemyDirection chasePlayer() {
+        // reset path finding
         startX = false;
         startY = false;
         endX = false;
@@ -34,6 +35,7 @@ public class PathFindingLv2 extends RandomMove {
                     && Math.abs(bomber.getGridY() - enemy.getGridY()) <= SCOPE
                     && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
                     && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0) { // check if bomber in scope
+                // set all path is true
                 startX = true;
                 startY = true;
                 endX = true;

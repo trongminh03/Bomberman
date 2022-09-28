@@ -123,7 +123,7 @@ public class GameViewManager {
 //                stillObjects.add(object);
 //            }
 //        }
-        File file = new File("res/levels/Level2.txt");
+        File file = new File("res/levels/Level3.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
