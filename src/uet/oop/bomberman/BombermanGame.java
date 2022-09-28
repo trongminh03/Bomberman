@@ -17,19 +17,13 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        /*MenuViewManager menuView = new MenuViewManager();
+        MenuViewManager menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
-        stage.show();*/
-
-        GameViewManager gameView = new GameViewManager();
-        gameView.createNewGame();
-        stage.setScene(gameView.getScene());
         stage.show();
 
     }
 
-//    Day la switch Scene.
     public static void switchScene(Scene scene) {
         stage.setScene(scene);
     }

@@ -14,4 +14,8 @@ public abstract class AnimatedEntity extends Entity {
         if (animation < MAX_ANIMATION) animation++;
         else animation = 0; //reset animation
     }
+
+    protected void setAnimation(int animation) {
+        this.animation = animation;
+    }
 }

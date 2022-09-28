@@ -34,5 +34,17 @@ public abstract class Character extends AnimatedEntity {
     public Direction getDirection() {
         return direction;
     }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
     public abstract boolean isColliding(Entity other);
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
 }

@@ -28,8 +28,11 @@ public abstract class Entity {
     }
     public abstract void update();
     public abstract RectBoundedBox getBoundingBox();
+    public int getGridX() {
+        return this.x / Sprite.SCALED_SIZE;
+    }
 
-    public void setImg(Image img) {
-        this.img = img;
+    public int getGridY() {
+        return this.y / Sprite.SCALED_SIZE;
     }
 }
