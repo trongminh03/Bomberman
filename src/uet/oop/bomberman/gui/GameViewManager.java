@@ -9,10 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.Balloom;
-import uet.oop.bomberman.entities.character.enemy.Doll;
-import uet.oop.bomberman.entities.character.enemy.Minvo;
-import uet.oop.bomberman.entities.character.enemy.Oneal;
+import uet.oop.bomberman.entities.character.enemy.*;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -123,7 +120,7 @@ public class GameViewManager {
 //                stillObjects.add(object);
 //            }
 //        }
-        File file = new File("res/levels/Level3.txt");
+        File file = new File("res/levels/Level2.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -186,6 +183,13 @@ public class GameViewManager {
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             enemies.add(enemy);
                             stillObjects.add(object);
+                            break;
+                        case '5':
+                            enemy = new Ovapi(j, i, Sprite.ovapi_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
                         default:
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             stillObjects.add(object);
