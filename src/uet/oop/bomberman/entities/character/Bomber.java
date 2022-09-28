@@ -31,9 +31,9 @@ public class Bomber extends Character {
     * */
     private boolean isPlacedBomb = false;
 
-    KeyManager keyInput;
-    Sprite currentSprite;
-    RectBoundedBox playerBoundary;
+    private KeyManager keyInput;
+    private Sprite currentSprite;
+    private RectBoundedBox playerBoundary;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput) {
         super( x, y, img);

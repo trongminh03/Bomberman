@@ -32,7 +32,7 @@ public class GameViewManager {
 
     private List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
-    private static Vector<Bomb> bombVector = BombStorage.getBombVector();
+    private Vector<Bomb> bombVector = BombStorage.getBombVector();
 
     private Stage mainStage;
 //    private Stage menuStage;
@@ -185,5 +185,5 @@ public class GameViewManager {
     public static List<Entity> getStillObjects() {
         return stillObjects;
     }
-
+    ArrayList
 }
