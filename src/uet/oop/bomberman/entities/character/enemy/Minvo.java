@@ -7,38 +7,38 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv1;
+import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv2;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 import java.util.Random;
 
-public class Oneal extends Character {
-    private int velocity;
+public class Minvo extends Character {
+    private int velocity = 1;
 
-    private final static int SPRITE_WIDTH = Sprite.oneal_right1.getSpriteWidth();
-    private final static int SPRITE_HEIGHT = Sprite.oneal_right1.getSpriteHeight();
+    private final static int SPRITE_WIDTH = Sprite.minvo_right1.getSpriteHeight();
+    private final static int SPRITE_HEIGHT = Sprite.minvo_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox onealBoundary;
+    private RectBoundedBox minvoBoundary;
     private GameViewManager game;
 
-    PathFindingLv1 pathFinding;
+    PathFindingLv2 pathFinding;
 
-    public Oneal(int xUnit, int yUnit, Image img, GameViewManager game) {
+    public Minvo(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
-        currentSprite = Sprite.balloom_right1;
+        currentSprite = Sprite.minvo_right1;
         moving = true;
-        onealBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        minvoBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
-        pathFinding = new PathFindingLv1(this, game.getBomberman(), game);
-        velocity = 1;
+        pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return onealBoundary;
+        minvoBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return minvoBoundary;
     }
 
     @Override
@@ -49,12 +49,7 @@ public class Oneal extends Character {
 
     @Override
     protected void move() {
-//        System.out.println(toString());
         pathFinding.updateEnemyDirection();
-        Random random = new Random();
-        velocity = random.nextInt(2) + 1; // velocity random [1, 2]
-//        System.out.println(velocity);
-//        System.out.println(direction.toString());
         switch (direction) {
             case UP:
                 moveUp();
@@ -104,8 +99,8 @@ public class Oneal extends Character {
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return onealBoundary.checkCollision(otherEntityBoundary);
+        minvoBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return minvoBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
@@ -121,20 +116,20 @@ public class Oneal extends Character {
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_right2,
-                        Sprite.oneal_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_right2,
+                        Sprite.minvo_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_left2,
-                        Sprite.oneal_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_left2,
+                        Sprite.minvo_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2,
-                        Sprite.oneal_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_left2,
+                        Sprite.minvo_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2,
-                        Sprite.oneal_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_right2,
+                        Sprite.minvo_right3, animation, 60);
                 break;
         }
     }

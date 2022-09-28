@@ -28,8 +28,11 @@ x - Portal
 
 Character:
 p - Bomber
-1 - Balloon
-2 - Oneal
+1 - Balloon: speed 1, move randomly
+2 - Oneal: speed [1, 2], move according to path finding lv1
+3 - Doll: speed 2, move randomly
+4 - Minvo: speed 1, move according to path finding lv2
+
 
 Items:
 b - Bomb Item

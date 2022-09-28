@@ -129,7 +129,7 @@ public class Bomber extends Character {
         };
 
         Timer timer = new Timer();
-        timer.schedule(task, 1800);
+        timer.schedule(task, 1700);
     }
 
     public void moveUp() {

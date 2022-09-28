@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
+import uet.oop.bomberman.entities.character.enemy.Doll;
+import uet.oop.bomberman.entities.character.enemy.Minvo;
 import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
@@ -169,6 +171,18 @@ public class GameViewManager {
                             break;
                         case '2':
                             enemy = new Oneal(j, i, Sprite.oneal_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        case '3':
+                            enemy = new Doll(j, i, Sprite.doll_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        case '4':
+                            enemy = new Minvo(j, i, Sprite.minvo_right1.getFxImage(), this);
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             enemies.add(enemy);
                             stillObjects.add(object);

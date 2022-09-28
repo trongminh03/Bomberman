@@ -7,17 +7,10 @@ import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.gui.GameViewManager;
 
-import java.util.List;
-import java.util.Random;
-
 public class PathFindingLv1 extends RandomMove {
     private Bomber bomber;
 //    private Character enemy;
     private GameViewManager game;
-
-    public enum EnemyDirection {
-        UP, DOWN, LEFT, RIGHT, DETECT_FAILED
-    }
 
     public PathFindingLv1(Character enemy, Bomber bomber, GameViewManager game) {
         super(enemy);
