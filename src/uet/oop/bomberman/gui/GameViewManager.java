@@ -77,44 +77,12 @@ public class GameViewManager {
     }
 
     private void createKeyListener() {
-//        scene.setOnKeyPressed(event -> {
-//            switch (event.getCode()) {
-//                case UP:
-//                    bomberman.moveUp();
-////                    System.out.println("UP");
-//                    break;
-//                case DOWN:
-//                    bomberman.moveDown();
-////                    System.out.println("DOWN");
-//                    break;
-//                case LEFT:
-//                    bomberman.moveLeft();
-////                    System.out.println("LEFT");
-//                    break;
-//                case RIGHT:
-//                    bomberman.moveRight();
-////                    System.out.println("RIGHT");
-//                    break;
-//            }
-//        });
         scene.setOnKeyPressed(event -> keys.pressed(event));
         scene.setOnKeyReleased(event -> keys.released(event));
     }
 
     public void createMap() {
-//        for (int i = 0; i < WIDTH; i++) {
-//            for (int j = 0; j < HEIGHT; j++) {
-//                Entity object;
-//                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-//                    object = new Wall(i, j, Sprite.wall.getFxImage());
-//                }
-//                else {
-//                    object = new Grass(i, j, Sprite.grass.getFxImage());
-//                }
-//                stillObjects.add(object);
-//            }
-//        }
-        File file = new File("res/levels/Level2.txt");
+        File file = new File("res/levels/Level4.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -220,8 +188,6 @@ public class GameViewManager {
     public void update() {
         enemies.forEach(Entity::update);
         bomberman.update();
-//        canvas.setLayoutX(canvas.getLayoutX() - 5);
-//        bomberman.toString();
     }
 
     public void render() {
