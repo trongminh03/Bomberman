@@ -2,17 +2,17 @@ package uet.oop.bomberman.entities.character.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv1;
 import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv2;
+import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.util.Random;
 
 public class Minvo extends Character {
     private int velocity = 1;
@@ -109,6 +109,12 @@ public class Minvo extends Character {
                 if (isColliding(entity))
                     return true;
             }
+        }
+        for (Bomb bomb : Storage.getBombVector()) {
+            if (isColliding(bomb)) return true;
+        }
+        for (Brick brick : Storage.getBickVector()) {
+            if (isColliding(brick)) return true;
         }
         return false;
     }

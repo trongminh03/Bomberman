@@ -21,7 +21,6 @@ public class BombermanGame extends Application {
         stage.setScene(menuView.getMenuScene());
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
         stage.show();
-
     }
 
     public static void switchScene(Scene scene) {

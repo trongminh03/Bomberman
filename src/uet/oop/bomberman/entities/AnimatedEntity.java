@@ -18,4 +18,6 @@ public abstract class AnimatedEntity extends Entity {
     protected void setAnimation(int animation) {
         this.animation = animation;
     }
+
+
 }

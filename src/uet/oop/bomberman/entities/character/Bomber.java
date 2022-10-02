@@ -3,13 +3,12 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.constants.BombStorage;
+import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.character.enemy.Balloom;
-import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -77,10 +76,16 @@ public class Bomber extends Character {
         for (Entity entity : game.getStillObjects()) {
             if (entity instanceof StaticEntity) {
                 if (isColliding(entity)) {
-//                    System.out.println("Collide");
                     return true;
                 }
             }
+        }
+        for (Bomb bomb : Storage.getBombVector()) {
+            if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
+            if (!isColliding(bomb)) bomb.setThroughBomb(false);
+        }
+        for (Brick brick : Storage.getBickVector()) {
+            if (isColliding(brick)) return true;
         }
         return false;
     }
@@ -92,10 +97,6 @@ public class Bomber extends Character {
                 return true;
             }
         }
-        for (Bomb bomb : BombStorage.getBombVector()) {
-            if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
-            if (!isColliding(bomb)) bomb.setThroughBomb(false);
-        }
         return false;
     }
 
@@ -103,7 +104,6 @@ public class Bomber extends Character {
     protected void move() {
         moving = false;
         if (keyInput.isPressed(KeyCode.UP)) {
-            System.out.println(x + "\t" + y);
             moveUp();
             if (checkSafeCollision()) moveDown();
             direction = Direction.UP;
@@ -146,9 +146,9 @@ public class Bomber extends Character {
         if (numBomb < limitBomb) {
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
-            Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb_2.getFxImage());
-            BombStorage.addBomb(bomb);
-            numBomb = BombStorage.getNumBomb();
+            Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
+            Storage.addBomb(bomb);
+            numBomb = Storage.getNumBomb();
         }
     }
 
@@ -208,7 +208,7 @@ public class Bomber extends Character {
                     if (isMoving()) {
 //                    System.out.println("UP");
                         currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
-                                Sprite.player_up_2, animation, 15);
+                                Sprite.player_up_2, animation, 30);
                     }
                     break;
                 case DOWN:
@@ -216,7 +216,7 @@ public class Bomber extends Character {
                     if (isMoving()) {
 //                    System.out.println("DOWN");
                         currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
-                                Sprite.player_down_2, animation, 15);
+                                Sprite.player_down_2, animation, 30);
                     }
                     break;
                 case LEFT:
@@ -224,7 +224,7 @@ public class Bomber extends Character {
                     if (isMoving()) {
 //                    System.out.println("LEFT");
                         currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
-                                Sprite.player_left_2, animation, 15);
+                                Sprite.player_left_2, animation, 30);
                     }
                     break;
                 case RIGHT:
@@ -232,7 +232,7 @@ public class Bomber extends Character {
                     if (isMoving()) {
 //                    System.out.println("RIGHT");
                         currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
-                                Sprite.player_right_2, animation, 15);
+                                Sprite.player_right_2, animation, 30);
                     }
                     break;
             }

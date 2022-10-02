@@ -1,19 +1,17 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
 import uet.oop.bomberman.entities.character.enemy.Doll;
 import uet.oop.bomberman.entities.character.enemy.Minvo;
 import uet.oop.bomberman.entities.character.enemy.Oneal;
-import uet.oop.bomberman.constants.BombStorage;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
@@ -23,13 +21,9 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
 
-import java.awt.*;
 import java.io.*;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 public class GameViewManager {
@@ -40,10 +34,10 @@ public class GameViewManager {
 
     private GraphicsContext gc;
     private Canvas canvas;
-//    private List<Entity> entities = new ArrayList<>();
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-    private Vector<Bomb> bombVector = BombStorage.getBombVector();
+    private Vector<Bomb> bombVector = Storage.getBombVector();
+    private Vector<Brick> brickVector = Storage.getBickVector();
 
     private Stage mainStage;
     //    private Stage menuStage;
@@ -116,19 +110,7 @@ public class GameViewManager {
     }
 
     public void createMap() {
-//        for (int i = 0; i < WIDTH; i++) {
-//            for (int j = 0; j < HEIGHT; j++) {
-//                Entity object;
-//                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-//                    object = new Wall(i, j, Sprite.wall.getFxImage());
-//                }
-//                else {
-//                    object = new Grass(i, j, Sprite.grass.getFxImage());
-//                }
-//                stillObjects.add(object);
-//            }
-//        }
-        File file = new File("res/levels/Level3.txt");
+        File file = new File("res/levels/Level2.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -143,14 +125,6 @@ public class GameViewManager {
             while (i < R) {
                 line = bf.readLine();
                 for (int j = 0; j < C; j++) {
-//                    Entity object;
-//                    if (line.charAt(j) == '#') {
-//                        object = new Wall(j, i, Sprite.wall.getFxImage());
-//                    } else if (line.charAt(j) == '*') {
-//                        object = new Brick(j, i, Sprite.brick.getFxImage());
-//                    } else {
-//                        object = new Grass(j, i, Sprite.grass.getFxImage());
-//                    }
                     switch (line.charAt(j)) {
                         case '#':
                             object = new Wall(j, i, Sprite.wall.getFxImage());
@@ -158,7 +132,10 @@ public class GameViewManager {
                             break;
                         case '*':
                             object = new Brick(j, i, Sprite.brick.getFxImage());
-                            stillObjects.add(object);
+                            Entity grass = new Grass(j, i, Sprite.grass.getFxImage());
+//                            stillObjects.add(object);
+                            stillObjects.add(grass);
+                            Storage.addBrick((Brick) object);
                             break;
                         case 'p':
 //                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys, this);
@@ -217,14 +194,20 @@ public class GameViewManager {
         bomberman.update();
 //        bomberman.toString();
         bombVector.forEach(Bomb::update);
+        brickVector.forEach(Brick::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
+        for (Entity entity : stillObjects) {
+//            if (!(entity instanceof Brick)) {
+                entity.render(gc);
+//            }
+        }
         enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
         bombVector.forEach(g -> g.render(gc));
+        brickVector.forEach(g -> g.render(gc));
     }
 
     private void createGameLoop() {
@@ -233,50 +216,39 @@ public class GameViewManager {
 
             @Override
             public void handle(long l) {
-                // Minh's laptop
-//                if (lastTick == 0) {
-//                    lastTick = l;
-//                    render();
-//                    update();
-//                }
-
-                if (l - lastTick > 1000000000 / FPS) {
+/*                if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     render();
                     update();
+                    BombStorage.clearGarbage();
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
                         BombermanGame.switchScene(MenuViewManager.getScene());
-                    }
-//                t += 0.016;
-//
-//                if (t > 0.02) {
-//                    render();
-//                    update();
-//                    t = 0;
-//                }
+                    }*/
 
-                    // Nam's Laptop
-//                render();
-//                update();
-                }
-                update();
+                // Nam's Laptop
                 render();
-                BombStorage.clearGarbage();
+                update();
+                if (!bomberman.isAlive()) {
+                    mainStage.close();
+                    timer.stop();
+                    BombermanGame.switchScene(MenuViewManager.getScene());
+                }
+                Storage.clearGarbage();
             }
         };
         timer.start();
     }
-        public List<Entity> getEnemies () {
+    public List<Entity> getEnemies () {
             return enemies;
         }
 
-        public Stage getMainStage () {
+    public Stage getMainStage () {
             return mainStage;
         }
 
-        public Bomber getBomberman() {
+    public Bomber getBomberman() {
             return bomberman;
         }
 
