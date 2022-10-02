@@ -223,4 +223,8 @@ public class Bomber extends Character {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
     }
+
+    public boolean checkHitEnemy() {
+        return hitEnemy;
+    }
 }

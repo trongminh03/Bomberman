@@ -32,6 +32,8 @@ p - Bomber
 2 - Oneal: speed [1, 2], move according to path finding lv1
 3 - Doll: speed 2, move randomly
 4 - Minvo: speed 1, move according to path finding lv2
+5 - Ovapi: speed 1, move according to path finding lv2, can move through brick
+6 - Pass: speed 2, move according to A* algorithm
 
 
 Items:

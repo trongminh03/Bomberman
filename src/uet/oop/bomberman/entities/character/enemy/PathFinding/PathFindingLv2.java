@@ -21,7 +21,7 @@ public class PathFindingLv2 extends RandomMove {
     public PathFindingLv2(Character enemy, Bomber bomber, GameViewManager game) {
         super(enemy);
         this.game = game;
-        this.bomber = game.getBomberman();
+        this.bomber = bomber;
     }
 
     public EnemyDirection chasePlayer() {

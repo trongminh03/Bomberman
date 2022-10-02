@@ -53,6 +53,7 @@ public class GameViewManager {
     public GameViewManager() {
         initializeStage();
         createKeyListener();
+//        createMap();
     }
 
     private void initializeStage() {
@@ -120,7 +121,7 @@ public class GameViewManager {
 //                stillObjects.add(object);
 //            }
 //        }
-        File file = new File("res/levels/Level2.txt");
+        File file = new File("res/levels/Level3.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -132,17 +133,11 @@ public class GameViewManager {
             int i = 0;
             Entity object;
             Entity enemy;
+            List<String> lines = new ArrayList<String>();
             while (i < R) {
                 line = bf.readLine();
+                lines.add(line);
                 for (int j = 0; j < C; j++) {
-//                    Entity object;
-//                    if (line.charAt(j) == '#') {
-//                        object = new Wall(j, i, Sprite.wall.getFxImage());
-//                    } else if (line.charAt(j) == '*') {
-//                        object = new Brick(j, i, Sprite.brick.getFxImage());
-//                    } else {
-//                        object = new Grass(j, i, Sprite.grass.getFxImage());
-//                    }
                     switch (line.charAt(j)) {
                         case '#':
                             object = new Wall(j, i, Sprite.wall.getFxImage());
@@ -155,11 +150,23 @@ public class GameViewManager {
                         case 'p':
 //                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys, this);
                             bomberman.setPosition(j, i);
-//                            System.out.println("Create bomberman");
                             object = new Grass(j, i, Sprite.grass.getFxImage());
-//                            enemies.add(bomberman);
                             stillObjects.add(object);
                             break;
+                        default:
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
+                            break;
+                    }
+                }
+                i++;
+            }
+            bf.close();
+            i = 0;
+            while (i < R) {
+                line = lines.get(i);
+                for (int j = 0; j < C; j++) {
+                    switch (line.charAt(j)) {
                         case '1':
                             enemy = new Balloom(j, i, Sprite.balloom_right1.getFxImage(), this);
                             object = new Grass(j, i, Sprite.grass.getFxImage());
@@ -190,15 +197,16 @@ public class GameViewManager {
                             enemies.add(enemy);
                             stillObjects.add(object);
                             break;
-                        default:
+                        case '6':
+                            enemy = new Pass(j, i, Sprite.pass_right1.getFxImage(), this);
                             object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
                             stillObjects.add(object);
                             break;
                     }
                 }
                 i++;
             }
-            bf.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -280,6 +288,14 @@ public class GameViewManager {
 
         public Bomber getBomberman() {
             return bomberman;
+        }
+
+        public int getRows() {
+            return R;
+        }
+
+        public int getColumns() {
+            return C;
         }
 
     }
