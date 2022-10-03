@@ -19,6 +19,8 @@ public class Brick extends AnimatedEntity {
     private boolean isAlive = true;
     RectBoundedBox box;
     Sprite currentSprite;
+    private double elapedTime = 1/30f;
+    private double time = 0;
 
     public Brick(int x, int y, Image img) {
         super(x, y, img);
@@ -35,21 +37,17 @@ public class Brick extends AnimatedEntity {
         this.isAlive = alive;
     }
     private void chooseSprite() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                destroy();
-            }
-        };
         if (isAlive) {
             currentSprite = Sprite.brick;
         }else {
             currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
                     Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 60);
-            Timer timer = new Timer();
-            timer.schedule(task, 600);
-//            destroy();
+            time += elapedTime;
+            if (time > 30 * elapedTime) {
+                destroy();
+            }
         }
+
     }
     @Override
     public void render(GraphicsContext gc) {

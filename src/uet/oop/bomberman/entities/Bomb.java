@@ -10,29 +10,31 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
+import uet.oop.bomberman.entities.character.Character;
 
 public class Bomb extends AnimatedEntity {
     final static int BOMB_WIDTH = 30;
     final static int BOMB_HEIGHT = 30;
-    private int size = 2;
-    private int maxSize = 4;
+    private final int size = 2;
+    private int maxRight = size;
+    private int maxLeft = size;
+    private int maxUp = size;
+    private int maxDown = size;
     private BombStatus bombStatus = BombStatus.PLACED;
     /*
-    Check through bomb:   false: bomber and bomb can't go on top of each other
-                          true:bomber and bomb can go on top of each other
+
     */
-    private boolean isThroughBomb = true;
+    private boolean isThroughBomb = true;   /*Check through bomb:   false: bomber and bomb can't go on top of each other
+                                                                    true:  3bomber and bomb can go on top of each other*/
+    private final double elapedTime = 1/30f;
+    private double time = 0;
 
     Sprite currentSprite;
     RectBoundedBox bombBoundary;
-    Explosion[] explosionsRight = new Explosion[maxSize];
-    Explosion[] explosionsLeft = new Explosion[maxSize];
-    Explosion[] explosionsUp = new Explosion[maxSize];
-    Explosion[] explosionsDown = new Explosion[maxSize];
+    Explosion[] explosionsRight = new Explosion[size];
+    Explosion[] explosionsLeft = new Explosion[size];
+    Explosion[] explosionsUp = new Explosion[size];
+    Explosion[] explosionsDown = new Explosion[size];
 
     GameViewManager game;
 
@@ -40,6 +42,7 @@ public class Bomb extends AnimatedEntity {
         super(xUnit, yUnit, img);
         bombBoundary = new RectBoundedBox(x, y, BOMB_WIDTH, BOMB_HEIGHT);
         this.game = gameViewManager;
+        explosionInit();
     }
 
     @Override
@@ -48,31 +51,12 @@ public class Bomb extends AnimatedEntity {
         return bombBoundary;
     }
 
-    private void setCurrentSprite(Sprite sprite) {
-        if (sprite != null) {
-            currentSprite = Sprite.bomb_2;
-        } else {
-            System.out.println("Missing sprite");
-        }
-    }
-
-    private void explosion() {
-        int maxRight = size;
-        int maxLeft = size;
-        int maxUp = size;
-        int maxDown = size;
-        //Choose maxRight
+    private void explosionInit() {
+        // Init Right
         {
-            for (Brick brick : Storage.getBickVector()) {
-                if (brick.getGridY() == this.getGridY()) {
-                    if (brick.getGridX() - this.getGridX() <= maxRight
-                            && brick.getGridX() - this.getGridX() > 0) {
-                        maxRight = brick.getGridX() - this.getGridX() - 1;
-                    }
-                }
-            }
+            //Choose maxRight
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
+                if (entity instanceof Wall || entity instanceof Brick) {
                     if (entity.getGridY() == this.getGridY()) {
                         if (entity.getGridX() - this.getGridX() <= maxRight
                                 && entity.getGridX() - this.getGridX() > 0) {
@@ -81,28 +65,22 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            //Destroy brick
-            for (Brick brick : Storage.getBickVector()) {
-                if (brick.getGridY() == this.getGridY()
-                && brick.getGridX() == this.getGridX() + maxRight + 1
-                && maxRight < size) {
-                    brick.setAlive(false);
-                }
+            //Init explosion right
+            for (int i = 1; i <= maxRight - 1; i++) {
+                Explosion explosion = new Explosion(this.getGridX() + i, this.getGridY(),
+                        Sprite.explosion_horizontal.getFxImage(), ExplosionType.HORIZONTAL);
+                explosionsRight[i] = explosion;
             }
+            Explosion explosion = new Explosion(this.getGridX() + maxRight, this.getGridY(),
+                    Sprite.explosion_horizontal_right_last.getFxImage(), ExplosionType.LAST_RIGHT);
+            explosionsRight[0] = explosion;
         }
 
-        //Choose maxLeft
+        //Init Left
         {
-            for (Brick brick : Storage.getBickVector()) {
-                if (brick.getGridY() == this.getGridY()) {
-                    if (this.getGridX() - brick.getGridX() <= maxLeft
-                            && this.getGridX() - brick.getGridX() > 0) {
-                        maxLeft = this.getGridX() - brick.getGridX() - 1;
-                    }
-                }
-            }
+            //Choose maxLeft
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
+                if (entity instanceof Wall || entity instanceof Brick) {
                     if (entity.getGridY() == this.getGridY()) {
                         if (this.getGridX() - entity.getGridX() <= maxLeft
                                 && this.getGridX() - entity.getGridX() > 0) {
@@ -111,68 +89,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-        }
-
-        //Choose maxUp
-        {
-            for (Brick brick : Storage.getBickVector()) {
-                if (brick.getGridX() == this.getGridX()) {
-                    if (this.getGridY() - brick.getGridY() <= maxUp
-                            && this.getGridY() - brick.getGridY() > 0) {
-                        maxUp = this.getGridY() - brick.getGridY() - 1;
-                    }
-                }
-            }
-            for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
-                    if (entity.getGridX() == this.getGridX()) {
-                        if (this.getGridY() - entity.getGridY() <= maxUp
-                                && this.getGridY() - entity.getGridY() > 0) {
-                            maxUp = this.getGridY() - entity.getGridY() - 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        //Choose maxDown
-        {
-            for (Brick brick : Storage.getBickVector()) {
-                if (brick.getGridX() == this.getGridX()) {
-                    if (brick.getGridY() - this.getGridY() <= maxDown
-                            && brick.getGridY() - this.getGridY() > 0) {
-                        maxDown = brick.getGridY() - this.getGridY() - 1;
-                    }
-                }
-            }
-            for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
-                    if (entity.getGridX() == this.getGridX()) {
-                        if (entity.getGridY() - this.getGridY() <= maxDown
-                                && entity.getGridY() - this.getGridY() > 0) {
-                            maxDown = entity.getGridY() - this.getGridY() - 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        //Explosion right
-        {
-            for (int i = 1; i <= maxRight - 1; i++) {
-                Explosion explosion = new Explosion(this.getGridX() + i, this.getGridY(),
-                        Sprite.explosion_horizontal.getFxImage(), ExplosionType.HORIZONTAL);
-                explosion.setAnimation(0);
-                explosionsRight[i] = explosion;
-            }
-            Explosion explosion = new Explosion(this.getGridX() + maxRight, this.getGridY(),
-                    Sprite.explosion_horizontal_right_last.getFxImage(), ExplosionType.LAST_RIGHT);
-            explosion.setAnimation(0);
-            explosionsRight[0] = explosion;
-        }
-
-        //Explosion left
-        {
+            //Init explosion left
             for (int i = 1; i <= maxLeft - 1; i++) {
                 Explosion explosion = new Explosion(this.getGridX() - i, this.getGridY(),
                         Sprite.explosion_horizontal.getFxImage(), ExplosionType.HORIZONTAL);
@@ -183,8 +100,20 @@ public class Bomb extends AnimatedEntity {
             explosionsLeft[0] = explosion;
         }
 
-        //Explosion up
+        //Init Up
         {
+            //Choose maxUp
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Wall || entity instanceof Brick) {
+                    if (entity.getGridX() == this.getGridX()) {
+                        if (this.getGridY() - entity.getGridY() <= maxUp
+                                && this.getGridY() - entity.getGridY() > 0) {
+                            maxUp = this.getGridY() - entity.getGridY() - 1;
+                        }
+                    }
+                }
+            }
+            //Init explosion up
             for (int i = 1; i <= maxUp - 1; i++) {
                 Explosion explosion = new Explosion(this.getGridX(), this.getGridY() - i,
                         Sprite.explosion_vertical.getFxImage(), ExplosionType.VERTICAL);
@@ -195,8 +124,20 @@ public class Bomb extends AnimatedEntity {
             explosionsUp[0] = explosion;
         }
 
-        //Explosion down
+        //Init Down
         {
+            //Choose maxDown
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Wall || entity instanceof Brick) {
+                    if (entity.getGridX() == this.getGridX()) {
+                        if (entity.getGridY() - this.getGridY() <= maxDown
+                                && entity.getGridY() - this.getGridY() > 0) {
+                            maxDown = entity.getGridY() - this.getGridY() - 1;
+                        }
+                    }
+                }
+            }
+            //Init explosion down
             for (int i = 1; i <= maxDown - 1; i++) {
                 Explosion explosion = new Explosion(this.getGridX(), this.getGridY() + i,
                         Sprite.explosion_vertical.getFxImage(), ExplosionType.VERTICAL);
@@ -208,32 +149,114 @@ public class Bomb extends AnimatedEntity {
         }
     }
 
+    private void explosion() {
+        //Explosion Right
+        {
+            //Destroy brick right
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Brick) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() + maxRight + 1
+                            && maxRight < size) {
+                        ((Brick)entity).setAlive(false);
+                    }
+                }
+            }
+            //Destroy enemy right
+            for (Entity entity : game.getEnemies()) {
+                if (entity instanceof Character) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() + maxRight + 1
+                            && maxRight < size) {
+                        ((Character)entity).dead();
+                    }
+                }
+            }
+        }
+        //Explosion Left
+        {
+            //Destroy brick left
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Brick) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() - maxLeft - 1
+                            && maxLeft < size) {
+                        ((Brick)entity).setAlive(false);
+                    }
+                }
+            }
+            //Destroy enemy left
+            for (Entity entity : game.getEnemies()) {
+                if (entity instanceof Character) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() - maxRight - 1
+                            && maxRight < size) {
+                        ((Character)entity).dead();
+                    }
+                }
+            }
+        }
+        //Explosion Up
+        {
+            //Destroy brick up
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Brick) {
+                    if (entity.getGridX() == this.getGridX()
+                            && entity.getGridY() == this.getGridY() - maxUp - 1
+                            && maxUp < size) {
+                        ((Brick)entity).setAlive(false);
+                    }
+                }
+            }
+            //Destroy enemy up
+            for (Entity entity : game.getEnemies()) {
+                if (entity instanceof Character) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() - maxUp - 1
+                            && maxRight < size) {
+                        ((Character)entity).dead();
+                    }
+                }
+            }
+        }
+        //Explosion Down
+        {
+            //Destroy brick down
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Brick) {
+                    if (entity.getGridX() == this.getGridX()
+                            && entity.getGridY() == this.getGridY() + maxDown + 1
+                            && maxDown < size) {
+                        ((Brick)entity).setAlive(false);
+                    }
+                }
+            }
+            //Destroy enemy down
+            for (Entity entity : game.getEnemies()) {
+                if (entity instanceof Character) {
+                    if (entity.getGridY() == this.getGridY()
+                            && entity.getGridX() == this.getGridX() + maxDown + 1
+                            && maxRight < size) {
+                        ((Character)entity).dead();
+                    }
+                }
+            }
+        }
+    }
     private void chooseSprite() {
-        TimerTask timerFire = new TimerTask() {
-            @Override
-            public void run() {
-                bombStatus = BombStatus.EXPLODE;
-            }
-        };
-        TimerTask timerDestroy = new TimerTask() {
-            @Override
-            public void run() {
-                bombStatus = BombStatus.DESTROY;
-            }
-        };
-        Timer timer = new Timer("Timer");
-        timer.schedule(timerFire, 2000);
-        timer.schedule(timerDestroy, 2450);
+        if (time >= 60 * elapedTime) {
+            bombStatus = BombStatus.EXPLODE;
+        }
+        if (time >= 90 * elapedTime) {
+            bombStatus = BombStatus.DESTROY;
+            time = 0;
+        }
         if (bombStatus == BombStatus.PLACED) {
             currentSprite = Sprite.movingSprite(Sprite.bomb_2, Sprite.bomb_1,
                     Sprite.bomb, animation, 60);
         } else if (bombStatus == BombStatus.EXPLODE) {
-            this.setAnimation(0);
             currentSprite = Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1,
                     Sprite.bomb_exploded2, Sprite.bomb_exploded1, Sprite.bomb_exploded, animation, 30);
-            explosion();
-        } else {
-//            this.destroy();
         }
     }
 
@@ -248,7 +271,7 @@ public class Bomb extends AnimatedEntity {
     @Override
     public void render(GraphicsContext gc) {
         chooseSprite();
-        {
+        if (bombStatus == BombStatus.EXPLODE) {
             for (Explosion explosion : explosionsDown) {
                 if (explosion != null) explosion.render(gc);
             }
@@ -268,7 +291,7 @@ public class Bomb extends AnimatedEntity {
 
     @Override
     public void update() {
-        {
+        if (bombStatus == BombStatus.EXPLODE){
             for (Explosion explosion : explosionsDown) {
                 if (explosion != null) explosion.update();
             }
@@ -281,8 +304,13 @@ public class Bomb extends AnimatedEntity {
             for (Explosion explosion : explosionsLeft) {
                 if (explosion != null) explosion.update();
             }
+            explosion();
+        }
+        if (bombStatus == BombStatus.DESTROY) {
+            destroy();
         }
         animate();
+        time += elapedTime;
     }
 
     private void destroy() {
@@ -290,26 +318,26 @@ public class Bomb extends AnimatedEntity {
     }
 
     public RectBoundedBox[] getRecBoundedBox() {
-        RectBoundedBox[] rectBoundedBoxes = new RectBoundedBox[4 * maxSize];
+        RectBoundedBox[] rectBoundedBoxes = new RectBoundedBox[4 * size];
         rectBoundedBoxes[0] = this.getBoundingBox();
-        for (int i = 1; i <= maxSize; i++) {
+        for (int i = 1; i <= size; i++) {
             if (explosionsLeft[i] != null) {
                 rectBoundedBoxes[i] = explosionsLeft[i].getBoundingBox();
             }
         }
-        for (int i = 1; i <= maxSize; i++) {
+        for (int i = 1; i <= size; i++) {
             if (explosionsRight[i] != null) {
-                rectBoundedBoxes[maxSize + i] = explosionsRight[i].getBoundingBox();
+                rectBoundedBoxes[size + i] = explosionsRight[i].getBoundingBox();
             }
         }
-        for (int i = 1; i <= maxSize; i++) {
+        for (int i = 1; i <= size; i++) {
             if (explosionsUp[i] != null) {
-                rectBoundedBoxes[2 * maxSize + i] = explosionsUp[i].getBoundingBox();
+                rectBoundedBoxes[2 * size + i] = explosionsUp[i].getBoundingBox();
             }
         }
-        for (int i = 1; i <= maxSize; i++) {
+        for (int i = 1; i <= size; i++) {
             if (explosionsDown[i] != null) {
-                rectBoundedBoxes[3 * maxSize + i] = explosionsDown[i].getBoundingBox();
+                rectBoundedBoxes[3 * size + i] = explosionsDown[i].getBoundingBox();
             }
         }
         return rectBoundedBoxes;

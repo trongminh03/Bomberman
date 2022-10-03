@@ -160,11 +160,6 @@ public class Bomber extends Character {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
         TimerTask task = new TimerTask() {
 

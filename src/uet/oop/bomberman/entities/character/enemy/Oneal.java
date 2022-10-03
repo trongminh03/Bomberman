@@ -95,11 +95,6 @@ public class Oneal extends Character {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
 
     }

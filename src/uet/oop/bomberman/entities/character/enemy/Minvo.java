@@ -87,11 +87,6 @@ public class Minvo extends Character {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
 
     }

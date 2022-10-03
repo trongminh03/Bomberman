@@ -89,13 +89,8 @@ public class Doll extends Character {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
-
+        this.alive = false;
     }
 
     @Override

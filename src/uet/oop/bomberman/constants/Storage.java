@@ -21,6 +21,9 @@ public class Storage {
         return brickVector;
     }
 
+    public static Vector<Brick> getBrickGarbage() {
+        return brickGarbage;
+    }
     public static void addBomb(Bomb bomb) {
         bombVector.add(bomb);
     }
@@ -38,8 +41,8 @@ public class Storage {
     }
 
     public static void clearGarbage() {
-        brickVector.removeAll(brickGarbage);
-        bombVector.removeAll(bombGarbage);
+        if (bombGarbage.size() != 0)    bombVector.removeAll(bombGarbage);
+        bombGarbage.clear();
     }
 
     public static int getNumBomb() {

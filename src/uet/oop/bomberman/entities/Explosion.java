@@ -67,6 +67,7 @@ public class Explosion extends AnimatedEntity {
                 currentSprite = Sprite.movingSprite(Sprite.explosion_horizontal_left_last, Sprite.explosion_horizontal_left_last1,
                         Sprite.explosion_horizontal_left_last2, Sprite.explosion_horizontal_left_last1,
                         Sprite.explosion_horizontal_left_last, animation, 30);
+                System.out.println(currentSprite);
                 break;
             case LAST_RIGHT:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_horizontal_right_last, Sprite.explosion_horizontal_right_last1,
@@ -88,19 +89,9 @@ public class Explosion extends AnimatedEntity {
         }
     }
 
-    public boolean isColliding(Entity other) {
-        RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        explosionBoundary.setPosition(x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
-        return explosionBoundary.checkCollision(otherEntityBoundary);
-    }
-
-    public void checkCollision() {
-//        for ()
-    }
     @Override
     public void update() {
         animate();
-
     }
 
     @Override

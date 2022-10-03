@@ -134,7 +134,7 @@ public class GameViewManager {
                         case '*':
                             object = new Brick(j, i, Sprite.brick.getFxImage());
                             Entity grass = new Grass(j, i, Sprite.grass.getFxImage());
-//                            stillObjects.add(object);
+                            stillObjects.add(object);
                             stillObjects.add(grass);
                             Storage.addBrick((Brick) object);
                             break;
@@ -194,18 +194,19 @@ public class GameViewManager {
 //        enemies.forEach(Entity::update);
         bomberman.update();
 //        bomberman.toString();
-//        bombVector.forEach(Bomb::update);
-//        brickVector.forEach(Brick::update);
+        bombVector.forEach(Bomb::update);
+        brickVector.forEach(Brick::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (Entity entity : stillObjects) {
+            if (!(entity instanceof Brick))
                 entity.render(gc);
         }
 //        enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
-//        bombVector.forEach(g -> g.render(gc));
+        bombVector.forEach(g -> g.render(gc));
         brickVector.forEach(g -> g.render(gc));
     }
 
@@ -234,7 +235,7 @@ public class GameViewManager {
                     timer.stop();
                     BombermanGame.switchScene(MenuViewManager.getScene());
                 }
-//                Storage.clearGarbage();
+                Storage.clearGarbage();
             }
         };
         timer.start();
