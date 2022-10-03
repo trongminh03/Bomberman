@@ -23,6 +23,7 @@ import uet.oop.bomberman.input.KeyManager;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Vector;
 
@@ -216,26 +217,27 @@ public class GameViewManager {
 
             @Override
             public void handle(long l) {
-/*                if (l - lastTick > 1000000000 / FPS) {
+                if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     render();
                     update();
-                    BombStorage.clearGarbage();
+                    Storage.clearGarbage();
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
                         BombermanGame.switchScene(MenuViewManager.getScene());
-                    }*/
-
+                    }
+                    System.out.println(System.currentTimeMillis());
+                }
                 // Nam's Laptop
-                render();
+                /*render();
                 update();
                 if (!bomberman.isAlive()) {
                     mainStage.close();
                     timer.stop();
                     BombermanGame.switchScene(MenuViewManager.getScene());
                 }
-                Storage.clearGarbage();
+                Storage.clearGarbage();*/
             }
         };
         timer.start();
@@ -251,7 +253,6 @@ public class GameViewManager {
     public Bomber getBomberman() {
             return bomberman;
         }
-
 
     public Scene getScene() {
         return scene;

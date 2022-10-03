@@ -46,8 +46,8 @@ public class Brick extends AnimatedEntity {
         }else {
             currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
                     Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 60);
-            /*Timer timer = new Timer();
-            timer.schedule(task, 600);*/
+            Timer timer = new Timer();
+            timer.schedule(task, 600);
 //            destroy();
         }
     }
