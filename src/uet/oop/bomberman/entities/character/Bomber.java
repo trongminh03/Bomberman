@@ -25,6 +25,7 @@ public class Bomber extends Character {
     final static int BOMBER_HEIGHT = 28;
     private int numBomb = 0;
     private int limitBomb = 0;
+    private Bomb[] bombs = new Bomb[5];
     private boolean isSpeedBuff = false;
     private boolean isBombBuff = false;
     private boolean isFlameBuff = false;
@@ -147,6 +148,12 @@ public class Bomber extends Character {
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
             Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
+            /*for (int i=0; i<limitBomb; i++) {
+                if (bombs[i] == null) {
+                    bombs[i] = bomb;
+                    break;
+                }
+            }*/
             Storage.addBomb(bomb);
             numBomb = Storage.getNumBomb();
         }
@@ -261,5 +268,9 @@ public class Bomber extends Character {
     public void setPosition(int xUnit, int yUnit) {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
+    }
+
+    public Bomb[] getBombs() {
+        return bombs;
     }
 }

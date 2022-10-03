@@ -233,7 +233,7 @@ public class Bomb extends AnimatedEntity {
                     Sprite.bomb_exploded2, Sprite.bomb_exploded1, Sprite.bomb_exploded, animation, 30);
             explosion();
         } else {
-            this.destroy();
+//            this.destroy();
         }
     }
 

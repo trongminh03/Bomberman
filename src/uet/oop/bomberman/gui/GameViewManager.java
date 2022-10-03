@@ -191,33 +191,30 @@ public class GameViewManager {
 //    }
 
     public void update() {
-        enemies.forEach(Entity::update);
+//        enemies.forEach(Entity::update);
         bomberman.update();
 //        bomberman.toString();
-        bombVector.forEach(Bomb::update);
-        brickVector.forEach(Brick::update);
+//        bombVector.forEach(Bomb::update);
+//        brickVector.forEach(Brick::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (Entity entity : stillObjects) {
-//            if (!(entity instanceof Brick)) {
                 entity.render(gc);
-//            }
         }
-        enemies.forEach(g -> g.render(gc));
+//        enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
-        bombVector.forEach(g -> g.render(gc));
+//        bombVector.forEach(g -> g.render(gc));
         brickVector.forEach(g -> g.render(gc));
     }
 
     private void createGameLoop() {
         timer = new AnimationTimer() {
-            long lastTick = 0;
-
+//            long lastTick = 0;
             @Override
             public void handle(long l) {
-                if (l - lastTick > 1000000000 / FPS) {
+                /*if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     render();
                     update();
@@ -228,16 +225,16 @@ public class GameViewManager {
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
                     System.out.println(System.currentTimeMillis());
-                }
+                }*/
                 // Nam's Laptop
-                /*render();
+                render();
                 update();
                 if (!bomberman.isAlive()) {
                     mainStage.close();
                     timer.stop();
                     BombermanGame.switchScene(MenuViewManager.getScene());
                 }
-                Storage.clearGarbage();*/
+//                Storage.clearGarbage();
             }
         };
         timer.start();
