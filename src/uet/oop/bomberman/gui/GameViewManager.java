@@ -1,15 +1,13 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.*;
+import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -20,11 +18,8 @@ import uet.oop.bomberman.input.KeyManager;
 
 import java.awt.*;
 import java.io.*;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameViewManager {
     public static final int WIDTH = 25;
@@ -121,7 +116,7 @@ public class GameViewManager {
 //                stillObjects.add(object);
 //            }
 //        }
-        File file = new File("res/levels/Level3.txt");
+        File file = new File("res/levels/Level2.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -134,6 +129,7 @@ public class GameViewManager {
             Entity object;
             Entity enemy;
             List<String> lines = new ArrayList<String>();
+            // create map
             while (i < R) {
                 line = bf.readLine();
                 lines.add(line);
@@ -150,23 +146,11 @@ public class GameViewManager {
                         case 'p':
 //                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys, this);
                             bomberman.setPosition(j, i);
+//                            System.out.println("Create bomberman");
                             object = new Grass(j, i, Sprite.grass.getFxImage());
+//                            enemies.add(bomberman);
                             stillObjects.add(object);
                             break;
-                        default:
-                            object = new Grass(j, i, Sprite.grass.getFxImage());
-                            stillObjects.add(object);
-                            break;
-                    }
-                }
-                i++;
-            }
-            bf.close();
-            i = 0;
-            while (i < R) {
-                line = lines.get(i);
-                for (int j = 0; j < C; j++) {
-                    switch (line.charAt(j)) {
                         case '1':
                             enemy = new Balloom(j, i, Sprite.balloom_right1.getFxImage(), this);
                             object = new Grass(j, i, Sprite.grass.getFxImage());
@@ -203,10 +187,21 @@ public class GameViewManager {
                             enemies.add(enemy);
                             stillObjects.add(object);
                             break;
+                        case '7':
+                            enemy = new Kondoria(j, i, Sprite.kondoria_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        default:
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
+                            break;
                     }
                 }
                 i++;
             }
+            bf.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

@@ -1,36 +1,43 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.RandomMove;
+import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-import java.util.Random;
-
-public class Balloom extends Character {
+public class Kondoria extends Enemy {
     private final static int velocity = 1;
 
-    private final static int SPRITE_WIDTH = Sprite.balloom_right1.getSpriteWidth();
-    private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
+    private final static int SPRITE_WIDTH = Sprite.kondoria_right1.getSpriteHeight();
+    private final static int SPRITE_HEIGHT = Sprite.kondoria_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox balloomBoundary;
+    private RectBoundedBox kondoriaBoundary;
     private GameViewManager game;
-    private RandomMove randomMove;
 
-    public Balloom(int xUnit, int yUnit, Image img, GameViewManager game) {
+    AStarAlgorithm pathFinding;
+
+    public Kondoria(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
-        this.game = game;
         direction = Direction.RIGHT;
-        currentSprite = Sprite.balloom_right1;
+        brickPass = true;
+        currentSprite = Sprite.minvo_right1;
+        FINDING_SCOPE = 7;
         moving = true;
-        balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        randomMove = new RandomMove(this);
+        kondoriaBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        this.game = game;
+        pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
+    }
+
+    @Override
+    public RectBoundedBox getBoundingBox() {
+        kondoriaBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return kondoriaBoundary;
     }
 
     @Override
@@ -41,8 +48,7 @@ public class Balloom extends Character {
 
     @Override
     protected void move() {
-//        System.out.println(toString());
-        randomMove.setRandomDirection();
+        pathFinding.updateEnemyDirection();
         switch (direction) {
             case UP:
                 moveUp();
@@ -52,13 +58,13 @@ public class Balloom extends Character {
                 moveDown();
                 if (checkSafeCollision()) moveUp();
                 break;
-            case LEFT:
-                moveLeft();
-                if (checkSafeCollision()) moveRight();
-                break;
             case RIGHT:
                 moveRight();
                 if (checkSafeCollision()) moveLeft();
+                break;
+            case LEFT:
+                moveLeft();
+                if (checkSafeCollision()) moveRight();
                 break;
         }
     }
@@ -92,13 +98,13 @@ public class Balloom extends Character {
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return balloomBoundary.checkCollision(otherEntityBoundary);
+        kondoriaBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return kondoriaBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof Wall) {
                 if (isColliding(entity))
                     return true;
             }
@@ -106,29 +112,23 @@ public class Balloom extends Character {
         return false;
     }
 
-    @Override
-    public RectBoundedBox getBoundingBox() {
-        balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return balloomBoundary;
-    }
-
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
-                        Sprite.balloom_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_right2,
+                        Sprite.kondoria_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
-                        Sprite.balloom_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_left2,
+                        Sprite.kondoria_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
-                        Sprite.balloom_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2,
+                        Sprite.kondoria_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
-                        Sprite.balloom_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_right2,
+                        Sprite.kondoria_right3, animation, 60);
                 break;
         }
     }
@@ -137,10 +137,5 @@ public class Balloom extends Character {
     public void render(GraphicsContext gc) {
         choosingSprite();
         gc.drawImage(currentSprite.getFxImage(), x, y);
-    }
-
-    @Override
-    public String toString() {
-        return "Balloom{x = " + x + ", y = " + y + "}";
     }
 }

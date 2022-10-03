@@ -1,14 +1,16 @@
-package uet.oop.bomberman.entities.character.enemy.PathFinding;
+package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.Random;
 
 public class RandomMove {
-    protected Character enemy;
+    protected Enemy enemy;
 
-    public RandomMove(Character enemy) {
+    public RandomMove(Enemy enemy) {
         this.enemy = enemy;
     }
 
@@ -17,7 +19,7 @@ public class RandomMove {
     }
 
     public void setRandomDirection() {
-        if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
+        if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
             Random random = new Random();
             int dir = random.nextInt(4);
             switch (dir) {

@@ -1,24 +1,24 @@
-package uet.oop.bomberman.entities.character.enemy.PathFinding;
+package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.Ovapi;
+import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.static_objects.Wall;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 
 public class PathFindingLv2 extends RandomMove {
     private Bomber bomber;
     private GameViewManager game;
-    private static final int SCOPE = 5;
     private boolean startX = false;
     private boolean startY = false;
     private boolean endX = false;
     private boolean endY = false;
 
-    public PathFindingLv2(Character enemy, Bomber bomber, GameViewManager game) {
+    public PathFindingLv2(Enemy enemy, Bomber bomber, GameViewManager game) {
         super(enemy);
         this.game = game;
         this.bomber = bomber;
@@ -31,12 +31,11 @@ public class PathFindingLv2 extends RandomMove {
         endX = false;
         endY = false;
 
-        // check exact grid
-        if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
-            if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= SCOPE
-                    && Math.abs(bomber.getGridY() - enemy.getGridY()) <= SCOPE
-                    && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
-                    && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0) { // check if bomber in scope
+        if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= enemy.getFindingScope()
+                && Math.abs(bomber.getGridY() - enemy.getGridY()) <= enemy.getFindingScope()
+                && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
+                && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0) { // check if bomber in enemy.getFindingScope()
+            if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) { // check exact grid
                 // set all path is true
                 startX = true;
                 startY = true;
@@ -102,12 +101,12 @@ public class PathFindingLv2 extends RandomMove {
         endX = false;
         endY = false;
 
-        // check exact grid
-        if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
-            if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= SCOPE
-                    && Math.abs(bomber.getGridY() - enemy.getGridY()) <= SCOPE
-                    && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
-                    && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0) { // check if bomber in scope
+        if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= enemy.getFindingScope()
+                && Math.abs(bomber.getGridY() - enemy.getGridY()) <= enemy.getFindingScope()
+                && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
+                && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0) { // check if bomber in enemy scope
+            // check exact grid
+            if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
                 // set all path is true
                 startX = true;
                 startY = true;

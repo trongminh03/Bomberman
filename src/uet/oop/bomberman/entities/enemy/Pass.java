@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -6,39 +6,37 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.RandomMove;
+import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-import java.util.Random;
+public class Pass extends Enemy {
+    private final static int velocity = 2;
 
-public class Doll extends Character {
-
-    private int velocity = 2;
-
-    private final static int SPRITE_WIDTH = Sprite.doll_right1.getSpriteWidth();
-    private final static int SPRITE_HEIGHT = Sprite.doll_right2.getSpriteHeight();
+    private final static int SPRITE_WIDTH = Sprite.pass_right1.getSpriteHeight();
+    private final static int SPRITE_HEIGHT = Sprite.pass_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox dollBoundary;
+    private RectBoundedBox passBoundary;
     private GameViewManager game;
 
-    RandomMove randomMove;
+    AStarAlgorithm pathFinding;
 
-    public Doll(int xUnit, int yUnit, Image img, GameViewManager game) {
+    public Pass(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
-        currentSprite = Sprite.doll_right1;
+        currentSprite = Sprite.minvo_right1;
         moving = true;
-        dollBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        passBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
-        randomMove = new RandomMove(this);
+        pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
+        FINDING_SCOPE = 5;
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        dollBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return dollBoundary;
+        passBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return passBoundary;
     }
 
     @Override
@@ -49,8 +47,7 @@ public class Doll extends Character {
 
     @Override
     protected void move() {
-//        System.out.println(toString());
-        randomMove.setRandomDirection();
+        pathFinding.updateEnemyDirection();
         switch (direction) {
             case UP:
                 moveUp();
@@ -100,8 +97,8 @@ public class Doll extends Character {
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        dollBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return dollBoundary.checkCollision(otherEntityBoundary);
+        passBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return passBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
@@ -117,20 +114,20 @@ public class Doll extends Character {
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_right2,
-                        Sprite.doll_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_right2,
+                        Sprite.pass_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_left2,
-                        Sprite.doll_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_left2,
+                        Sprite.pass_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2,
-                        Sprite.doll_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_left2,
+                        Sprite.pass_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2,
-                        Sprite.doll_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_right2,
+                        Sprite.pass_right3, animation, 60);
                 break;
         }
     }

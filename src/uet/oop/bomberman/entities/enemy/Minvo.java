@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -6,16 +6,15 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv1;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv2;
+import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv2;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-import java.util.Random;
+import javax.print.attribute.standard.Finishings;
 
-public class Minvo extends Character {
-    private int velocity = 1;
+public class Minvo extends Enemy {
+    private final static int velocity = 1;
 
     private final static int SPRITE_WIDTH = Sprite.minvo_right1.getSpriteHeight();
     private final static int SPRITE_HEIGHT = Sprite.minvo_right1.getSpriteHeight();
@@ -33,6 +32,7 @@ public class Minvo extends Character {
         minvoBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
         pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
+        FINDING_SCOPE = 5;
     }
 
     @Override

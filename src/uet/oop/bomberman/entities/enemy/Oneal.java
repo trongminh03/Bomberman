@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -6,37 +6,40 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.PathFindingLv2;
-import uet.oop.bomberman.entities.static_objects.Wall;
+import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv1;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-public class Ovapi extends Character {
-    private int velocity = 1;
+import java.util.Random;
 
-    private final static int SPRITE_WIDTH = Sprite.ovapi_right1.getSpriteHeight();
-    private final static int SPRITE_HEIGHT = Sprite.ovapi_right1.getSpriteHeight();
+public class Oneal extends Enemy {
+    private int velocity;
+
+    private final static int SPRITE_WIDTH = Sprite.oneal_right1.getSpriteWidth();
+    private final static int SPRITE_HEIGHT = Sprite.oneal_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox ovapiBoundary;
+    private RectBoundedBox onealBoundary;
     private GameViewManager game;
 
-    PathFindingLv2 pathFinding;
+    private final PathFindingLv1 pathFinding;
 
-    public Ovapi(int xUnit, int yUnit, Image img, GameViewManager game) {
+    public Oneal(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
-        currentSprite = Sprite.minvo_right1;
+        currentSprite = Sprite.balloom_right1;
         moving = true;
-        ovapiBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        onealBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
-        pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
+        pathFinding = new PathFindingLv1(this, game.getBomberman(), game);
+        velocity = 1;
+        FINDING_SCOPE = 5;
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        ovapiBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return ovapiBoundary;
+        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return onealBoundary;
     }
 
     @Override
@@ -47,7 +50,12 @@ public class Ovapi extends Character {
 
     @Override
     protected void move() {
-        pathFinding.updateEnemyDirectionBrickPass();
+//        System.out.println(toString());
+        pathFinding.updateEnemyDirection();
+        Random random = new Random();
+        velocity = random.nextInt(2) + 1; // velocity random [1, 2]
+//        System.out.println(velocity);
+//        System.out.println(direction.toString());
         switch (direction) {
             case UP:
                 moveUp();
@@ -97,13 +105,13 @@ public class Ovapi extends Character {
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        ovapiBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return ovapiBoundary.checkCollision(otherEntityBoundary);
+        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return onealBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall) {
+            if (entity instanceof StaticEntity) {
                 if (isColliding(entity))
                     return true;
             }
@@ -114,20 +122,20 @@ public class Ovapi extends Character {
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.ovapi_left1, Sprite.ovapi_right2,
-                        Sprite.ovapi_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_right2,
+                        Sprite.oneal_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.ovapi_right1, Sprite.ovapi_left2,
-                        Sprite.ovapi_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_left2,
+                        Sprite.oneal_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.ovapi_left1, Sprite.ovapi_left2,
-                        Sprite.ovapi_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2,
+                        Sprite.oneal_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.ovapi_right1, Sprite.ovapi_right2,
-                        Sprite.ovapi_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2,
+                        Sprite.oneal_right3, animation, 60);
                 break;
         }
     }

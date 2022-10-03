@@ -5,8 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.character.enemy.Balloom;
-import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;

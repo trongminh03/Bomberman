@@ -1,16 +1,16 @@
-package uet.oop.bomberman.entities.character.enemy.PathFinding;
+package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
-import uet.oop.bomberman.constants.GlobalConstants;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.entities.static_objects.Wall;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -21,14 +21,12 @@ public class AStarAlgorithm extends RandomMove {
     private Node startNode;
     private Node goalNode;
 
-//    private Node currentNode;
-
-    private static final int SCOPE = 20;
+    //    private Node currentNode;
     private Node[][] map;
     private PriorityQueue<Node> open;
     private List<Node> closed;
 
-    public AStarAlgorithm(Character enemy, Bomber bomber, GameViewManager game) {
+    public AStarAlgorithm(Enemy enemy, Bomber bomber, GameViewManager game) {
         super(enemy);
         this.game = game;
         this.bomber = bomber;
@@ -43,11 +41,13 @@ public class AStarAlgorithm extends RandomMove {
     }
 
     public EnemyDirection chasePlayer() {
-        if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= SCOPE
-                && Math.abs(bomber.getGridY() - enemy.getGridY()) <= SCOPE
-                && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
-                && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkHitEnemy()) { // check if bomber in scope
-            if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
+        // check if bomber in enemy scope
+        if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= enemy.getFindingScope()
+            && Math.abs(bomber.getGridY() - enemy.getGridY()) <= enemy.getFindingScope()
+            && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
+            && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkHitEnemy()) {
+            // Check exact grid
+            if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
                 List<Node> path = findPath();
                 if (path == null) {
                     return EnemyDirection.DETECT_FAILED;
@@ -70,7 +70,8 @@ public class AStarAlgorithm extends RandomMove {
     public List<Node> findPath() {
         open.clear();
         closed.clear();
-//        setObstacles();
+        setNodes();
+        setObstacles();
         List<Node> path = new ArrayList<Node>();
         setStartNode(new Node(enemy.getGridX(), enemy.getGridY()));
 //        currentNode = startNode;
@@ -121,11 +122,21 @@ public class AStarAlgorithm extends RandomMove {
     }
 
     public void setObstacles() {
-        for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
-                int row = entity.getGridY();
-                int column = entity.getGridX();
-                setBlock(row, column);
+        if (enemy.canBrickPass()) {
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Wall) {
+                    int row = entity.getGridY();
+                    int column = entity.getGridX();
+                    setBlock(row, column);
+                }
+            }
+        } else {
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof StaticEntity) {
+                    int row = entity.getGridY();
+                    int column = entity.getGridX();
+                    setBlock(row, column);
+                }
             }
         }
     }
@@ -174,7 +185,6 @@ public class AStarAlgorithm extends RandomMove {
 
     public void updateEnemyDirection() {
         EnemyDirection dir = chasePlayer();
-        System.out.println(dir);
         if (dir == EnemyDirection.RIGHT) {
             enemy.setDirection(Direction.RIGHT);
         } else if (dir == EnemyDirection.LEFT) {

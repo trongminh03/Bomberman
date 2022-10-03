@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.character.enemy.PathFinding;
+package uet.oop.bomberman.entities.enemy.PathFinding;
 
 public class Node implements Comparable<Node> {
     private int gCost;

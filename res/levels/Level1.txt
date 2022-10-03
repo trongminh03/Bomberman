@@ -29,11 +29,13 @@ x - Portal
 Character:
 p - Bomber
 1 - Balloon: speed 1, move randomly
-2 - Oneal: speed [1, 2], move according to path finding lv1
+2 - Oneal: speed [1, 2], move according to path finding lv1, finding scope = 5
 3 - Doll: speed 2, move randomly
-4 - Minvo: speed 1, move according to path finding lv2
-5 - Ovapi: speed 1, move according to path finding lv2, can move through brick
-6 - Pass: speed 2, move according to A* algorithm
+4 - Minvo: speed 1, move according to path finding lv2, finding scope = 5
+5 - Ovapi: speed 1, move according to path finding lv2, can move through brick, finding scope = 5
+6 - Pass: speed 2, move according to A* algorithm, finding scope = 5
+7 - Kondoria: speed 1, can move through brick, move according to A* algorithm, finding scope = 7
+8 - Pontan: speed 2, can move through brick, move according to A* algorithm, finding scope = 7;
 
 
 Items:
