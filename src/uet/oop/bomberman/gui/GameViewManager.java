@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameViewManager {
-    public static final int WIDTH = 25;
+    public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
 
     public static boolean running;
@@ -46,21 +46,20 @@ public class GameViewManager {
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
+        createNewGame();
         initializeStage();
         createKeyListener();
 //        createMap();
     }
 
     private void initializeStage() {
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(Sprite.SCALED_SIZE * getColumns(), Sprite.SCALED_SIZE * getRows());
         gc = canvas.getGraphicsContext2D();
-
         // Tao root container
         root = new Group();
         root.getChildren().add(canvas);
-
         // Tao scene
-        scene = new Scene(root);
+        scene = new Scene(root, Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
 
         // Tao stage
         mainStage = new Stage();
@@ -116,7 +115,7 @@ public class GameViewManager {
 //                stillObjects.add(object);
 //            }
 //        }
-        File file = new File("res/levels/Level2.txt");
+        File file = new File("res/levels/Level3.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -193,6 +192,11 @@ public class GameViewManager {
                             enemies.add(enemy);
                             stillObjects.add(object);
                             break;
+                        case '8':
+                            enemy = new Pontan(j, i, Sprite.pontan_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
                         default:
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             stillObjects.add(object);
@@ -217,6 +221,7 @@ public class GameViewManager {
     public void update() {
         enemies.forEach(Entity::update);
         bomberman.update();
+//        canvas.setLayoutX(canvas.getLayoutX() - 5);
 //        bomberman.toString();
     }
 
@@ -242,6 +247,7 @@ public class GameViewManager {
 
                 if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
+                    moveBackground();
                     render();
                     update();
                     if (!bomberman.isAlive()) {
@@ -249,6 +255,7 @@ public class GameViewManager {
                         timer.stop();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
+                    System.out.println(canvas.getLayoutX() + " " + canvas.getLayoutY());
 //                t += 0.016;
 //
 //                if (t > 0.02) {
@@ -293,4 +300,25 @@ public class GameViewManager {
             return C;
         }
 
+        public void moveBackground() {
+            int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
+            if (bomberman.getX() >= midHorizontalPosition
+                    && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
+                canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
+            } else if (bomberman.getX() < midHorizontalPosition) {
+                canvas.setLayoutX(0);
+            } else {
+                canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
+            }
+
+            int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
+            if (bomberman.getY() >= midVerticalPosition
+                    && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
+                canvas.setLayoutY(midVerticalPosition - bomberman.getY());
+            } else if (bomberman.getY() < midVerticalPosition) {
+                canvas.setLayoutY(0);
+            } else {
+                canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
+            }
+        }
     }

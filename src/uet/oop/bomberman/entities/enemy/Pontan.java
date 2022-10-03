@@ -4,40 +4,40 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-public class Kondoria extends Enemy {
-    private final static int velocity = 1;
+public class Pontan extends Enemy {
 
-    private final static int SPRITE_WIDTH = Sprite.kondoria_right1.getSpriteHeight();
-    private final static int SPRITE_HEIGHT = Sprite.kondoria_right1.getSpriteHeight();
+    private final static int velocity = 2;
+
+    private final static int SPRITE_WIDTH = Sprite.pontan_right1.getSpriteHeight();
+    private final static int SPRITE_HEIGHT = Sprite.pontan_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox kondoriaBoundary;
+    private RectBoundedBox pontanBoundary;
     private GameViewManager game;
 
     AStarAlgorithm pathFinding;
 
-    public Kondoria(int xUnit, int yUnit, Image img, GameViewManager game) {
+    public Pontan(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
         brickPass = true;
-        currentSprite = Sprite.kondoria_right1;
+        currentSprite = Sprite.pontan_right1;
         FINDING_SCOPE = 7;
         moving = true;
-        kondoriaBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        pontanBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
         pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        kondoriaBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return kondoriaBoundary;
+        pontanBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return pontanBoundary;
     }
 
     @Override
@@ -98,8 +98,8 @@ public class Kondoria extends Enemy {
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        kondoriaBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return kondoriaBoundary.checkCollision(otherEntityBoundary);
+        pontanBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return pontanBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
@@ -115,20 +115,20 @@ public class Kondoria extends Enemy {
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_right2,
-                        Sprite.kondoria_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_right2,
+                        Sprite.pontan_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_left2,
-                        Sprite.kondoria_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_left2,
+                        Sprite.pontan_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2,
-                        Sprite.kondoria_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_left2,
+                        Sprite.pontan_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_right2,
-                        Sprite.kondoria_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_right2,
+                        Sprite.pontan_right3, animation, 60);
                 break;
         }
     }
