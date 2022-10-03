@@ -302,22 +302,26 @@ public class GameViewManager {
 
         public void moveBackground() {
             int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
+            // check if bomberman is in the middle of the screen width
             if (bomberman.getX() >= midHorizontalPosition
                     && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
+                // move background upon bomberman position
                 canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
-            } else if (bomberman.getX() < midHorizontalPosition) {
+            } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
                 canvas.setLayoutX(0);
-            } else {
+            } else { // set camera upon bomberman position
                 canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
             }
 
+            // check if bomberman is in the middle of the screen height
             int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
             if (bomberman.getY() >= midVerticalPosition
                     && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
+                // move background upon bomberman position
                 canvas.setLayoutY(midVerticalPosition - bomberman.getY());
-            } else if (bomberman.getY() < midVerticalPosition) {
+            } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
                 canvas.setLayoutY(0);
-            } else {
+            } else { // set camera upon bomberman position
                 canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
             }
         }
