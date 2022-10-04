@@ -27,7 +27,6 @@ public class Brick extends AnimatedEntity {
         box = new RectBoundedBox(x, y, Sprite.brick.getSpriteWidth(), Sprite.brick.getSpriteWidth());
     }
 
-
     @Override
     public void update() {
         animate();
@@ -36,9 +35,11 @@ public class Brick extends AnimatedEntity {
     public void setAlive(boolean alive) {
         this.isAlive = alive;
     }
+
     private void chooseSprite() {
         if (isAlive) {
             currentSprite = Sprite.brick;
+            this.setAnimation(0);
         }else {
             currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
                     Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 60);
@@ -47,7 +48,6 @@ public class Brick extends AnimatedEntity {
                 destroy();
             }
         }
-
     }
     @Override
     public void render(GraphicsContext gc) {

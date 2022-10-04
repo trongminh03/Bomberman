@@ -19,21 +19,22 @@ import java.util.TimerTask;
 
 public class Bomber extends Character {
     private static final int velocity = 2;
-//    private Point2D step;
-//    private int step;
+
     final static int BOMBER_WIDTH = 24;
     final static int BOMBER_HEIGHT = 28;
+
     private int numBomb = 0;
     private int limitBomb = 0;
     private Bomb[] bombs = new Bomb[5];
+
     private boolean isSpeedBuff = false;
     private boolean isBombBuff = false;
     private boolean isFlameBuff = false;
-    /*
-     * Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
-     *                   false: bomber no bomb yet, can place bombs now
-     * */
-    private boolean isPlacedBomb = false;
+    private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
+                                                                 false: bomber no bomb yet, can place bombs now */
+
+    private final double elapsedTime = 1/30f;
+    private double time = 10;
 
     KeyManager keyInput;
     private Sprite currentSprite;
@@ -58,6 +59,10 @@ public class Bomber extends Character {
         if (checkFatalCollision()) {
             dead();
         }
+        if (!isPlacedBomb) {
+            time += elapsedTime;
+        }
+        System.out.println(time);
     }
 
     @Override
@@ -85,7 +90,7 @@ public class Bomber extends Character {
             if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
             if (!isColliding(bomb)) bomb.setThroughBomb(false);
         }
-        for (Brick brick : Storage.getBickVector()) {
+        for (Brick brick : Storage.getBrickVector()) {
             if (isColliding(brick)) return true;
         }
         return false;
@@ -129,9 +134,10 @@ public class Bomber extends Character {
             moving = true;
         }
 
-        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb) {
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb && time >= 60 * elapsedTime) {
             createBomb();
             isPlacedBomb = true;
+            time = 0;
         }
         if (!keyInput.isPressed(KeyCode.SPACE) && isPlacedBomb) {
             isPlacedBomb = false;
@@ -139,6 +145,12 @@ public class Bomber extends Character {
     }
 
     private void createBomb() {
+        /*numBomb = 0;
+        for (int i=0; i<limitBomb; i++) {
+            if (bombs[i] != null) {
+                numBomb ++;
+            }
+        }*/
         if (isBombBuff) {
             limitBomb = 2;
         }else {
@@ -147,6 +159,9 @@ public class Bomber extends Character {
         if (numBomb < limitBomb) {
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
+            for (Bomb bomb : Storage.getBombVector()) {
+                if (bomb.getGridX() == xUnit && bomb.getGridY() == yUnit) return;
+            }
             Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
             /*for (int i=0; i<limitBomb; i++) {
                 if (bombs[i] == null) {

@@ -23,7 +23,6 @@ import uet.oop.bomberman.input.KeyManager;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,7 +37,7 @@ public class GameViewManager {
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private Vector<Bomb> bombVector = Storage.getBombVector();
-    private Vector<Brick> brickVector = Storage.getBickVector();
+    private Vector<Brick> brickVector = Storage.getBrickVector();
 
     private Stage mainStage;
     //    private Stage menuStage;
@@ -235,6 +234,7 @@ public class GameViewManager {
                     timer.stop();
                     BombermanGame.switchScene(MenuViewManager.getScene());
                 }
+                stillObjects.removeAll(Storage.getBrickGarbage());
                 Storage.clearGarbage();
             }
         };

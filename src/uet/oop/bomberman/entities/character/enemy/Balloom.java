@@ -102,7 +102,7 @@ public class Balloom extends Character {
         for (Bomb bomb : Storage.getBombVector()) {
             if (isColliding(bomb)) return true;
         }
-        for (Brick brick : Storage.getBickVector()) {
+        for (Brick brick : Storage.getBrickVector()) {
             if (isColliding(brick)) return true;
         }
         return false;
