@@ -7,7 +7,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.entities.character.enemy.Balloom;
 import uet.oop.bomberman.entities.character.enemy.Doll;
 import uet.oop.bomberman.entities.character.enemy.Minvo;
@@ -36,8 +35,6 @@ public class GameViewManager {
     private Canvas canvas;
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-    private Vector<Bomb> bombVector = Storage.getBombVector();
-    private Vector<Brick> brickVector = Storage.getBrickVector();
 
     private Stage mainStage;
     //    private Stage menuStage;
@@ -131,11 +128,10 @@ public class GameViewManager {
                             stillObjects.add(object);
                             break;
                         case '*':
-                            object = new Brick(j, i, Sprite.brick.getFxImage());
+                            object = new Brick(j, i, Sprite.brick.getFxImage(), this);
                             Entity grass = new Grass(j, i, Sprite.grass.getFxImage());
-                            stillObjects.add(object);
                             stillObjects.add(grass);
-                            Storage.addBrick((Brick) object);
+                            stillObjects.add(object);
                             break;
                         case 'p':
 //                            bomberman = new Bomber(j, i, Sprite.player_right.getFxImage(), keys, this);
@@ -184,17 +180,14 @@ public class GameViewManager {
         }
     }
 
-//    public void createBomberman() {
-//        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys);
-//        entities.add(bomberman);
-//    }
-
     public void update() {
-//        enemies.forEach(Entity::update);
+        enemies.forEach(Entity::update);
+        /*for (Entity entity : stillObjects) {
+            if (entity instanceof Brick) {
+                entity.update();
+            }
+        }*/
         bomberman.update();
-//        bomberman.toString();
-        bombVector.forEach(Bomb::update);
-        brickVector.forEach(Brick::update);
     }
 
     public void render() {
@@ -202,11 +195,18 @@ public class GameViewManager {
         for (Entity entity : stillObjects) {
             if (!(entity instanceof Brick))
                 entity.render(gc);
+//            else {
+//                Brick brick = (Brick) entity;
+//                brick.render(gc);
+//            }
+//            if (entity instanceof Brick) {
+//                Brick brick = (Brick) entity;
+//                brick.render(gc);
+//            }
         }
-//        enemies.forEach(g -> g.render(gc));
+//        stillObjects.forEach(g -> g.render(gc));
+        enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
-        bombVector.forEach(g -> g.render(gc));
-        brickVector.forEach(g -> g.render(gc));
     }
 
     private void createGameLoop() {
@@ -234,8 +234,7 @@ public class GameViewManager {
                     timer.stop();
                     BombermanGame.switchScene(MenuViewManager.getScene());
                 }
-                stillObjects.removeAll(Storage.getBrickGarbage());
-                Storage.clearGarbage();
+                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();

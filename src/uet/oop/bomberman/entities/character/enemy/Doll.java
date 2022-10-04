@@ -2,7 +2,6 @@ package uet.oop.bomberman.entities.character.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
@@ -106,12 +105,13 @@ public class Doll extends Character {
                 if (isColliding(entity))
                     return true;
             }
+            if (entity instanceof Brick) {
+                Brick brick = (Brick) entity;
+                if (isColliding(brick)) return true;
+            }
         }
-        for (Bomb bomb : Storage.getBombVector()) {
+        for (Bomb bomb : game.getBomberman().getBombs()) {
             if (isColliding(bomb)) return true;
-        }
-        for (Brick brick : Storage.getBrickVector()) {
-            if (isColliding(brick)) return true;
         }
         return false;
     }

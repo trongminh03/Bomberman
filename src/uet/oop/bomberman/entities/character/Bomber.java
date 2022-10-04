@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.constants.Storage;
+import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.StaticEntity;
@@ -22,10 +22,10 @@ public class Bomber extends Character {
 
     final static int BOMBER_WIDTH = 24;
     final static int BOMBER_HEIGHT = 28;
-
     private int numBomb = 0;
     private int limitBomb = 0;
-    private Bomb[] bombs = new Bomb[5];
+    private int maxBomb = 3;
+    private Bomb[] bombs = new Bomb[maxBomb];
 
     private boolean isSpeedBuff = false;
     private boolean isBombBuff = false;
@@ -50,6 +50,11 @@ public class Bomber extends Character {
         direction = Direction.RIGHT;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
+        for (int i=0; i<maxBomb; i++) {
+            Bomb bomb = new Bomb(-1, -1, Sprite.bomb.getFxImage());
+            bomb.setBombStatus(BombStatus.DESTROY);
+            bombs[i] = bomb;
+        }
     }
 
     @Override
@@ -59,10 +64,14 @@ public class Bomber extends Character {
         if (checkFatalCollision()) {
             dead();
         }
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                bomb.update();
+            }
+        }
         if (!isPlacedBomb) {
             time += elapsedTime;
         }
-        System.out.println(time);
     }
 
     @Override
@@ -85,13 +94,16 @@ public class Bomber extends Character {
                     return true;
                 }
             }
+            if (entity instanceof Brick) {
+                Brick brick = (Brick) entity;
+                if (isColliding(brick)) return true;
+            }
         }
-        for (Bomb bomb : Storage.getBombVector()) {
-            if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
-            if (!isColliding(bomb)) bomb.setThroughBomb(false);
-        }
-        for (Brick brick : Storage.getBrickVector()) {
-            if (isColliding(brick)) return true;
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
+                if (!isColliding(bomb)) bomb.setThroughBomb(false);
+            }
         }
         return false;
     }
@@ -145,32 +157,32 @@ public class Bomber extends Character {
     }
 
     private void createBomb() {
-        /*numBomb = 0;
-        for (int i=0; i<limitBomb; i++) {
-            if (bombs[i] != null) {
+        numBomb = 0;
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
                 numBomb ++;
             }
-        }*/
+        }
         if (isBombBuff) {
             limitBomb = 2;
         }else {
-            limitBomb = 100;
+            limitBomb = 3;
         }
         if (numBomb < limitBomb) {
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
-            for (Bomb bomb : Storage.getBombVector()) {
-                if (bomb.getGridX() == xUnit && bomb.getGridY() == yUnit) return;
+            for (Bomb bomb : bombs) {
+                if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                    if (bomb.getGridX() == xUnit && bomb.getGridY() == yUnit) return;
+                }
             }
             Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
-            /*for (int i=0; i<limitBomb; i++) {
-                if (bombs[i] == null) {
+            for (int i=0; i<limitBomb; i++) {
+                if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
                     bombs[i] = bomb;
                     break;
                 }
-            }*/
-            Storage.addBomb(bomb);
-            numBomb = Storage.getNumBomb();
+            }
         }
     }
 
@@ -268,6 +280,11 @@ public class Bomber extends Character {
     public void render(GraphicsContext gc) {
         chooseSprite();
         gc.drawImage(currentSprite.getFxImage(), x, y);
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                bomb.render(gc);
+            }
+        }
     }
 
     public String toString() {

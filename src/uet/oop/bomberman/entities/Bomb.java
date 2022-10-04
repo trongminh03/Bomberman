@@ -3,7 +3,6 @@ package uet.oop.bomberman.entities;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.BombStatus;
-import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.constants.ExplosionType;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
@@ -20,7 +19,7 @@ public class Bomb extends AnimatedEntity {
     private int maxLeft = size;
     private int maxUp = size;
     private int maxDown = size;
-    private BombStatus bombStatus = BombStatus.PLACED;
+    private BombStatus bombStatus;
     /*
 
     */
@@ -38,10 +37,15 @@ public class Bomb extends AnimatedEntity {
 
     GameViewManager game;
 
+    public Bomb(int xUnit, int yUnit, Image img) {
+        super(xUnit, yUnit, img);
+    }
+
     public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
         bombBoundary = new RectBoundedBox(x, y, BOMB_WIDTH, BOMB_HEIGHT);
         this.game = gameViewManager;
+        bombStatus = BombStatus.PLACED;
         explosionInit();
     }
 
@@ -270,23 +274,25 @@ public class Bomb extends AnimatedEntity {
 
     @Override
     public void render(GraphicsContext gc) {
-        chooseSprite();
-        if (bombStatus == BombStatus.EXPLODE) {
-            for (Explosion explosion : explosionsDown) {
-                if (explosion != null) explosion.render(gc);
-            }
-            for (Explosion explosion : explosionsUp) {
-                if (explosion != null) explosion.render(gc);
-            }
-            for (Explosion explosion : explosionsRight) {
-                if (explosion != null) explosion.render(gc);
-            }
-            for (Explosion explosion : explosionsLeft) {
-                if (explosion != null) explosion.render(gc);
-            }
+        if (bombStatus != BombStatus.DESTROY) {
+            chooseSprite();
+            if (bombStatus == BombStatus.EXPLODE) {
+                for (Explosion explosion : explosionsDown) {
+                    if (explosion != null) explosion.render(gc);
+                }
+                for (Explosion explosion : explosionsUp) {
+                    if (explosion != null) explosion.render(gc);
+                }
+                for (Explosion explosion : explosionsRight) {
+                    if (explosion != null) explosion.render(gc);
+                }
+                for (Explosion explosion : explosionsLeft) {
+                    if (explosion != null) explosion.render(gc);
+                }
 
+            }
+            gc.drawImage(currentSprite.getFxImage(), x, y);
         }
-        gc.drawImage(currentSprite.getFxImage(), x, y);
     }
 
     @Override
@@ -306,15 +312,8 @@ public class Bomb extends AnimatedEntity {
             }
             explosion();
         }
-        if (bombStatus == BombStatus.DESTROY) {
-            destroy();
-        }
         animate();
         time += elapedTime;
-    }
-
-    private void destroy() {
-        Storage.addBombGarbage(this);
     }
 
     public RectBoundedBox[] getRecBoundedBox() {
@@ -341,5 +340,13 @@ public class Bomb extends AnimatedEntity {
             }
         }
         return rectBoundedBoxes;
+    }
+
+    public BombStatus getBombStatus() {
+        return bombStatus;
+    }
+
+    public void setBombStatus(BombStatus bombStatus) {
+        this.bombStatus = bombStatus;
     }
 }

@@ -2,16 +2,10 @@ package uet.oop.bomberman.entities.static_objects;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.constants.Storage;
 import uet.oop.bomberman.entities.AnimatedEntity;
-import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Brick extends AnimatedEntity {
     final static int BRICK_WIDTH = 32;
@@ -22,9 +16,12 @@ public class Brick extends AnimatedEntity {
     private double elapedTime = 1/30f;
     private double time = 0;
 
-    public Brick(int x, int y, Image img) {
+    private GameViewManager game;
+
+    public Brick(int x, int y, Image img, GameViewManager gameViewManager) {
         super(x, y, img);
         box = new RectBoundedBox(x, y, Sprite.brick.getSpriteWidth(), Sprite.brick.getSpriteWidth());
+        this.game = gameViewManager;
     }
 
     @Override
@@ -37,17 +34,9 @@ public class Brick extends AnimatedEntity {
     }
 
     private void chooseSprite() {
-        if (isAlive) {
-            currentSprite = Sprite.brick;
-            this.setAnimation(0);
-        }else {
-            currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
-                    Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 60);
-            time += elapedTime;
-            if (time > 30 * elapedTime) {
-                destroy();
-            }
-        }
+
+        currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
+                Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 30);
     }
     @Override
     public void render(GraphicsContext gc) {
@@ -62,6 +51,6 @@ public class Brick extends AnimatedEntity {
     }
 
     private void destroy() {
-        Storage.addBrickGarbage(this);
+        game.getStillObjects().remove(this);
     }
 }
