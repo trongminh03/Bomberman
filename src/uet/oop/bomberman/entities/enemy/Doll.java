@@ -86,11 +86,6 @@ public class Doll extends Enemy {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
 
     }

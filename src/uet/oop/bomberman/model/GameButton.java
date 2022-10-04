@@ -6,8 +6,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 
 public class GameButton extends Button {
 //    private final String mainFont = "/model/KaushanScript-Regular.otf";

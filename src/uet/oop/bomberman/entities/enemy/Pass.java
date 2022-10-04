@@ -85,11 +85,6 @@ public class Pass extends Enemy {
     }
 
     @Override
-    public void kill() {
-
-    }
-
-    @Override
     public void dead() {
 
     }
