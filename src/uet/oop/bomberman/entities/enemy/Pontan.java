@@ -1,44 +1,43 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
-import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.RandomMove;
-import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-public class Doll extends Character {
+public class Pontan extends Enemy {
 
-    private int velocity = 2;
+    private final static int velocity = 2;
 
-    private final static int SPRITE_WIDTH = Sprite.doll_right1.getSpriteWidth();
-    private final static int SPRITE_HEIGHT = Sprite.doll_right2.getSpriteHeight();
+    private final static int SPRITE_WIDTH = Sprite.pontan_right1.getSpriteHeight();
+    private final static int SPRITE_HEIGHT = Sprite.pontan_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox dollBoundary;
+    private RectBoundedBox pontanBoundary;
     private GameViewManager game;
 
-    RandomMove randomMove;
+    AStarAlgorithm pathFinding;
 
-    public Doll(int xUnit, int yUnit, Image img, GameViewManager game) {
+    public Pontan(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
-        currentSprite = Sprite.doll_right1;
+        brickPass = true;
+        currentSprite = Sprite.pontan_right1;
+        FINDING_SCOPE = 7;
         moving = true;
-        dollBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        pontanBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
-        randomMove = new RandomMove(this);
+        pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
     }
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        dollBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return dollBoundary;
+        pontanBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return pontanBoundary;
     }
 
     @Override
@@ -49,8 +48,7 @@ public class Doll extends Character {
 
     @Override
     protected void move() {
-//        System.out.println(toString());
-        randomMove.setRandomDirection();
+        pathFinding.updateEnemyDirection();
         switch (direction) {
             case UP:
                 moveUp();
@@ -89,29 +87,22 @@ public class Doll extends Character {
 
     @Override
     public void dead() {
-        this.alive = false;
+
     }
 
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        dollBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return dollBoundary.checkCollision(otherEntityBoundary);
+        pontanBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return pontanBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof Wall) {
                 if (isColliding(entity))
                     return true;
             }
-            if (entity instanceof Brick) {
-                Brick brick = (Brick) entity;
-                if (isColliding(brick)) return true;
-            }
-        }
-        for (Bomb bomb : game.getBomberman().getBombs()) {
-            if (isColliding(bomb)) return true;
         }
         return false;
     }
@@ -119,20 +110,20 @@ public class Doll extends Character {
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_right2,
-                        Sprite.doll_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_right2,
+                        Sprite.pontan_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_left2,
-                        Sprite.doll_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_left2,
+                        Sprite.pontan_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2,
-                        Sprite.doll_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_left2,
+                        Sprite.pontan_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2,
-                        Sprite.doll_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_right2,
+                        Sprite.pontan_right3, animation, 60);
                 break;
         }
     }

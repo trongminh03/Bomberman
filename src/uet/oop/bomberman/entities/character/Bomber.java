@@ -48,6 +48,7 @@ public class Bomber extends Character {
         this.keyInput = keyInput;
         this.game = game;
         direction = Direction.RIGHT;
+//        moving = true;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         for (int i=0; i<maxBomb; i++) {
@@ -59,6 +60,9 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
+//        if (isMoving()) {
+//            move();
+//        }
         move();
         animate();
         if (checkFatalCollision()) {
@@ -270,6 +274,8 @@ public class Bomber extends Character {
                 animation = 0;
                 resetAnimation = true;
             }
+            velocity = 0;
+//            moving = false;
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
                     Sprite.player_dead3, animation, 60);
         }
@@ -297,6 +303,8 @@ public class Bomber extends Character {
         this.y = yUnit * Sprite.SCALED_SIZE;
     }
 
+    public boolean checkHitEnemy() {
+        return hitEnemy;
     public Bomb[] getBombs() {
         return bombs;
     }

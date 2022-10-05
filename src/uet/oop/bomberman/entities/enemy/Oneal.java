@@ -1,36 +1,45 @@
-package uet.oop.bomberman.entities.character.enemy;
+package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
-import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Character;
-import uet.oop.bomberman.entities.character.enemy.PathFinding.RandomMove;
-import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv1;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-public class Balloom extends Character {
-    private final static int velocity = 1;
+import java.util.Random;
 
-    private final static int SPRITE_WIDTH = Sprite.balloom_right1.getSpriteWidth();
-    private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
+public class Oneal extends Enemy {
+    private int velocity;
+
+    private final static int SPRITE_WIDTH = Sprite.oneal_right1.getSpriteWidth();
+    private final static int SPRITE_HEIGHT = Sprite.oneal_right1.getSpriteHeight();
     private Sprite currentSprite;
-    private RectBoundedBox balloomBoundary;
+    private RectBoundedBox onealBoundary;
     private GameViewManager game;
-    private RandomMove randomMove;
 
-    public Balloom(int xUnit, int yUnit, Image img, GameViewManager game) {
+    private final PathFindingLv1 pathFinding;
+
+    public Oneal(int xUnit, int yUnit, Image img, GameViewManager game) {
         super(xUnit, yUnit, img);
-        this.game = game;
         direction = Direction.RIGHT;
         currentSprite = Sprite.balloom_right1;
         moving = true;
-        balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        randomMove = new RandomMove(this);
+        onealBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        this.game = game;
+        pathFinding = new PathFindingLv1(this, game.getBomberman(), game);
+        velocity = 1;
+        FINDING_SCOPE = 5;
+    }
+
+    @Override
+    public RectBoundedBox getBoundingBox() {
+        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return onealBoundary;
     }
 
     @Override
@@ -42,7 +51,11 @@ public class Balloom extends Character {
     @Override
     protected void move() {
 //        System.out.println(toString());
-        randomMove.setRandomDirection();
+        pathFinding.updateEnemyDirection();
+        Random random = new Random();
+        velocity = random.nextInt(2) + 1; // velocity random [1, 2]
+//        System.out.println(velocity);
+//        System.out.println(direction.toString());
         switch (direction) {
             case UP:
                 moveUp();
@@ -52,13 +65,13 @@ public class Balloom extends Character {
                 moveDown();
                 if (checkSafeCollision()) moveUp();
                 break;
-            case LEFT:
-                moveLeft();
-                if (checkSafeCollision()) moveRight();
-                break;
             case RIGHT:
                 moveRight();
                 if (checkSafeCollision()) moveLeft();
+                break;
+            case LEFT:
+                moveLeft();
+                if (checkSafeCollision()) moveRight();
                 break;
         }
     }
@@ -81,14 +94,14 @@ public class Balloom extends Character {
 
     @Override
     public void dead() {
-        this.alive = false;
+
     }
 
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return balloomBoundary.checkCollision(otherEntityBoundary);
+        onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        return onealBoundary.checkCollision(otherEntityBoundary);
     }
 
     public boolean checkSafeCollision() {
@@ -97,40 +110,27 @@ public class Balloom extends Character {
                 if (isColliding(entity))
                     return true;
             }
-            if (entity instanceof Brick) {
-                Brick brick = (Brick) entity;
-                if (isColliding(brick)) return true;
-            }
-        }
-        for (Bomb bomb : game.getBomberman().getBombs()) {
-            if (isColliding(bomb)) return true;
         }
         return false;
-    }
-
-    @Override
-    public RectBoundedBox getBoundingBox() {
-        balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        return balloomBoundary;
     }
 
     public void choosingSprite() {
         switch (direction) {
             case UP:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
-                        Sprite.balloom_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_right2,
+                        Sprite.oneal_left3, animation, 60);
                 break;
             case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
-                        Sprite.balloom_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_left2,
+                        Sprite.oneal_right3, animation, 60);
                 break;
             case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
-                        Sprite.balloom_left3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2,
+                        Sprite.oneal_left3, animation, 60);
                 break;
             case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
-                        Sprite.balloom_right3, animation, 60);
+                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2,
+                        Sprite.oneal_right3, animation, 60);
                 break;
         }
     }
@@ -139,10 +139,5 @@ public class Balloom extends Character {
     public void render(GraphicsContext gc) {
         choosingSprite();
         gc.drawImage(currentSprite.getFxImage(), x, y);
-    }
-
-    @Override
-    public String toString() {
-        return "Balloom{x = " + x + ", y = " + y + "}";
     }
 }

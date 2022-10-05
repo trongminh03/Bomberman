@@ -12,6 +12,7 @@ import uet.oop.bomberman.entities.character.enemy.Doll;
 import uet.oop.bomberman.entities.character.enemy.Minvo;
 import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.Bomb;
+import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class GameViewManager {
-    public static final int WIDTH = 25;
+    public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
 
     public static boolean running;
@@ -50,20 +51,20 @@ public class GameViewManager {
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
+        createNewGame();
         initializeStage();
         createKeyListener();
+//        createMap();
     }
 
     private void initializeStage() {
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(Sprite.SCALED_SIZE * getColumns(), Sprite.SCALED_SIZE * getRows());
         gc = canvas.getGraphicsContext2D();
-
         // Tao root container
         root = new Group();
         root.getChildren().add(canvas);
-
         // Tao scene
-        scene = new Scene(root);
+        scene = new Scene(root, Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
 
         // Tao stage
         mainStage = new Stage();
@@ -107,6 +108,18 @@ public class GameViewManager {
     }
 
     public void createMap() {
+//        for (int i = 0; i < WIDTH; i++) {
+//            for (int j = 0; j < HEIGHT; j++) {
+//                Entity object;
+//                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
+//                    object = new Wall(i, j, Sprite.wall.getFxImage());
+//                }
+//                else {
+//                    object = new Grass(i, j, Sprite.grass.getFxImage());
+//                }
+//                stillObjects.add(object);
+//            }
+//        }
         File file = new File("res/levels/Level2.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
@@ -119,8 +132,11 @@ public class GameViewManager {
             int i = 0;
             Entity object;
             Entity enemy;
+            List<String> lines = new ArrayList<String>();
+            // create map
             while (i < R) {
                 line = bf.readLine();
+                lines.add(line);
                 for (int j = 0; j < C; j++) {
                     switch (line.charAt(j)) {
                         case '#':
@@ -164,6 +180,30 @@ public class GameViewManager {
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             enemies.add(enemy);
                             stillObjects.add(object);
+                            break;
+                        case '5':
+                            enemy = new Ovapi(j, i, Sprite.ovapi_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        case '6':
+                            enemy = new Pass(j, i, Sprite.pass_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        case '7':
+                            enemy = new Kondoria(j, i, Sprite.kondoria_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
+                            break;
+                        case '8':
+                            enemy = new Pontan(j, i, Sprite.pontan_right1.getFxImage(), this);
+                            object = new Grass(j, i, Sprite.grass.getFxImage());
+                            enemies.add(enemy);
+                            stillObjects.add(object);
                         default:
                             object = new Grass(j, i, Sprite.grass.getFxImage());
                             stillObjects.add(object);
@@ -188,6 +228,8 @@ public class GameViewManager {
             }
         }*/
         bomberman.update();
+//        canvas.setLayoutX(canvas.getLayoutX() - 5);
+//        bomberman.toString();
     }
 
     public void render() {
@@ -216,6 +258,7 @@ public class GameViewManager {
             public void handle(long l) {
                 /*if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
+                    moveBackground();
                     render();
                     update();
                     Storage.clearGarbage();
@@ -224,15 +267,18 @@ public class GameViewManager {
                         timer.stop();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
-                    System.out.println(System.currentTimeMillis());
-                }*/
-                // Nam's Laptop
-                render();
-                update();
-                if (!bomberman.isAlive()) {
-                    mainStage.close();
-                    timer.stop();
-                    BombermanGame.switchScene(MenuViewManager.getScene());
+                    System.out.println(canvas.getLayoutX() + " " + canvas.getLayoutY());
+//                t += 0.016;
+//
+//                if (t > 0.02) {
+//                    render();
+//                    update();
+//                    t = 0;
+//                }
+
+                    // Nam's Laptop
+//                render();
+//                update();
                 }
                 System.out.println(System.currentTimeMillis());
             }
@@ -251,8 +297,39 @@ public class GameViewManager {
             return bomberman;
         }
 
-    public Scene getScene() {
-        return scene;
+        public int getRows() {
+            return R;
+        }
+
+        public int getColumns() {
+            return C;
+        }
+
+        public void moveBackground() {
+            int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
+            // check if bomberman is in the middle of the screen width
+            if (bomberman.getX() >= midHorizontalPosition
+                    && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
+                // move background upon bomberman position
+                canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
+            } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
+                canvas.setLayoutX(0);
+            } else { // set camera upon bomberman position
+                canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
+            }
+
+            // check if bomberman is in the middle of the screen height
+            int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
+            if (bomberman.getY() >= midVerticalPosition
+                    && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
+                // move background upon bomberman position
+                canvas.setLayoutY(midVerticalPosition - bomberman.getY());
+            } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
+                canvas.setLayoutY(0);
+            } else { // set camera upon bomberman position
+                canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
+            }
+        }
     }
 
     public List<Entity> getStillObjects() {
