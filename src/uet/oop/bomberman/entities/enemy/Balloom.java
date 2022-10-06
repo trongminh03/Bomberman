@@ -79,11 +79,6 @@ public class Balloom extends Enemy {
     }
 
     @Override
-    public void dead() {
-        this.alive = false;
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         balloomBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -110,23 +105,27 @@ public class Balloom extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
-                        Sprite.balloom_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
-                        Sprite.balloom_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
-                        Sprite.balloom_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
-                        Sprite.balloom_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
+                            Sprite.balloom_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
+                            Sprite.balloom_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
+                            Sprite.balloom_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
+                            Sprite.balloom_right3, animation, 60);
+                    break;
+            }
+        }else {
+            currentSprite = Sprite.balloom_dead;
         }
     }
 

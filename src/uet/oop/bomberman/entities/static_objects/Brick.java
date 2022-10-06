@@ -34,22 +34,21 @@ public class Brick extends AnimatedEntity {
     }
 
     private void chooseSprite() {
-        if (isAlive) {
-            currentSprite = Sprite.brick;
-            this.setAnimation(0);
-        }else {
-            currentSprite = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1,
-                    Sprite.brick_exploded2, animation, 30);
-            time += elapsedTime;
-            if (time == 25 * elapsedTime) {
-                destroy();
-            }
+        currentSprite = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1,
+                Sprite.brick_exploded2, animation, 30);
+        time += elapsedTime;
+        if (time == 25 * elapsedTime) {
+            destroy();
         }
     }
     @Override
     public void render(GraphicsContext gc) {
-        chooseSprite();
-        gc.drawImage(currentSprite.getFxImage(), x, y);
+        if (isAlive) {
+            super.render(gc);
+        } else {
+            chooseSprite();
+            gc.drawImage(currentSprite.getFxImage(), x, y);
+        }
     }
 
     @Override

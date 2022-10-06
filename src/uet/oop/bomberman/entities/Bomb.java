@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.ExplosionType;
+import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -24,8 +25,8 @@ public class Bomb extends AnimatedEntity {
 
     */
     private boolean isThroughBomb = true;   /*Check through bomb:   false: bomber and bomb can't go on top of each other
-                                                                    true:  3bomber and bomb can go on top of each other*/
-    private final double elapedTime = 1/30f;
+                                                                    true:  bomber and bomb can go on top of each other*/
+    private final double elapsedTime = 1/30f;
     private double time = 0;
 
     Sprite currentSprite;
@@ -47,7 +48,7 @@ public class Bomb extends AnimatedEntity {
         this.game = gameViewManager;
         bombStatus = BombStatus.PLACED;
         explosionInit();
-    }   
+    }
 
     @Override
     public RectBoundedBox getBoundingBox() {
@@ -167,11 +168,11 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy right
             for (Entity entity : game.getEnemies()) {
-                if (entity instanceof Character) {
+                if (entity instanceof Enemy) {
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() + maxRight + 1
                             && maxRight < size) {
-                        ((Character)entity).dead();
+                        ((Enemy)entity).dead();
                     }
                 }
             }
@@ -247,10 +248,11 @@ public class Bomb extends AnimatedEntity {
         }
     }
     private void chooseSprite() {
-        if (time >= 60 * elapedTime) {
+        if (time == 60 * elapsedTime) {
             bombStatus = BombStatus.EXPLODE;
+            this.setAnimation(0);
         }
-        if (time >= 90 * elapedTime) {
+        if (time == 90 * elapsedTime) {
             bombStatus = BombStatus.DESTROY;
             time = 0;
         }
@@ -312,7 +314,7 @@ public class Bomb extends AnimatedEntity {
             explosion();
         }
         animate();
-        time += elapedTime;
+        time += elapsedTime;
     }
 
     public RectBoundedBox[] getRecBoundedBox() {

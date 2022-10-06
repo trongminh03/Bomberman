@@ -23,7 +23,9 @@ public abstract class Enemy extends AnimatedEntity {
 
     protected abstract void move();
 
-    public abstract void dead();
+    public void dead() {
+        alive = false;
+    };
 
     public boolean isAlive() {
         return alive;

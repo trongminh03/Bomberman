@@ -278,7 +278,7 @@ public class GameViewManager {
 //                render();
 //                update();
                 }
-                System.out.println(System.currentTimeMillis());
+//                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();

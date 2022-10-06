@@ -105,8 +105,12 @@ public class Bomber extends Character {
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                if (isColliding(bomb) && !bomb.isThroughBomb()) return true;
-                if (!isColliding(bomb)) bomb.setThroughBomb(false);
+                if (!isColliding(bomb)) {
+                    bomb.setThroughBomb(false);
+                }
+                if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                    return true;
+                }
             }
         }
         return false;
