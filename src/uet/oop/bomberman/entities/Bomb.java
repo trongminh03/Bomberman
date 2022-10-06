@@ -47,11 +47,10 @@ public class Bomb extends AnimatedEntity {
         this.game = gameViewManager;
         bombStatus = BombStatus.PLACED;
         explosionInit();
-    }
+    }   
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        bombBoundary.setPosition(x, y, BOMB_WIDTH, BOMB_HEIGHT);
         return bombBoundary;
     }
 

@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomber extends Character {
-    private static final int velocity = 2;
+    private static int velocity = 2;
 
     final static int BOMBER_WIDTH = 24;
     final static int BOMBER_HEIGHT = 28;
@@ -305,6 +305,7 @@ public class Bomber extends Character {
 
     public boolean checkHitEnemy() {
         return hitEnemy;
+    }
     public Bomb[] getBombs() {
         return bombs;
     }

@@ -13,14 +13,14 @@ public class Brick extends AnimatedEntity {
     private boolean isAlive = true;
     RectBoundedBox box;
     Sprite currentSprite;
-    private double elapedTime = 1/30f;
+    private final double elapsedTime = 1/30f;
     private double time = 0;
 
     private GameViewManager game;
 
     public Brick(int x, int y, Image img, GameViewManager gameViewManager) {
         super(x, y, img);
-        box = new RectBoundedBox(x, y, Sprite.brick.getSpriteWidth(), Sprite.brick.getSpriteWidth());
+        box = new RectBoundedBox(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         this.game = gameViewManager;
     }
 
@@ -34,9 +34,17 @@ public class Brick extends AnimatedEntity {
     }
 
     private void chooseSprite() {
-
-        currentSprite = Sprite.movingSprite(Sprite.brick_exploded,
-                Sprite.brick_exploded1, Sprite.brick_exploded2, animation, 30);
+        if (isAlive) {
+            currentSprite = Sprite.brick;
+            this.setAnimation(0);
+        }else {
+            currentSprite = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1,
+                    Sprite.brick_exploded2, animation, 30);
+            time += elapsedTime;
+            if (time == 25 * elapsedTime) {
+                destroy();
+            }
+        }
     }
     @Override
     public void render(GraphicsContext gc) {
@@ -46,11 +54,10 @@ public class Brick extends AnimatedEntity {
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        box.setPosition(x, y, BRICK_WIDTH, BRICK_HEIGHT);
         return box;
     }
 
     private void destroy() {
-        game.getStillObjects().remove(this);
+        game.getBrickGarbage().add(this);
     }
 }

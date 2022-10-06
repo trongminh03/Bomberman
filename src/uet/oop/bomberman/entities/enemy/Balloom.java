@@ -96,10 +96,6 @@ public class Balloom extends Enemy {
                 if (isColliding(entity))
                     return true;
             }
-            if (entity instanceof Brick) {
-                Brick brick = (Brick) entity;
-                if (isColliding(brick)) return true;
-            }
         }
         for (Bomb bomb : game.getBomberman().getBombs()) {
             if (isColliding(bomb)) return true;
