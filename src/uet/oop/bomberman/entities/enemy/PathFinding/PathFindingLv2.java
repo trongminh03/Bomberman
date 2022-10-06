@@ -1,10 +1,9 @@
 package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Bomber;
-import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -42,7 +41,7 @@ public class PathFindingLv2 extends RandomMove {
                 endX = true;
                 endY = true;
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof StaticEntity) {
+                    if (object instanceof Wall || object instanceof Brick) {
                         if (Math.abs(bomber.getGridX() - object.getGridX()) + Math.abs(object.getGridX() - enemy.getGridX())
                                 == Math.abs(bomber.getGridX() - enemy.getGridX())) { // if objects in X axis
                             if (enemy.getGridY() == object.getGridY()) { // if objects block startX

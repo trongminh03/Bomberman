@@ -3,10 +3,11 @@ package uet.oop.bomberman.entities.enemy;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.StaticEntity;
-import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.static_objects.StaticEntity;
 import uet.oop.bomberman.entities.enemy.PathFinding.RandomMove;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
@@ -99,7 +100,7 @@ public class Doll extends Enemy {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof Wall || entity instanceof Brick) {
                 if (isColliding(entity))
                     return true;
             }

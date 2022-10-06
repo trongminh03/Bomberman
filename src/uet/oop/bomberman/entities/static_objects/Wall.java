@@ -1,7 +1,6 @@
 package uet.oop.bomberman.entities.static_objects;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.model.RectBoundedBox;
 

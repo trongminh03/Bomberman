@@ -4,8 +4,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.constants.Direction;
-import uet.oop.bomberman.entities.StaticEntity;
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.static_objects.StaticEntity;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -66,7 +68,7 @@ public class Bomber extends Character {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof Wall || entity instanceof Brick) {
                 if (isColliding(entity)) {
 //                    System.out.println("Collide");
                     return true;

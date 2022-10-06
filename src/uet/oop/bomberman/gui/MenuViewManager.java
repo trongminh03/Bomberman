@@ -5,7 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -14,6 +17,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.model.GameButton;
+import uet.oop.bomberman.model.GameSubScene;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,6 +33,13 @@ public class MenuViewManager {
 
     List<Button> menuButtons;
 
+    private GameSubScene creditsSubScene;
+    private GameSubScene helpSubScene;
+    private GameSubScene scoreSubScene;
+
+    private GameSubScene sceneToHide;
+
+
     public MenuViewManager() {
         menuButtons = new ArrayList<Button>();
         menuPane = new AnchorPane();
@@ -36,6 +47,8 @@ public class MenuViewManager {
                                 Sprite.SCALED_SIZE * GameViewManager.HEIGHT);
         menuStage = new Stage();
         menuStage.setScene(menuScene);
+        createLogo();
+        createSubScene();
         createButton();
         createBackground();
     }
@@ -62,6 +75,26 @@ public class MenuViewManager {
         createCreditsButton();
     }
 
+    private void showSubScene(GameSubScene subScene) {
+        if (sceneToHide != null) {
+            sceneToHide.moveSubScene();
+        }
+
+        subScene.moveSubScene();
+        sceneToHide = subScene;
+    }
+
+    private void createSubScene() {
+        creditsSubScene = new GameSubScene();
+        menuPane.getChildren().add(creditsSubScene);
+
+        helpSubScene = new GameSubScene();
+        menuPane.getChildren().add(helpSubScene);
+
+        scoreSubScene = new GameSubScene();
+        menuPane.getChildren().add(scoreSubScene);
+    }
+
     private void createStartButton() {
         GameButton startButton = new GameButton("PLAY GAME");
         addMenuButton(startButton, 0);
@@ -80,16 +113,60 @@ public class MenuViewManager {
     private void createScoreButton() {
         GameButton scoreButton = new GameButton("SCORES");
         addMenuButton(scoreButton, 1);
+
+        scoreButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(scoreSubScene);
+            }
+        });
     }
 
     private void createHelpButton() {
         GameButton helpButton = new GameButton("HELP");
         addMenuButton(helpButton, 2);
+
+        helpButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(helpSubScene);
+            }
+        });
     }
 
     private void createCreditsButton() {
         GameButton creditsButton = new GameButton("CREDITS");
         addMenuButton(creditsButton, 3);
+
+        creditsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(creditsSubScene);
+            }
+        });
+    }
+
+    private void createLogo() {
+        ImageView logo = new ImageView("/model/logo.png");
+        logo.setLayoutX(280);
+        logo.setLayoutY(5);
+
+        logo.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                logo.setEffect(new DropShadow());
+            }
+        });
+
+        logo.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                logo.setEffect(null);
+            }
+        });
+
+        menuPane.getChildren().add(logo);
     }
 
     private void createBackground() {

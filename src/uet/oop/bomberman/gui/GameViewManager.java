@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.enemy.*;
-import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
@@ -16,7 +16,6 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
