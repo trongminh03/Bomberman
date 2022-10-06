@@ -82,7 +82,7 @@ public class GameViewManager {
     }
 
     public void createMap() {
-        File file = new File("res/levels/Level4.txt");
+        File file = new File("res/levels/Level2.txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
