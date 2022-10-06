@@ -99,6 +99,11 @@ public class Explosion extends AnimatedEntity {
         return explosionBoundary;
     }
 
+    public boolean isColliding(Entity other) {
+        RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
+        explosionBoundary.setPosition(x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
+        return explosionBoundary.checkCollision(otherEntityBoundary);
+    }
 
     @Override
     public void render(GraphicsContext gc) {

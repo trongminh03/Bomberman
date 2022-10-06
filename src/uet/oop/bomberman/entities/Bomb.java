@@ -40,11 +40,12 @@ public class Bomb extends AnimatedEntity {
 
     public Bomb(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
+        bombBoundary = new RectBoundedBox(xUnit, yUnit, BOMB_WIDTH, BOMB_HEIGHT);
     }
 
     public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
-        bombBoundary = new RectBoundedBox(x, y, BOMB_WIDTH, BOMB_HEIGHT);
+        bombBoundary = new RectBoundedBox(xUnit, yUnit, BOMB_WIDTH, BOMB_HEIGHT);
         this.game = gameViewManager;
         bombStatus = BombStatus.PLACED;
         explosionInit();
@@ -151,6 +152,7 @@ public class Bomb extends AnimatedEntity {
                     Sprite.explosion_vertical_down_last.getFxImage(), ExplosionType.LAST_DOWN);
             explosionsDown[0] = explosion;
         }
+        System.out.println("right = " + maxRight + "\t left = " + maxLeft + "\t up = " + maxUp + "\t down = " + maxDown);
     }
 
     private void explosion() {
@@ -168,14 +170,15 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy right
             for (Entity entity : game.getEnemies()) {
-                if (entity instanceof Enemy) {
-                    if (entity.getGridY() == this.getGridY()
-                            && entity.getGridX() == this.getGridX() + maxRight + 1
-                            && maxRight < size) {
-                        ((Enemy)entity).dead();
+                for (Explosion explosion : explosionsRight) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(entity)) {
+                            ((Enemy)entity).dead();
+                        }
                     }
                 }
             }
+
         }
         //Explosion Left
         {
@@ -191,11 +194,11 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy left
             for (Entity entity : game.getEnemies()) {
-                if (entity instanceof Character) {
-                    if (entity.getGridY() == this.getGridY()
-                            && entity.getGridX() == this.getGridX() - maxRight - 1
-                            && maxRight < size) {
-                        ((Character)entity).dead();
+                for (Explosion explosion : explosionsLeft) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(entity)) {
+                            ((Enemy)entity).dead();
+                        }
                     }
                 }
             }
@@ -214,11 +217,11 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy up
             for (Entity entity : game.getEnemies()) {
-                if (entity instanceof Character) {
-                    if (entity.getGridY() == this.getGridY()
-                            && entity.getGridX() == this.getGridX() - maxUp - 1
-                            && maxRight < size) {
-                        ((Character)entity).dead();
+                for (Explosion explosion : explosionsUp) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(entity)) {
+                            ((Enemy)entity).dead();
+                        }
                     }
                 }
             }
@@ -237,12 +240,18 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy down
             for (Entity entity : game.getEnemies()) {
-                if (entity instanceof Character) {
-                    if (entity.getGridY() == this.getGridY()
-                            && entity.getGridX() == this.getGridX() + maxDown + 1
-                            && maxRight < size) {
-                        ((Character)entity).dead();
+                for (Explosion explosion : explosionsRight) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(entity)) {
+                            ((Enemy)entity).dead();
+                        }
                     }
+                }
+            }
+            //Destroy enemy center
+            for (Entity entity : game.getEnemies()) {
+                if (this.isColliding(entity)) {
+                    ((Enemy)entity).dead();
                 }
             }
         }
@@ -317,37 +326,17 @@ public class Bomb extends AnimatedEntity {
         time += elapsedTime;
     }
 
-    public RectBoundedBox[] getRecBoundedBox() {
-        RectBoundedBox[] rectBoundedBoxes = new RectBoundedBox[4 * size];
-        rectBoundedBoxes[0] = this.getBoundingBox();
-        for (int i = 1; i <= size; i++) {
-            if (explosionsLeft[i] != null) {
-                rectBoundedBoxes[i] = explosionsLeft[i].getBoundingBox();
-            }
-        }
-        for (int i = 1; i <= size; i++) {
-            if (explosionsRight[i] != null) {
-                rectBoundedBoxes[size + i] = explosionsRight[i].getBoundingBox();
-            }
-        }
-        for (int i = 1; i <= size; i++) {
-            if (explosionsUp[i] != null) {
-                rectBoundedBoxes[2 * size + i] = explosionsUp[i].getBoundingBox();
-            }
-        }
-        for (int i = 1; i <= size; i++) {
-            if (explosionsDown[i] != null) {
-                rectBoundedBoxes[3 * size + i] = explosionsDown[i].getBoundingBox();
-            }
-        }
-        return rectBoundedBoxes;
-    }
-
     public BombStatus getBombStatus() {
         return bombStatus;
     }
 
     public void setBombStatus(BombStatus bombStatus) {
         this.bombStatus = bombStatus;
+    }
+
+    public boolean isColliding(Entity other) {
+        RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
+        bombBoundary.setPosition(x, y, BOMB_WIDTH, BOMB_HEIGHT);
+        return bombBoundary.checkCollision(otherEntityBoundary);
     }
 }

@@ -87,11 +87,6 @@ public class Minvo extends Enemy {
     }
 
     @Override
-    public void dead() {
-
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         minvoBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -109,23 +104,31 @@ public class Minvo extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_right2,
-                        Sprite.minvo_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_left2,
-                        Sprite.minvo_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_left2,
-                        Sprite.minvo_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_right2,
-                        Sprite.minvo_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_right2,
+                            Sprite.minvo_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_left2,
+                            Sprite.minvo_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.minvo_left1, Sprite.minvo_left2,
+                            Sprite.minvo_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.minvo_right1, Sprite.minvo_right2,
+                            Sprite.minvo_right3, animation, 60);
+                    break;
+            }
+        }else {
+            currentSprite = Sprite.minvo_dead;
+            time += elapsedTime;
+            if (time == 15 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

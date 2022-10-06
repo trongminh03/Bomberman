@@ -33,6 +33,8 @@ public class GameViewManager {
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
+    private List<Enemy> enemieGarbage = new ArrayList<>();
+
     private Stage mainStage;
     //    private Stage menuStage;
     private Group root;
@@ -217,7 +219,7 @@ public class GameViewManager {
     }
 
     public void update() {
-//        enemies.forEach(Entity::update);
+        enemies.forEach(Entity::update);
         for (Entity entity : stillObjects) {
             if (entity instanceof Brick) {
                 entity.update();
@@ -230,18 +232,6 @@ public class GameViewManager {
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        /*for (Entity entity : stillObjects) {
-            if (!(entity instanceof Brick))
-                entity.render(gc);
-//            else {
-//                Brick brick = (Brick) entity;
-//                brick.render(gc);
-//            }
-//            if (entity instanceof Brick) {
-//                Brick brick = (Brick) entity;
-//                brick.render(gc);
-//            }
-        }*/
         stillObjects.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
@@ -266,17 +256,10 @@ public class GameViewManager {
                         stillObjects.removeAll(brickGarbage);
                         brickGarbage.clear();
                     }
-//                t += 0.016;
-//
-//                if (t > 0.02) {
-//                    render();
-//                    update();
-//                    t = 0;
-//                }
-
-                    // Nam's Laptop
-//                render();
-//                update();
+                    if (enemieGarbage.size() != 0) {
+                        enemies.removeAll(enemieGarbage);
+                        enemieGarbage.clear();
+                    }
                 }
 //                System.out.println(System.currentTimeMillis());
             }
@@ -337,5 +320,8 @@ public class GameViewManager {
 
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
+    }
+    public List<Enemy> getEnemieGarbage() {
+        return enemieGarbage;
     }
 }

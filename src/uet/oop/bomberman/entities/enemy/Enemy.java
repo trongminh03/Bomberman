@@ -13,6 +13,8 @@ public abstract class Enemy extends AnimatedEntity {
     protected boolean brickPass = false;
     protected int SCORE = 0;
     protected int FINDING_SCOPE = 0;
+    protected final double elapsedTime = 1/30f;
+    protected double time = 0;
 
     public Enemy(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);

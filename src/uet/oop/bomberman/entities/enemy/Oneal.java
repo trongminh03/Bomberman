@@ -93,11 +93,6 @@ public class Oneal extends Enemy {
     }
 
     @Override
-    public void dead() {
-
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         onealBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -115,23 +110,31 @@ public class Oneal extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_right2,
-                        Sprite.oneal_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_left2,
-                        Sprite.oneal_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2,
-                        Sprite.oneal_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2,
-                        Sprite.oneal_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_right2,
+                            Sprite.oneal_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_left2,
+                            Sprite.oneal_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2,
+                            Sprite.oneal_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2,
+                            Sprite.oneal_right3, animation, 60);
+                    break;
+            }
+        }else {
+            currentSprite = Sprite.oneal_dead;
+            time += elapsedTime;
+            if (time == 15 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

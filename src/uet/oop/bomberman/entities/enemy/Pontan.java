@@ -86,11 +86,6 @@ public class Pontan extends Enemy {
     }
 
     @Override
-    public void dead() {
-
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         pontanBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -108,23 +103,31 @@ public class Pontan extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_right2,
-                        Sprite.pontan_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_left2,
-                        Sprite.pontan_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_left2,
-                        Sprite.pontan_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_right2,
-                        Sprite.pontan_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_right2,
+                            Sprite.pontan_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_left2,
+                            Sprite.pontan_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.pontan_left1, Sprite.pontan_left2,
+                            Sprite.pontan_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.pontan_right1, Sprite.pontan_right2,
+                            Sprite.pontan_right3, animation, 60);
+                    break;
+            }
+        }else {
+            currentSprite = Sprite.pontan_dead;
+            time += elapsedTime;
+            if (time == 15 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

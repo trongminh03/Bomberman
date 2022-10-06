@@ -85,11 +85,6 @@ public class Pass extends Enemy {
     }
 
     @Override
-    public void dead() {
-
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         passBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -107,23 +102,31 @@ public class Pass extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_right2,
-                        Sprite.pass_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_left2,
-                        Sprite.pass_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_left2,
-                        Sprite.pass_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_right2,
-                        Sprite.pass_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_right2,
+                            Sprite.pass_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_left2,
+                            Sprite.pass_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_left2,
+                            Sprite.pass_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_right2,
+                            Sprite.pass_right3, animation, 60);
+                    break;
+            }
+        }else {
+            currentSprite = Sprite.pass_dead;
+            time += elapsedTime;
+            if (time == 15 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

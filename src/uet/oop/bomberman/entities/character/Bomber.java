@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomber extends Character {
-    private static int velocity = 2;
+    private static int velocity;
 
     final static int BOMBER_WIDTH = 24;
     final static int BOMBER_HEIGHT = 28;
@@ -48,11 +48,12 @@ public class Bomber extends Character {
         this.keyInput = keyInput;
         this.game = game;
         direction = Direction.RIGHT;
+        velocity = 2;
 //        moving = true;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         for (int i=0; i<maxBomb; i++) {
-            Bomb bomb = new Bomb(-1, -1, Sprite.bomb.getFxImage());
+            Bomb bomb = new Bomb(0, 0, Sprite.bomb.getFxImage(), game);
             bomb.setBombStatus(BombStatus.DESTROY);
             bombs[i] = bomb;
         }
@@ -66,7 +67,7 @@ public class Bomber extends Character {
         move();
         animate();
         if (checkFatalCollision()) {
-            dead();
+//            dead();
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
@@ -238,7 +239,7 @@ public class Bomber extends Character {
 //    }
 
     private void chooseSprite() {
-        if (!hitEnemy) {
+//        if (!hitEnemy) {
             switch (direction) {
                 case UP:
                     currentSprite = Sprite.player_up;
@@ -273,7 +274,7 @@ public class Bomber extends Character {
                     }
                     break;
             }
-        } else {
+        /*} else {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
@@ -282,7 +283,7 @@ public class Bomber extends Character {
 //            moving = false;
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
                     Sprite.player_dead3, animation, 60);
-        }
+        }*/
     }
 
 

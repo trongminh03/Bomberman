@@ -92,9 +92,6 @@ public class Balloom extends Enemy {
                     return true;
             }
         }
-        for (Bomb bomb : game.getBomberman().getBombs()) {
-            if (isColliding(bomb)) return true;
-        }
         return false;
     }
 
@@ -126,6 +123,10 @@ public class Balloom extends Enemy {
             }
         }else {
             currentSprite = Sprite.balloom_dead;
+            time += elapsedTime;
+            if (time == 15 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 
