@@ -13,7 +13,7 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Doll extends Enemy {
 
-    private final static int velocity = 2;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.doll_right1.getSpriteWidth();
     private final static int SPRITE_HEIGHT = Sprite.doll_right2.getSpriteHeight();
@@ -27,6 +27,7 @@ public class Doll extends Enemy {
         super(xUnit, yUnit, img);
         direction = Direction.RIGHT;
         currentSprite = Sprite.doll_right1;
+        velocity = 2;
         moving = true;
         dollBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
@@ -123,9 +124,15 @@ public class Doll extends Enemy {
                     break;
             }
         }else {
-            currentSprite = Sprite.doll_dead;
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.doll_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
-            if (time == 15 * elapsedTime) {
+            if (time == 35 * elapsedTime) {
                 game.getEnemieGarbage().add(this);
             }
         }

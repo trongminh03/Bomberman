@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public abstract class AnimatedEntity extends Entity {
     protected int animation = 0;
     protected final int MAX_ANIMATION = 300;
+    protected boolean resetAnimation = false;
 
     public AnimatedEntity(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);

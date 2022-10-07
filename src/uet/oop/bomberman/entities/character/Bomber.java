@@ -40,7 +40,7 @@ public class Bomber extends Character {
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean hitEnemy = false;
-    private boolean resetAnimation = false;
+//    private boolean resetAnimation = false;
     private GameViewManager game;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
@@ -52,7 +52,7 @@ public class Bomber extends Character {
 //        moving = true;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
-        for (int i=0; i<maxBomb; i++) {
+        for (int i = 0; i < maxBomb; i++) {
             Bomb bomb = new Bomb(0, 0, Sprite.bomb.getFxImage(), game);
             bomb.setBombStatus(BombStatus.DESTROY);
             bombs[i] = bomb;

@@ -52,8 +52,10 @@ public class Oneal extends Enemy {
     protected void move() {
 //        System.out.println(toString());
         pathFinding.updateEnemyDirection();
-        Random random = new Random();
-        velocity = random.nextInt(2) + 1; // velocity random [1, 2]
+        if (velocity != 0) {
+            Random random = new Random();
+            velocity = random.nextInt(2) + 1; // velocity random [1, 2]
+        }
 //        System.out.println(velocity);
 //        System.out.println(direction.toString());
         switch (direction) {
@@ -130,9 +132,15 @@ public class Oneal extends Enemy {
                     break;
             }
         }else {
-            currentSprite = Sprite.oneal_dead;
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.oneal_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
-            if (time == 15 * elapsedTime) {
+            if (time == 35 * elapsedTime) {
                 game.getEnemieGarbage().add(this);
             }
         }

@@ -233,8 +233,8 @@ public class GameViewManager {
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
+        enemies.forEach(g -> g.render(gc));
     }
 
     private void createGameLoop() {

@@ -12,7 +12,7 @@ import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Ovapi extends Enemy {
-    private final static int velocity = 1;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.ovapi_right1.getSpriteHeight();
     private final static int SPRITE_HEIGHT = Sprite.ovapi_right1.getSpriteHeight();
@@ -27,6 +27,7 @@ public class Ovapi extends Enemy {
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
+        velocity = 1;
         ovapiBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
         pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
@@ -123,11 +124,16 @@ public class Ovapi extends Enemy {
                     break;
             }
         }else {
-            currentSprite = Sprite.ovapi_dead;
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.ovapi_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
-            if (time == 15 * elapsedTime) {
+            if (time == 35 * elapsedTime) {
                 game.getEnemieGarbage().add(this);
-
             }
         }
     }

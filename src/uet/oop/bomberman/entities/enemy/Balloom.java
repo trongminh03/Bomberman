@@ -13,7 +13,7 @@ import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Balloom extends Enemy {
-    private final static int velocity = 1;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.balloom_right1.getSpriteWidth();
     private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
@@ -26,6 +26,7 @@ public class Balloom extends Enemy {
         super(xUnit, yUnit, img);
         this.game = game;
         direction = Direction.RIGHT;
+        velocity = 1;
         currentSprite = Sprite.balloom_right1;
         moving = true;
         balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -122,9 +123,15 @@ public class Balloom extends Enemy {
                     break;
             }
         }else {
-            currentSprite = Sprite.balloom_dead;
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.balloom_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
-            if (time == 15 * elapsedTime) {
+            if (time == 35 * elapsedTime) {
                 game.getEnemieGarbage().add(this);
             }
         }

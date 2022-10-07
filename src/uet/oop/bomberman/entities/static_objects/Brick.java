@@ -34,6 +34,10 @@ public class Brick extends AnimatedEntity {
     }
 
     private void chooseSprite() {
+        if (!resetAnimation) {
+            animation = 0;
+            resetAnimation = true;
+        }
         currentSprite = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1,
                 Sprite.brick_exploded2, animation, 30);
         time += elapsedTime;

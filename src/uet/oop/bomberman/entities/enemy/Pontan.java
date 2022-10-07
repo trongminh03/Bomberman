@@ -12,7 +12,7 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Pontan extends Enemy {
 
-    private final static int velocity = 2;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.pontan_right1.getSpriteHeight();
     private final static int SPRITE_HEIGHT = Sprite.pontan_right1.getSpriteHeight();
@@ -28,6 +28,7 @@ public class Pontan extends Enemy {
         brickPass = true;
         currentSprite = Sprite.pontan_right1;
         FINDING_SCOPE = 7;
+        velocity = 2;
         moving = true;
         pontanBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
@@ -123,9 +124,15 @@ public class Pontan extends Enemy {
                     break;
             }
         }else {
-            currentSprite = Sprite.pontan_dead;
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.pontan_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
-            if (time == 15 * elapsedTime) {
+            if (time == 35 * elapsedTime) {
                 game.getEnemieGarbage().add(this);
             }
         }

@@ -240,7 +240,7 @@ public class Bomb extends AnimatedEntity {
             }
             //Destroy enemy down
             for (Entity entity : game.getEnemies()) {
-                for (Explosion explosion : explosionsRight) {
+                for (Explosion explosion : explosionsDown) {
                     if (explosion != null) {
                         if (explosion.isColliding(entity)) {
                             ((Enemy)entity).dead();
