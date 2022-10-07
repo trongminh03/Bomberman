@@ -98,7 +98,7 @@ public class Pontan extends Enemy {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
+            if (entity instanceof Wall || entity instanceof Bomb) {
                 if (entity instanceof Bomb) {
                     Bomb bomb = (Bomb) entity;
                     if (bomb.getBombStatus() != BombStatus.DESTROY) {
