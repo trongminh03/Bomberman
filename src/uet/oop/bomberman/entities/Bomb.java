@@ -175,6 +175,14 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
+            // Destroy bomberman
+            for (Explosion explosion : explosionsRight) {
+                if (explosion != null) {
+                    if (explosion.isColliding(game.getBomberman())) {
+                        game.getBomberman().setFatalHit(true);
+                    }
+                }
+            }
 
         }
         //Explosion Left
@@ -202,6 +210,14 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
+            // Destroy bomberman
+            for (Explosion explosion : explosionsLeft) {
+                if (explosion != null) {
+                    if (explosion.isColliding(game.getBomberman())) {
+                        game.getBomberman().setFatalHit(true);
+                    }
+                }
+            }
         }
         //Explosion Up
         {
@@ -222,6 +238,14 @@ public class Bomb extends AnimatedEntity {
                         if (explosion.isColliding(entity)) {
                             ((Enemy)entity).dead();
                         }
+                    }
+                }
+            }
+            // Destroy bomberman
+            for (Explosion explosion : explosionsUp) {
+                if (explosion != null) {
+                    if (explosion.isColliding(game.getBomberman())) {
+                        game.getBomberman().setFatalHit(true);
                     }
                 }
             }
@@ -248,11 +272,24 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
+            // Destroy bomberman
+            for (Explosion explosion : explosionsDown) {
+                if (explosion != null) {
+                    if (explosion.isColliding(game.getBomberman())) {
+                        game.getBomberman().setFatalHit(true);
+                    }
+                }
+            }
+
             //Destroy enemy center
             for (Entity entity : game.getEnemies()) {
                 if (this.isColliding(entity)) {
                     ((Enemy)entity).dead();
                 }
+            }
+            // Destroy bomberman
+            if (this.isColliding(game.getBomberman())) {
+                game.getBomberman().setFatalHit(true);
             }
         }
     }

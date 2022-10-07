@@ -34,13 +34,10 @@ public class Bomber extends Character {
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
 
-    private final double elapsedTime = 1/30f;
-    private double time = 10;
-
     KeyManager keyInput;
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
-    private boolean hitEnemy = false;
+    private boolean fatalHit = false;
 //    private boolean resetAnimation = false;
     private GameViewManager game;
 
@@ -50,6 +47,7 @@ public class Bomber extends Character {
         this.game = game;
         direction = Direction.RIGHT;
         velocity = 2;
+        time = 10;
 //        moving = true;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
@@ -67,7 +65,7 @@ public class Bomber extends Character {
 //        }
         move();
         animate();
-        if (checkFatalCollision()) {
+        if (checkFatalCollision() || checkFatalHit()) {
             dead();
         }
         for (Bomb bomb : bombs) {
@@ -117,7 +115,7 @@ public class Bomber extends Character {
     public boolean checkFatalCollision() {
         for (Entity entity : game.getEnemies()) {
             if (isColliding(entity)) {
-                hitEnemy = true;
+                fatalHit = true;
                 return true;
             }
         }
@@ -236,7 +234,7 @@ public class Bomber extends Character {
 //    }
 
     private void chooseSprite() {
-        if (!hitEnemy) {
+        if (!fatalHit) {
             switch (direction) {
                 case UP:
                     currentSprite = Sprite.player_up;
@@ -287,12 +285,12 @@ public class Bomber extends Character {
     @Override
     public void render(GraphicsContext gc) {
         chooseSprite();
-        gc.drawImage(currentSprite.getFxImage(), x, y);
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
                 bomb.render(gc);
             }
         }
+        gc.drawImage(currentSprite.getFxImage(), x, y);
     }
 
     public String toString() {
@@ -305,8 +303,12 @@ public class Bomber extends Character {
         this.y = yUnit * Sprite.SCALED_SIZE;
     }
 
-    public boolean checkHitEnemy() {
-        return hitEnemy;
+    public boolean checkFatalHit() {
+        return fatalHit;
+    }
+
+    public void setFatalHit(boolean fatalHit) {
+        this.fatalHit = fatalHit;
     }
     public Bomb[] getBombs() {
         return bombs;

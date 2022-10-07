@@ -47,7 +47,7 @@ public class AStarAlgorithm extends RandomMove {
         if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= enemy.getFindingScope()
             && Math.abs(bomber.getGridY() - enemy.getGridY()) <= enemy.getFindingScope()
             && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
-            && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkHitEnemy()) {
+            && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkFatalHit()) {
             // Check exact grid
             if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
                 List<Node> path = findPath();
