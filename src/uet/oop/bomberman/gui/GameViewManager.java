@@ -20,8 +20,6 @@ import uet.oop.bomberman.input.KeyManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 public class GameViewManager {
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
@@ -209,6 +207,10 @@ public class GameViewManager {
                     }
                 }
                 i++;
+            }
+
+            for (Bomb bomb : bomberman.getBombs()) {
+                stillObjects.add(bomb);
             }
             bf.close();
         } catch (FileNotFoundException e) {

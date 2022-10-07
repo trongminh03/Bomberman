@@ -2,10 +2,13 @@ package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv2;
+import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
@@ -95,9 +98,18 @@ public class Ovapi extends Enemy {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall) {
-                if (isColliding(entity))
-                    return true;
+            if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
+                if (entity instanceof Bomb) {
+                    Bomb bomb = (Bomb) entity;
+                    if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                        if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isColliding(entity))
+                        return true;
+                }
             }
         }
         return false;

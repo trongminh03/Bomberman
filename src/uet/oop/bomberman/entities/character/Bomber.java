@@ -9,6 +9,7 @@ import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.static_objects.Brick;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -53,7 +54,7 @@ public class Bomber extends Character {
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         for (int i = 0; i < maxBomb; i++) {
-            Bomb bomb = new Bomb(0, 0, Sprite.bomb.getFxImage(), game);
+            Bomb bomb = new Bomb(-1, -1, Sprite.bomb.getFxImage(), game);
             bomb.setBombStatus(BombStatus.DESTROY);
             bombs[i] = bomb;
         }
@@ -67,7 +68,7 @@ public class Bomber extends Character {
         move();
         animate();
         if (checkFatalCollision()) {
-//            dead();
+            dead();
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
@@ -94,14 +95,10 @@ public class Bomber extends Character {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof StaticEntity) {
+            if (entity instanceof Wall || entity instanceof Brick) {
                 if (isColliding(entity)) {
                     return true;
                 }
-            }
-            if (entity instanceof Brick) {
-                Brick brick = (Brick) entity;
-                if (isColliding(brick)) return true;
             }
         }
         for (Bomb bomb : bombs) {
@@ -174,7 +171,7 @@ public class Bomber extends Character {
         }
         if (isBombBuff) {
             limitBomb = 2;
-        }else {
+        } else {
             limitBomb = 3;
         }
         if (numBomb < limitBomb) {
@@ -186,9 +183,9 @@ public class Bomber extends Character {
                 }
             }
             Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
-            for (int i=0; i<limitBomb; i++) {
+            for (int i = 0; i < limitBomb; i++) {
                 if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
-                    bombs[i] = bomb;
+                    bombs[i].setBomb(bomb);
                     break;
                 }
             }
@@ -239,7 +236,7 @@ public class Bomber extends Character {
 //    }
 
     private void chooseSprite() {
-//        if (!hitEnemy) {
+        if (!hitEnemy) {
             switch (direction) {
                 case UP:
                     currentSprite = Sprite.player_up;
@@ -274,7 +271,7 @@ public class Bomber extends Character {
                     }
                     break;
             }
-        /*} else {
+        } else {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
@@ -283,7 +280,7 @@ public class Bomber extends Character {
 //            moving = false;
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
                     Sprite.player_dead3, animation, 60);
-        }*/
+        }
     }
 
 

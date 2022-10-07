@@ -56,32 +56,32 @@ public class Explosion extends AnimatedEntity {
             case LAST_DOWN:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_vertical_down_last, Sprite.explosion_vertical_down_last1,
                         Sprite.explosion_vertical_down_last2, Sprite.explosion_vertical_down_last1,
-                        Sprite.explosion_vertical_down_last, animation, 30);
+                        Sprite.explosion_vertical_down_last, animation, 15);
                 break;
             case LAST_UP:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_vertical_top_last, Sprite.explosion_vertical_top_last1,
                         Sprite.explosion_vertical_top_last2, Sprite.explosion_vertical_top_last1,
-                        Sprite.explosion_vertical_top_last, animation, 30);
+                        Sprite.explosion_vertical_top_last, animation, 15);
                 break;
             case LAST_LEFT:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_horizontal_left_last, Sprite.explosion_horizontal_left_last1,
                         Sprite.explosion_horizontal_left_last2, Sprite.explosion_horizontal_left_last1,
-                        Sprite.explosion_horizontal_left_last, animation, 30);
+                        Sprite.explosion_horizontal_left_last, animation, 15);
                 break;
             case LAST_RIGHT:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_horizontal_right_last, Sprite.explosion_horizontal_right_last1,
                         Sprite.explosion_horizontal_right_last2, Sprite.explosion_horizontal_right_last1,
-                        Sprite.explosion_horizontal_right_last, animation, 30);
+                        Sprite.explosion_horizontal_right_last, animation, 15);
                 break;
             case HORIZONTAL:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_horizontal, Sprite.explosion_horizontal1,
                         Sprite.explosion_horizontal2, Sprite.explosion_horizontal1,
-                        Sprite.explosion_horizontal, animation, 30);
+                        Sprite.explosion_horizontal, animation, 15);
                 break;
             case VERTICAL:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_vertical, Sprite.explosion_vertical1,
                         Sprite.explosion_vertical2, Sprite.explosion_vertical1,
-                        Sprite.explosion_vertical, animation, 30);
+                        Sprite.explosion_vertical, animation, 15);
                 break;
             default:
                 break;

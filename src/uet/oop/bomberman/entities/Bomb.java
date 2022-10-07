@@ -21,30 +21,27 @@ public class Bomb extends AnimatedEntity {
     private int maxUp = size;
     private int maxDown = size;
     private BombStatus bombStatus;
-    /*
-
-    */
     private boolean isThroughBomb = true;   /*Check through bomb:   false: bomber and bomb can't go on top of each other
                                                                     true:  bomber and bomb can go on top of each other*/
     private final double elapsedTime = 1/30f;
-    private double time = 0;
+    private double time;
 
     Sprite currentSprite;
     RectBoundedBox bombBoundary;
-    Explosion[] explosionsRight = new Explosion[size];
-    Explosion[] explosionsLeft = new Explosion[size];
-    Explosion[] explosionsUp = new Explosion[size];
-    Explosion[] explosionsDown = new Explosion[size];
+    Explosion[] explosionsRight;
+    Explosion[] explosionsLeft;
+    Explosion[] explosionsUp;
+    Explosion[] explosionsDown;
 
     GameViewManager game;
 
-    public Bomb(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
-        bombBoundary = new RectBoundedBox(xUnit, yUnit, BOMB_WIDTH, BOMB_HEIGHT);
-    }
-
     public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
+        explosionsRight = new Explosion[size];
+        explosionsLeft = new Explosion[size];
+        explosionsUp = new Explosion[size];
+        explosionsDown = new Explosion[size];
+        time = 0;
         bombBoundary = new RectBoundedBox(xUnit, yUnit, BOMB_WIDTH, BOMB_HEIGHT);
         this.game = gameViewManager;
         bombStatus = BombStatus.PLACED;
@@ -152,7 +149,7 @@ public class Bomb extends AnimatedEntity {
                     Sprite.explosion_vertical_down_last.getFxImage(), ExplosionType.LAST_DOWN);
             explosionsDown[0] = explosion;
         }
-        System.out.println("right = " + maxRight + "\t left = " + maxLeft + "\t up = " + maxUp + "\t down = " + maxDown);
+//        System.out.println("right = " + maxRight + "\t left = " + maxLeft + "\t up = " + maxUp + "\t down = " + maxDown);
     }
 
     private void explosion() {
@@ -185,6 +182,9 @@ public class Bomb extends AnimatedEntity {
             //Destroy brick left
             for (Entity entity : game.getStillObjects()) {
                 if (entity instanceof Brick) {
+                    System.out.println("entity X: " + entity.getGridX() + "\t Y: " + entity.getGridY());
+                    System.out.println("this X: " + this.getGridX() + "\t Y: " + this.getGridY());
+                    System.out.println("max = " + maxLeft);
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {
@@ -256,21 +256,24 @@ public class Bomb extends AnimatedEntity {
             }
         }
     }
+
     private void chooseSprite() {
-        if (time == 60 * elapsedTime) {
+        if (time == 75 * elapsedTime) {
             bombStatus = BombStatus.EXPLODE;
             this.setAnimation(0);
         }
         if (time == 90 * elapsedTime) {
             bombStatus = BombStatus.DESTROY;
+            this.x = -1 * Sprite.SCALED_SIZE;
+            this.y = -1 * Sprite.SCALED_SIZE;
             time = 0;
         }
         if (bombStatus == BombStatus.PLACED) {
             currentSprite = Sprite.movingSprite(Sprite.bomb_2, Sprite.bomb_1,
-                    Sprite.bomb, animation, 60);
+                    Sprite.bomb, animation, 45);
         } else if (bombStatus == BombStatus.EXPLODE) {
             currentSprite = Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1,
-                    Sprite.bomb_exploded2, Sprite.bomb_exploded1, Sprite.bomb_exploded, animation, 30);
+                    Sprite.bomb_exploded2, Sprite.bomb_exploded1, Sprite.bomb_exploded, animation, 15);
         }
     }
 
@@ -338,5 +341,21 @@ public class Bomb extends AnimatedEntity {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         bombBoundary.setPosition(x, y, BOMB_WIDTH, BOMB_HEIGHT);
         return bombBoundary.checkCollision(otherEntityBoundary);
+    }
+
+    public void setBomb(Bomb other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.bombStatus = other.bombStatus;
+        this.isThroughBomb = other.isThroughBomb;
+        this.explosionsRight = other.explosionsRight;
+        this.explosionsLeft = other.explosionsLeft;
+        this.explosionsDown = other.explosionsDown;
+        this.explosionsUp = other.explosionsUp;
+        this.bombBoundary = other.bombBoundary;
+        this.maxLeft = other.maxLeft;
+        this.maxDown = other.maxDown;
+        this.maxUp = other.maxUp;
+        this.maxRight = other.maxRight;
     }
 }

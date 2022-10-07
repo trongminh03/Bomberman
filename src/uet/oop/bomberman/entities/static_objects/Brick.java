@@ -39,9 +39,9 @@ public class Brick extends AnimatedEntity {
             resetAnimation = true;
         }
         currentSprite = Sprite.movingSprite(Sprite.brick_exploded, Sprite.brick_exploded1,
-                Sprite.brick_exploded2, animation, 30);
+                Sprite.brick_exploded2, animation, 15);
         time += elapsedTime;
-        if (time == 25 * elapsedTime) {
+        if (time == 15 * elapsedTime) {
             destroy();
         }
     }

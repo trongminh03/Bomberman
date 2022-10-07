@@ -1,11 +1,13 @@
 package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.StaticEntity;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
@@ -49,7 +51,7 @@ public class AStarAlgorithm extends RandomMove {
             // Check exact grid
             if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
                 List<Node> path = findPath();
-                if (path == null) {
+                if (path.size() == 0) {
                     return EnemyDirection.DETECT_FAILED;
                 }
                 Node step = path.get(1).subtract(path.get(0));
@@ -124,18 +126,22 @@ public class AStarAlgorithm extends RandomMove {
     public void setObstacles() {
         if (enemy.canBrickPass()) {
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
+                if (entity instanceof Wall || entity instanceof Bomb) {
                     int row = entity.getGridY();
                     int column = entity.getGridX();
-                    setBlock(row, column);
+                    if (row >= 0 && column >= 0) {
+                        setBlock(row, column);
+                    }
                 }
             }
         } else {
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof StaticEntity) {
+                if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
                     int row = entity.getGridY();
                     int column = entity.getGridX();
-                    setBlock(row, column);
+                    if (row >= 0 && column >= 0) {
+                        setBlock(row, column);
+                    }
                 }
             }
         }

@@ -96,17 +96,33 @@ public class Kondoria extends Enemy {
     }
 
     public boolean checkSafeCollision() {
+//        for (Entity entity : game.getStillObjects()) {
+//            if (entity instanceof Wall) {
+//                if (isColliding(entity))
+//                    return true;
+//            }
+//        }
+//
+//        for (Bomb bomb : game.getBomberman().getBombs()) {
+//            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+//                if (isColliding(bomb) && !bomb.isThroughBomb()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall) {
-                if (isColliding(entity))
-                    return true;
-            }
-        }
-
-        for (Bomb bomb : game.getBomberman().getBombs()) {
-            if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                if (isColliding(bomb)) {
-                    return true;
+            if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
+                if (entity instanceof Bomb) {
+                    Bomb bomb = (Bomb) entity;
+                    if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                        if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isColliding(entity))
+                        return true;
                 }
             }
         }
