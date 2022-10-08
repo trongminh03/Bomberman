@@ -5,10 +5,9 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.StaticEntity;
 import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv2;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
@@ -17,7 +16,7 @@ import uet.oop.bomberman.model.RectBoundedBox;
 import javax.print.attribute.standard.Finishings;
 
 public class Minvo extends Enemy {
-    private final static int velocity = 1;
+    private int velocity = 1;
 
     private final static int SPRITE_WIDTH = Sprite.minvo_right1.getSpriteHeight();
     private final static int SPRITE_HEIGHT = Sprite.minvo_right1.getSpriteHeight();

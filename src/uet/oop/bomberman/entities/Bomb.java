@@ -5,12 +5,10 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.ExplosionType;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.entities.static_objects.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-import uet.oop.bomberman.entities.character.Character;
 
 public class Bomb extends AnimatedEntity {
     final static int BOMB_WIDTH = 30;

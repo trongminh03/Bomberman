@@ -7,6 +7,8 @@ import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -18,8 +20,8 @@ import java.util.TimerTask;
 public class Bomber extends Character {
     private static int velocity;
 
-    private final static int SPRITE_WIDTH = 24;
-    private final static int SPRITE_HEIGHT = 32;
+    private final static int BOMBER_WIDTH = 24;
+    private final static int BOMBER_HEIGHT = 32;
     private int numBomb = 0;
     private int limitBomb = 0;
     private int maxBomb = 3;
@@ -35,7 +37,7 @@ public class Bomber extends Character {
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
-//    private boolean resetAnimation = false;
+    //    private boolean resetAnimation = false;
     private GameViewManager game;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
@@ -78,14 +80,14 @@ public class Bomber extends Character {
 
     @Override
     public RectBoundedBox getBoundingBox() {
-        playerBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary.setPosition(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         return playerBoundary;
     }
 
     @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
-        playerBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary.setPosition(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         return playerBoundary.checkCollision(otherEntityBoundary);
     }
 

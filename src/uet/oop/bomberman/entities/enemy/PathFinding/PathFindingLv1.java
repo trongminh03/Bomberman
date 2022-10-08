@@ -2,9 +2,8 @@ package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.StaticEntity;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.static_objects.Wall;
