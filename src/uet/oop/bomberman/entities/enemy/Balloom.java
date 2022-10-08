@@ -3,9 +3,9 @@ package uet.oop.bomberman.entities.enemy;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.StaticEntity;
 import uet.oop.bomberman.entities.enemy.PathFinding.RandomMove;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -13,7 +13,7 @@ import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Balloom extends Enemy {
-    private final static int velocity = 1;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.balloom_right1.getSpriteWidth();
     private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
@@ -26,6 +26,7 @@ public class Balloom extends Enemy {
         super(xUnit, yUnit, img);
         this.game = game;
         direction = Direction.RIGHT;
+        velocity = 1;
         currentSprite = Sprite.balloom_right1;
         moving = true;
         balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -92,9 +93,18 @@ public class Balloom extends Enemy {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall || entity instanceof Brick) {
-                if (isColliding(entity))
-                    return true;
+            if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
+                if (entity instanceof Bomb) {
+                    Bomb bomb = (Bomb) entity;
+                    if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                        if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isColliding(entity))
+                        return true;
+                }
             }
         }
         return false;
@@ -107,23 +117,37 @@ public class Balloom extends Enemy {
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
-                        Sprite.balloom_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
-                        Sprite.balloom_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
-                        Sprite.balloom_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
-                        Sprite.balloom_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_right2,
+                            Sprite.balloom_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_left2,
+                            Sprite.balloom_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
+                            Sprite.balloom_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
+                            Sprite.balloom_right3, animation, 60);
+                    break;
+            }
+        }else {
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.balloom_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
+            time += elapsedTime;
+            if (time == 35 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

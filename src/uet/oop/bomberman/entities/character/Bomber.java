@@ -3,11 +3,10 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.static_objects.StaticEntity;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
@@ -17,17 +16,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomber extends Character {
-    private int velocity = 2;
+    private static int velocity;
+
     private final static int SPRITE_WIDTH = 24;
-    final static int SPRITE_HEIGHT = 32;
-//    private Point2D step;
-//    private int step;
+    private final static int SPRITE_HEIGHT = 32;
+    private int numBomb = 0;
+    private int limitBomb = 0;
+    private int maxBomb = 3;
+    private Bomb[] bombs = new Bomb[maxBomb];
+
+    private boolean isSpeedBuff = false;
+    private boolean isBombBuff = false;
+    private boolean isFlameBuff = false;
+    private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
+                                                                 false: bomber no bomb yet, can place bombs now */
 
     KeyManager keyInput;
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
-    private boolean hitEnemy = false;
-    private boolean resetAnimation = false;
+    private boolean fatalHit = false;
+//    private boolean resetAnimation = false;
     private GameViewManager game;
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
@@ -35,9 +43,16 @@ public class Bomber extends Character {
         this.keyInput = keyInput;
         this.game = game;
         direction = Direction.RIGHT;
+        velocity = 2;
+        time = 10;
 //        moving = true;
         currentSprite = Sprite.player_right;
-        playerBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
+        for (int i = 0; i < maxBomb; i++) {
+            Bomb bomb = new Bomb(-1, -1, Sprite.bomb.getFxImage(), game);
+            bomb.setBombStatus(BombStatus.DESTROY);
+            bombs[i] = bomb;
+        }
     }
 
 
@@ -48,8 +63,16 @@ public class Bomber extends Character {
 //        }
         move();
         animate();
-        if (checkFatalCollision()) {
+        if (checkFatalCollision() || checkFatalHit()) {
             dead();
+        }
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                bomb.update();
+            }
+        }
+        if (!isPlacedBomb) {
+            time += elapsedTime;
         }
     }
 
@@ -70,7 +93,16 @@ public class Bomber extends Character {
         for (Entity entity : game.getStillObjects()) {
             if (entity instanceof Wall || entity instanceof Brick) {
                 if (isColliding(entity)) {
-//                    System.out.println("Collide");
+                    return true;
+                }
+            }
+        }
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                if (!isColliding(bomb)) {
+                    bomb.setThroughBomb(false);
+                }
+                if (isColliding(bomb) && !bomb.isThroughBomb()) {
                     return true;
                 }
             }
@@ -81,7 +113,7 @@ public class Bomber extends Character {
     public boolean checkFatalCollision() {
         for (Entity entity : game.getEnemies()) {
             if (isColliding(entity)) {
-                hitEnemy = true;
+                fatalHit = true;
                 return true;
             }
         }
@@ -115,11 +147,45 @@ public class Bomber extends Character {
             direction = Direction.RIGHT;
             moving = true;
         }
+
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb && time >= 60 * elapsedTime) {
+            createBomb();
+            isPlacedBomb = true;
+            time = 0;
+        }
+        if (!keyInput.isPressed(KeyCode.SPACE) && isPlacedBomb) {
+            isPlacedBomb = false;
+        }
     }
 
-    @Override
-    public void kill() {
-
+    private void createBomb() {
+        numBomb = 0;
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                numBomb ++;
+            }
+        }
+        if (isBombBuff) {
+            limitBomb = 2;
+        } else {
+            limitBomb = 3;
+        }
+        if (numBomb < limitBomb) {
+            int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
+            int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
+            for (Bomb bomb : bombs) {
+                if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                    if (bomb.getGridX() == xUnit && bomb.getGridY() == yUnit) return;
+                }
+            }
+            Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
+            for (int i = 0; i < limitBomb; i++) {
+                if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
+                    bombs[i].setBomb(bomb);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -166,7 +232,7 @@ public class Bomber extends Character {
 //    }
 
     private void chooseSprite() {
-        if (!hitEnemy) {
+        if (!fatalHit) {
             switch (direction) {
                 case UP:
                     currentSprite = Sprite.player_up;
@@ -217,6 +283,11 @@ public class Bomber extends Character {
     @Override
     public void render(GraphicsContext gc) {
         chooseSprite();
+        for (Bomb bomb : bombs) {
+            if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                bomb.render(gc);
+            }
+        }
         gc.drawImage(currentSprite.getFxImage(), x, y);
     }
 
@@ -230,7 +301,14 @@ public class Bomber extends Character {
         this.y = yUnit * Sprite.SCALED_SIZE;
     }
 
-    public boolean checkHitEnemy() {
-        return hitEnemy;
+    public boolean checkFatalHit() {
+        return fatalHit;
+    }
+
+    public void setFatalHit(boolean fatalHit) {
+        this.fatalHit = fatalHit;
+    }
+    public Bomb[] getBombs() {
+        return bombs;
     }
 }

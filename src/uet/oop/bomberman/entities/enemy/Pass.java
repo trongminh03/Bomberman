@@ -2,7 +2,9 @@ package uet.oop.bomberman.entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.static_objects.StaticEntity;
@@ -13,7 +15,7 @@ import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Pass extends Enemy {
-    private final static int velocity = 2;
+    private int velocity;
 
     private final static int SPRITE_WIDTH = Sprite.pass_right1.getSpriteHeight();
     private final static int SPRITE_HEIGHT = Sprite.pass_right1.getSpriteHeight();
@@ -28,6 +30,7 @@ public class Pass extends Enemy {
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
+        velocity = 2;
         passBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         this.game = game;
         pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
@@ -86,11 +89,6 @@ public class Pass extends Enemy {
     }
 
     @Override
-    public void dead() {
-
-    }
-
-    @Override
     public boolean isColliding(Entity other) {
         RectBoundedBox otherEntityBoundary = (RectBoundedBox) other.getBoundingBox();
         passBoundary.setPosition(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -99,32 +97,55 @@ public class Pass extends Enemy {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall || entity instanceof Brick) {
-                if (isColliding(entity))
-                    return true;
+            if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
+                if (entity instanceof Bomb) {
+                    Bomb bomb = (Bomb) entity;
+                    if (bomb.getBombStatus() != BombStatus.DESTROY) {
+                        if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isColliding(entity))
+                        return true;
+                }
             }
         }
         return false;
     }
 
     public void choosingSprite() {
-        switch (direction) {
-            case UP:
-                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_right2,
-                        Sprite.pass_left3, animation, 60);
-                break;
-            case DOWN:
-                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_left2,
-                        Sprite.pass_right3, animation, 60);
-                break;
-            case LEFT:
-                currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_left2,
-                        Sprite.pass_left3, animation, 60);
-                break;
-            case RIGHT:
-                currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_right2,
-                        Sprite.pass_right3, animation, 60);
-                break;
+        if (isAlive()) {
+            switch (direction) {
+                case UP:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_right2,
+                            Sprite.pass_left3, animation, 60);
+                    break;
+                case DOWN:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_left2,
+                            Sprite.pass_right3, animation, 60);
+                    break;
+                case LEFT:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_left1, Sprite.pass_left2,
+                            Sprite.pass_left3, animation, 60);
+                    break;
+                case RIGHT:
+                    currentSprite = Sprite.movingSprite(Sprite.pass_right1, Sprite.pass_right2,
+                            Sprite.pass_right3, animation, 60);
+                    break;
+            }
+        }else {
+            if (!resetAnimation) {
+                animation = 0;
+                resetAnimation = true;
+            }
+            velocity = 0;
+            currentSprite = Sprite.movingSprite(Sprite.pass_dead, Sprite.mob_dead1, Sprite.mob_dead2,
+                    Sprite.mob_dead3, animation, 40);
+            time += elapsedTime;
+            if (time == 35 * elapsedTime) {
+                game.getEnemieGarbage().add(this);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemy.PathFinding;
 
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.static_objects.StaticEntity;
@@ -26,7 +27,7 @@ public class PathFindingLv1 extends RandomMove {
             // check exact grid
             if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof Wall || object instanceof Brick) {
+                    if (object instanceof Wall || object instanceof Brick || object instanceof Bomb) {
                         if (enemy.getGridY() == object.getGridY() && object.getGridX() > enemy.getGridX()
                                 && bomber.getGridX() > object.getGridX()) {
                             return EnemyDirection.DETECT_FAILED;
@@ -43,7 +44,7 @@ public class PathFindingLv1 extends RandomMove {
             // check exact grid
             if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof Wall || object instanceof Brick) {
+                    if (object instanceof Wall || object instanceof Brick || object instanceof Bomb) {
                         if (enemy.getGridY() == object.getGridY() && enemy.getGridX() > object.getGridX()
                                 && object.getGridX() > bomber.getGridX()) {
                             return EnemyDirection.DETECT_FAILED;
@@ -60,7 +61,7 @@ public class PathFindingLv1 extends RandomMove {
             // check exact grid
             if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof Wall || object instanceof Brick) {
+                    if (object instanceof Wall || object instanceof Brick || object instanceof Bomb) {
                         if (enemy.getGridX() == object.getGridX() && object.getGridY() > bomber.getGridY()
                                 && object.getGridY() < enemy.getGridY()) {
                             return EnemyDirection.DETECT_FAILED;
@@ -77,7 +78,7 @@ public class PathFindingLv1 extends RandomMove {
             // check exact grid
             if (enemy.getX() % 32 == 0 && enemy.getY() % 32 == 0) {
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof Wall || object instanceof Brick) {
+                    if (object instanceof Wall || object instanceof Brick || object instanceof Bomb) {
                         if (enemy.getGridX() == object.getGridX() && bomber.getGridY() > object.getGridY()
                                 && enemy.getGridY() < object.getGridY()) {
                             return EnemyDirection.DETECT_FAILED;

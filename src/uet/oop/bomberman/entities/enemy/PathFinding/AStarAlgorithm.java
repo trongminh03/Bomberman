@@ -44,11 +44,11 @@ public class AStarAlgorithm extends RandomMove {
         if (Math.abs(bomber.getGridX() - enemy.getGridX()) <= enemy.getFindingScope()
             && Math.abs(bomber.getGridY() - enemy.getGridY()) <= enemy.getFindingScope()
             && Math.abs(bomber.getGridX() - enemy.getGridX()) >= 0
-            && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkHitEnemy()) {
+            && Math.abs(enemy.getGridY() - bomber.getGridY()) >= 0 && !bomber.checkFatalHit()) {
             // Check exact grid
             if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
                 List<Node> path = findPath();
-                if (path == null) {
+                if (path.size() == 0) {
                     return EnemyDirection.DETECT_FAILED;
                 }
                 Node step = path.get(1).subtract(path.get(0));
@@ -123,18 +123,22 @@ public class AStarAlgorithm extends RandomMove {
     public void setObstacles() {
         if (enemy.canBrickPass()) {
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall) {
+                if (entity instanceof Wall || entity instanceof Bomb) {
                     int row = entity.getGridY();
                     int column = entity.getGridX();
-                    setBlock(row, column);
+                    if (row >= 0 && column >= 0) {
+                        setBlock(row, column);
+                    }
                 }
             }
         } else {
             for (Entity entity : game.getStillObjects()) {
-                if (entity instanceof Wall || entity instanceof Brick) {
+                if (entity instanceof Wall || entity instanceof Brick || entity instanceof Bomb) {
                     int row = entity.getGridY();
                     int column = entity.getGridX();
-                    setBlock(row, column);
+                    if (row >= 0 && column >= 0) {
+                        setBlock(row, column);
+                    }
                 }
             }
         }
