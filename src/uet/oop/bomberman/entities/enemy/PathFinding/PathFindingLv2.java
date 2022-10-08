@@ -113,7 +113,7 @@ public class PathFindingLv2 extends RandomMove {
                 endX = true;
                 endY = true;
                 for (Entity object : game.getStillObjects()) {
-                    if (object instanceof Wall) {
+                    if (object instanceof Wall || object instanceof Bomb) {
                         if (Math.abs(bomber.getGridX() - object.getGridX()) + Math.abs(object.getGridX() - enemy.getGridX())
                                 == Math.abs(bomber.getGridX() - enemy.getGridX())) { // if objects in X axis
                             if (enemy.getGridY() == object.getGridY()) { // if objects block startX
