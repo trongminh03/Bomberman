@@ -13,6 +13,7 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
+import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
@@ -20,6 +21,7 @@ import uet.oop.bomberman.input.KeyManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class GameViewManager {
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
@@ -32,6 +34,7 @@ public class GameViewManager {
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
     private List<Enemy> enemieGarbage = new ArrayList<>();
+    private List<Item> itemGarbage = new ArrayList<>();
 
     private Stage mainStage;
     //    private Stage menuStage;
@@ -96,6 +99,8 @@ public class GameViewManager {
             int i = 0;
             Entity object;
             Entity enemy;
+            Entity grass;
+            Entity brick;
             List<String> lines = new ArrayList<String>();
             // create map
             while (i < R) {
@@ -109,7 +114,7 @@ public class GameViewManager {
                             break;
                         case '*':
                             object = new Brick(j, i, Sprite.brick.getFxImage(), this);
-                            Entity grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
                             stillObjects.add(grass);
                             stillObjects.add(object);
                             break;
@@ -120,6 +125,62 @@ public class GameViewManager {
                             object = new Grass(j, i, Sprite.grass.getFxImage());
 //                            enemies.add(bomberman);
                             stillObjects.add(object);
+                            break;
+                        case 'f':
+                            object = new FlameItem(j, i, Sprite.powerup_flames.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 'b':
+                            object = new BombItem(j, i, Sprite.powerup_bombs.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 's':
+                            object = new SpeedItem(j, i, Sprite.powerup_speed.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 'W':
+                            object = new BrickPassItem(j, i, Sprite.powerup_wallpass.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 'B':
+                            object = new BombPassItem(j, i, Sprite.powerup_bombpass.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 'F':
+                            object = new FlamePassItem(j, i, Sprite.powerup_flamepass.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
+                            break;
+                        case 'P':
+                            object = new Portal(j, i, Sprite.portal.getFxImage());
+                            brick = new Brick(j, i, Sprite.brick.getFxImage(), this);
+                            grass = new Grass(j, i, Sprite.grass.getFxImage());
+                            stillObjects.add(grass);
+                            stillObjects.add(object);
+                            stillObjects.add(brick);
                             break;
                         case '1':
                             enemy = new Balloom(j, i, Sprite.balloom_right1.getFxImage(), this);
@@ -203,93 +264,109 @@ public class GameViewManager {
         stillObjects.forEach(g -> g.render(gc));
         bomberman.render(gc);
         enemies.forEach(g -> g.render(gc));
+
     }
 
     private void createGameLoop() {
         timer = new AnimationTimer() {
             long lastTick = 0;
+
             @Override
             public void handle(long l) {
                 if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     moveBackground();
-                    render();
                     update();
+                    render();
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
-                    if (brickGarbage.size() != 0) {
-                        stillObjects.removeAll(brickGarbage);
-                        brickGarbage.clear();
-                    }
-                    if (enemieGarbage.size() != 0) {
-                        enemies.removeAll(enemieGarbage);
-                        enemieGarbage.clear();
-                    }
+                    clearGarbage();
                 }
 //                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();
     }
-    public List<Entity> getEnemies () {
-            return enemies;
-        }
 
-    public Stage getMainStage () {
-            return mainStage;
-        }
+    public List<Entity> getEnemies() {
+        return enemies;
+    }
+
+    public Stage getMainStage() {
+        return mainStage;
+    }
 
     public Bomber getBomberman() {
-            return bomberman;
+        return bomberman;
+    }
+
+    public int getRows() {
+        return R;
+    }
+
+    public int getColumns() {
+        return C;
+    }
+
+    public void moveBackground() {
+        int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
+        // check if bomberman is in the middle of the screen width
+        if (bomberman.getX() >= midHorizontalPosition
+                && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
+            // move background upon bomberman position
+            canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
+        } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
+            canvas.setLayoutX(0);
+        } else { // set camera upon bomberman position
+            canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
         }
 
-        public int getRows() {
-            return R;
+        // check if bomberman is in the middle of the screen height
+        int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
+        if (bomberman.getY() >= midVerticalPosition
+                && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
+            // move background upon bomberman position
+            canvas.setLayoutY(midVerticalPosition - bomberman.getY());
+        } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
+            canvas.setLayoutY(0);
+        } else { // set camera upon bomberman position
+            canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
         }
+    }
 
-        public int getColumns() {
-            return C;
-        }
-
-        public void moveBackground() {
-            int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
-            // check if bomberman is in the middle of the screen width
-            if (bomberman.getX() >= midHorizontalPosition
-                    && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
-                // move background upon bomberman position
-                canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
-            } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
-                canvas.setLayoutX(0);
-            } else { // set camera upon bomberman position
-                canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
-            }
-
-            // check if bomberman is in the middle of the screen height
-            int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
-            if (bomberman.getY() >= midVerticalPosition
-                    && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
-                // move background upon bomberman position
-                canvas.setLayoutY(midVerticalPosition - bomberman.getY());
-            } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
-                canvas.setLayoutY(0);
-            } else { // set camera upon bomberman position
-                canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
-            }
-        }
     public List<Entity> getStillObjects() {
         return stillObjects;
     }
-    public Scene getScene () {
+
+    public List<Item> getItemGarbage() { return itemGarbage;}
+
+    public Scene getScene() {
         return scene;
     }
 
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
+
     public List<Enemy> getEnemieGarbage() {
         return enemieGarbage;
+    }
+
+    private void clearGarbage() {
+        if (brickGarbage.size() != 0) {
+            stillObjects.removeAll(brickGarbage);
+            brickGarbage.clear();
+        }
+        if (enemieGarbage.size() != 0) {
+            enemies.removeAll(enemieGarbage);
+            enemieGarbage.clear();
+        }
+        if (itemGarbage.size() != 0) {
+            stillObjects.removeAll(itemGarbage);
+            itemGarbage.clear();
+        }
     }
 }

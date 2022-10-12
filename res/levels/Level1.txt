@@ -42,5 +42,11 @@ Items:
 b - Bomb Item
 f - Flame Item
 s - Speed Item
+d - Detonator Item
+W - Brick pass Item
+B - Bomb pass Item
+F - Flame pass Item
+P - Portal
+
 
 Kí tự khác các kí tự trên - Grass

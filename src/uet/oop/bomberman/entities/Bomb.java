@@ -13,11 +13,11 @@ import uet.oop.bomberman.model.RectBoundedBox;
 public class Bomb extends AnimatedEntity {
     final static int BOMB_WIDTH = 30;
     final static int BOMB_HEIGHT = 30;
-    private final int size = 2;
-    private int maxRight = size;
-    private int maxLeft = size;
-    private int maxUp = size;
-    private int maxDown = size;
+    private int size;
+    private int maxRight;
+    private int maxLeft;
+    private int maxUp;
+    private int maxDown;
     private BombStatus bombStatus;
     private boolean isThroughBomb = true;   /*Check through bomb:   false: bomber and bomb can't go on top of each other
                                                                     true:  bomber and bomb can go on top of each other*/
@@ -33,13 +33,17 @@ public class Bomb extends AnimatedEntity {
 
     GameViewManager game;
 
-    public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
+    public Bomb(int xUnit, int yUnit, int size, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
+        this.size = size;
+        maxRight = size;
+        maxLeft = size;
+        maxUp = size;
+        maxDown = size;
         explosionsRight = new Explosion[size];
         explosionsLeft = new Explosion[size];
         explosionsUp = new Explosion[size];
         explosionsDown = new Explosion[size];
-        time = 0;
         bombBoundary = new RectBoundedBox(xUnit, yUnit, BOMB_WIDTH, BOMB_HEIGHT);
         this.game = gameViewManager;
         bombStatus = BombStatus.PLACED;
@@ -147,7 +151,6 @@ public class Bomb extends AnimatedEntity {
                     Sprite.explosion_vertical_down_last.getFxImage(), ExplosionType.LAST_DOWN);
             explosionsDown[0] = explosion;
         }
-//        System.out.println("right = " + maxRight + "\t left = " + maxLeft + "\t up = " + maxUp + "\t down = " + maxDown);
     }
 
     private void explosion() {
@@ -173,24 +176,23 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
-            for (Explosion explosion : explosionsRight) {
-                if (explosion != null) {
-                    if (explosion.isColliding(game.getBomberman())) {
-                        game.getBomberman().setFatalHit(true);
+            // Destroy bomberman right
+            if (!game.getBomberman().getFlamePassItem()) {
+                for (Explosion explosion : explosionsRight) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(game.getBomberman())) {
+                            game.getBomberman().setFatalHit(true);
+                        }
                     }
                 }
             }
-
         }
+
         //Explosion Left
         {
             //Destroy brick left
             for (Entity entity : game.getStillObjects()) {
                 if (entity instanceof Brick) {
-                    System.out.println("entity X: " + entity.getGridX() + "\t Y: " + entity.getGridY());
-                    System.out.println("this X: " + this.getGridX() + "\t Y: " + this.getGridY());
-                    System.out.println("max = " + maxLeft);
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {
@@ -208,11 +210,13 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
-            for (Explosion explosion : explosionsLeft) {
-                if (explosion != null) {
-                    if (explosion.isColliding(game.getBomberman())) {
-                        game.getBomberman().setFatalHit(true);
+            // Destroy bomberman left
+            if (!game.getBomberman().getFlamePassItem()) {
+                for (Explosion explosion : explosionsLeft) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(game.getBomberman())) {
+                            game.getBomberman().setFatalHit(true);
+                        }
                     }
                 }
             }
@@ -239,11 +243,13 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
-            for (Explosion explosion : explosionsUp) {
-                if (explosion != null) {
-                    if (explosion.isColliding(game.getBomberman())) {
-                        game.getBomberman().setFatalHit(true);
+            // Destroy bomberman up
+            if (!game.getBomberman().getFlamePassItem()) {
+                for (Explosion explosion : explosionsUp) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(game.getBomberman())) {
+                            game.getBomberman().setFatalHit(true);
+                        }
                     }
                 }
             }
@@ -270,11 +276,13 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
-            for (Explosion explosion : explosionsDown) {
-                if (explosion != null) {
-                    if (explosion.isColliding(game.getBomberman())) {
-                        game.getBomberman().setFatalHit(true);
+            // Destroy bomberman down
+            if (!game.getBomberman().getFlamePassItem()) {
+                for (Explosion explosion : explosionsDown) {
+                    if (explosion != null) {
+                        if (explosion.isColliding(game.getBomberman())) {
+                            game.getBomberman().setFatalHit(true);
+                        }
                     }
                 }
             }
@@ -285,9 +293,11 @@ public class Bomb extends AnimatedEntity {
                     ((Enemy)entity).dead();
                 }
             }
-            // Destroy bomberman
-            if (this.isColliding(game.getBomberman())) {
-                game.getBomberman().setFatalHit(true);
+            // Destroy bomberman center
+            if (!game.getBomberman().getFlamePassItem()) {
+                if (this.isColliding(game.getBomberman())) {
+                    game.getBomberman().setFatalHit(true);
+                }
             }
         }
     }
@@ -378,6 +388,14 @@ public class Bomb extends AnimatedEntity {
         return bombBoundary.checkCollision(otherEntityBoundary);
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     public void setBomb(Bomb other) {
         this.x = other.x;
         this.y = other.y;
@@ -388,6 +406,7 @@ public class Bomb extends AnimatedEntity {
         this.explosionsDown = other.explosionsDown;
         this.explosionsUp = other.explosionsUp;
         this.bombBoundary = other.bombBoundary;
+        this.size = other.size;
         this.maxLeft = other.maxLeft;
         this.maxDown = other.maxDown;
         this.maxUp = other.maxUp;

@@ -6,8 +6,9 @@ import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
@@ -17,19 +18,25 @@ import uet.oop.bomberman.model.RectBoundedBox;
 import java.util.Timer;
 import java.util.TimerTask;
 
+enum ItemType {
+    BOMB, BOMB_PASS, FLAME, FLAME_PASS, SPEED, BRICK_PASS
+}
+
 public class Bomber extends Character {
     private static int velocity;
 
     private final static int BOMBER_WIDTH = 24;
     private final static int BOMBER_HEIGHT = 32;
     private int numBomb = 0;
-    private int limitBomb = 0;
-    private int maxBomb = 3;
+    private int limitBomb = 1;
+    private int maxBomb = 10;
     private Bomb[] bombs = new Bomb[maxBomb];
 
-    private boolean isSpeedBuff = false;
-    private boolean isBombBuff = false;
-    private boolean isFlameBuff = false;
+    private int numItem = 6;
+    private boolean[] items = new boolean[numItem];
+    private int numFlameItem = 0; // The number of flame items bomber got
+    private int numBombItem = 0; // The number of bomb items bomber got
+
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
 
@@ -51,9 +58,12 @@ public class Bomber extends Character {
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         for (int i = 0; i < maxBomb; i++) {
-            Bomb bomb = new Bomb(-1, -1, Sprite.bomb.getFxImage(), game);
+            Bomb bomb = new Bomb(-1, -1, 1, Sprite.bomb.getFxImage(), game);
             bomb.setBombStatus(BombStatus.DESTROY);
             bombs[i] = bomb;
+        }
+        for (boolean b : items) {
+            b = false;
         }
     }
 
@@ -63,6 +73,7 @@ public class Bomber extends Character {
 //        if (isMoving()) {
 //            move();
 //        }
+//        System.out.println("bomber x in update = " + this.getGridX() + " y = " + this.getGridY());
         move();
         animate();
         if (checkFatalCollision() || checkFatalHit()) {
@@ -73,9 +84,9 @@ public class Bomber extends Character {
                 bomb.update();
             }
         }
-        if (!isPlacedBomb) {
+        /*if (!isPlacedBomb) {
             time += elapsedTime;
-        }
+        }*/
     }
 
     @Override
@@ -93,19 +104,43 @@ public class Bomber extends Character {
 
     public boolean checkSafeCollision() {
         for (Entity entity : game.getStillObjects()) {
-            if (entity instanceof Wall || entity instanceof Brick) {
+            //Colliding with wall
+            if (entity instanceof Wall) {
                 if (isColliding(entity)) {
                     return true;
+                }
+            }
+            //Colliding with brick
+            if (entity instanceof Brick) {
+                if (!items[ItemType.BRICK_PASS.ordinal()] && isColliding(entity)) {
+                    return true;
+                }
+            }
+            ////Colliding with item
+            if (entity instanceof Item) {
+                if (!(entity instanceof Portal)) {
+                    if (this.getX() == entity.getX() && this.getY() == entity.getY()) {
+                        game.getItemGarbage().add((Item) entity);
+                        powerUp((Item) entity);
+                    }
+                }else {
+                    if (this.getX() == entity.getX() && this.getY() == entity.getY() && game.getEnemies().size() == 0) {
+                        game.getItemGarbage().add((Item) entity);
+                        //Navigate screen
+                        System.out.println("navigate screen");
+                    }
                 }
             }
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                if (!isColliding(bomb)) {
-                    bomb.setThroughBomb(false);
-                }
-                if (isColliding(bomb) && !bomb.isThroughBomb()) {
-                    return true;
+                if (!bomb.isThroughBomb()) {
+                    if (!isColliding(bomb)) {
+                        bomb.setThroughBomb(false);
+                    }
+                    if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                        return true;
+                    }
                 }
             }
         }
@@ -150,10 +185,10 @@ public class Bomber extends Character {
             moving = true;
         }
 
-        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb && time >= 60 * elapsedTime) {
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb /*&& time >= 60 * elapsedTime*/) {
             createBomb();
             isPlacedBomb = true;
-            time = 0;
+//            time = 0;
         }
         if (!keyInput.isPressed(KeyCode.SPACE) && isPlacedBomb) {
             isPlacedBomb = false;
@@ -164,26 +199,26 @@ public class Bomber extends Character {
         numBomb = 0;
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                numBomb ++;
+                numBomb++;
             }
         }
-        if (isBombBuff) {
-            limitBomb = 2;
-        } else {
-            limitBomb = 3;
-        }
+
         if (numBomb < limitBomb) {
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
-            for (Bomb bomb : bombs) {
-                if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                    if (bomb.getGridX() == xUnit && bomb.getGridY() == yUnit) return;
+            for (Entity entity : game.getStillObjects()) {
+                if (entity instanceof Brick) {
+                    if (entity.getGridX() == xUnit && entity.getGridY() == yUnit) return;
+                }
+                if (entity instanceof Bomb) {
+                    if (entity.getGridX() == xUnit && entity.getGridY() == yUnit) return;
                 }
             }
-            Bomb bomb = new Bomb(xUnit, yUnit, Sprite.bomb.getFxImage(), game);
             for (int i = 0; i < limitBomb; i++) {
                 if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
+                    Bomb bomb = new Bomb(xUnit, yUnit, 1 + numFlameItem, Sprite.bomb.getFxImage(), game);
                     bombs[i].setBomb(bomb);
+                    if (items[ItemType.BOMB_PASS.ordinal()]) bombs[i].setThroughBomb(true);
                     break;
                 }
             }
@@ -310,7 +345,36 @@ public class Bomber extends Character {
     public void setFatalHit(boolean fatalHit) {
         this.fatalHit = fatalHit;
     }
+
     public Bomb[] getBombs() {
         return bombs;
+    }
+
+    private void powerUp(Item item) {
+        if (item instanceof BombItem) {
+            items[ItemType.BOMB.ordinal()] = true;
+            limitBomb++;
+        }
+        if (item instanceof SpeedItem) {
+            items[ItemType.SPEED.ordinal()] = true;
+            velocity = 4;
+        }
+        if (item instanceof BombPassItem) {
+            items[ItemType.BOMB_PASS.ordinal()] = true;
+        }
+        if (item instanceof FlameItem) {
+            items[ItemType.FLAME.ordinal()] = true;
+            numFlameItem++;
+        }
+        if (item instanceof FlamePassItem) {
+            items[ItemType.FLAME_PASS.ordinal()] = true;
+        }
+        if (item instanceof BrickPassItem) {
+            items[ItemType.BRICK_PASS.ordinal()] = true;
+        }
+    }
+
+    public boolean getFlamePassItem() {
+        return items[ItemType.FLAME_PASS.ordinal()];
     }
 }

@@ -27,7 +27,7 @@ public abstract class Character extends AnimatedEntity {
 
     public boolean isMoving() {
         return moving;
-    };
+    }
 
     public Direction getDirection() {
         return direction;
@@ -36,13 +36,7 @@ public abstract class Character extends AnimatedEntity {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
     public abstract boolean isColliding(Entity other);
 
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
 }
