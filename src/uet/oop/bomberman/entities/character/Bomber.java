@@ -3,6 +3,8 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.MediaPlayer;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
@@ -19,7 +21,6 @@ import java.util.TimerTask;
 
 public class Bomber extends Character {
     private static int velocity;
-
     private final static int BOMBER_WIDTH = 24;
     private final static int BOMBER_HEIGHT = 32;
     private int numBomb = 0;
@@ -37,8 +38,9 @@ public class Bomber extends Character {
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
-    //    private boolean resetAnimation = false;
     private GameViewManager game;
+    AudioManager deadAudio = new AudioManager("res/audio/dead.mp3");
+    AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav");
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
         super(x, y, img);
@@ -151,6 +153,7 @@ public class Bomber extends Character {
         }
 
         if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb && time >= 60 * elapsedTime) {
+            dropBombAudio.play(1);
             createBomb();
             isPlacedBomb = true;
             time = 0;
@@ -273,6 +276,7 @@ public class Bomber extends Character {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
+                deadAudio.play(1);
             }
             velocity = 0;
 //            moving = false;

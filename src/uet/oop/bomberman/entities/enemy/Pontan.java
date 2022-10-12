@@ -102,7 +102,7 @@ public class Pontan extends Enemy {
                 if (entity instanceof Bomb) {
                     Bomb bomb = (Bomb) entity;
                     if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                        if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                        if (isColliding(bomb)) {
                             return true;
                         }
                     }

@@ -5,8 +5,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.Brick;
@@ -20,6 +22,7 @@ import uet.oop.bomberman.input.KeyManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class GameViewManager {
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
@@ -44,6 +47,7 @@ public class GameViewManager {
     private double t = 0;
     private final static double FPS = 62;
     private KeyManager keys = new KeyManager();
+    AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3");
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
@@ -75,6 +79,9 @@ public class GameViewManager {
         createMap();
 //        createBomberman();
         createGameLoop();
+        if (AudioManager.isSoundEnabled()) {
+            playBackgroundMusic();
+        } else backgroundMusic.stop();
 //        mainStage.show();
     }
 
@@ -208,6 +215,7 @@ public class GameViewManager {
     private void createGameLoop() {
         timer = new AnimationTimer() {
             long lastTick = 0;
+
             @Override
             public void handle(long l) {
                 if (l - lastTick > 1000000000 / FPS) {
@@ -215,81 +223,98 @@ public class GameViewManager {
                     moveBackground();
                     render();
                     update();
+                    if (bomberman.checkFatalHit()) {
+                        backgroundMusic.stop();
+                    }
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
-                        BombermanGame.switchScene(MenuViewManager.getScene());
+                        MenuViewManager menuView = new MenuViewManager();
+                        BombermanGame.switchScene(menuView.getMenuScene());
+//                        BombermanGame.switchScene(MenuViewManager.getScene());
                     }
-                    if (brickGarbage.size() != 0) {
-                        stillObjects.removeAll(brickGarbage);
-                        brickGarbage.clear();
-                    }
-                    if (enemieGarbage.size() != 0) {
-                        enemies.removeAll(enemieGarbage);
-                        enemieGarbage.clear();
-                    }
+                    clearGarbage();
                 }
 //                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();
     }
-    public List<Entity> getEnemies () {
-            return enemies;
-        }
 
-    public Stage getMainStage () {
-            return mainStage;
-        }
+    public void playBackgroundMusic() {
+        backgroundMusic.play(MediaPlayer.INDEFINITE);
+    }
+
+    public List<Entity> getEnemies() {
+        return enemies;
+    }
+
+    public Stage getMainStage() {
+        return mainStage;
+    }
 
     public Bomber getBomberman() {
-            return bomberman;
+        return bomberman;
+    }
+
+    public int getRows() {
+        return R;
+    }
+
+    public int getColumns() {
+        return C;
+    }
+
+    public void moveBackground() {
+        int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
+        // check if bomberman is in the middle of the screen width
+        if (bomberman.getX() >= midHorizontalPosition
+                && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
+            // move background upon bomberman position
+            canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
+        } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
+            canvas.setLayoutX(0);
+        } else { // set camera upon bomberman position
+            canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
         }
 
-        public int getRows() {
-            return R;
+        // check if bomberman is in the middle of the screen height
+        int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
+        if (bomberman.getY() >= midVerticalPosition
+                && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
+            // move background upon bomberman position
+            canvas.setLayoutY(midVerticalPosition - bomberman.getY());
+        } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
+            canvas.setLayoutY(0);
+        } else { // set camera upon bomberman position
+            canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
         }
+    }
 
-        public int getColumns() {
-            return C;
-        }
-
-        public void moveBackground() {
-            int midHorizontalPosition = (WIDTH * Sprite.SCALED_SIZE) / 2;
-            // check if bomberman is in the middle of the screen width
-            if (bomberman.getX() >= midHorizontalPosition
-                    && bomberman.getX() <= getColumns() * Sprite.SCALED_SIZE - midHorizontalPosition) {
-                // move background upon bomberman position
-                canvas.setLayoutX(midHorizontalPosition - bomberman.getX());
-            } else if (bomberman.getX() < midHorizontalPosition) { // set camera upon bomberman current position
-                canvas.setLayoutX(0);
-            } else { // set camera upon bomberman position
-                canvas.setLayoutX((WIDTH - getColumns()) * Sprite.SCALED_SIZE);
-            }
-
-            // check if bomberman is in the middle of the screen height
-            int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
-            if (bomberman.getY() >= midVerticalPosition
-                    && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
-                // move background upon bomberman position
-                canvas.setLayoutY(midVerticalPosition - bomberman.getY());
-            } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
-                canvas.setLayoutY(0);
-            } else { // set camera upon bomberman position
-                canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
-            }
-        }
     public List<Entity> getStillObjects() {
         return stillObjects;
     }
-    public Scene getScene () {
+
+    public Scene getScene() {
         return scene;
     }
 
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
+
     public List<Enemy> getEnemieGarbage() {
         return enemieGarbage;
+    }
+
+    private void clearGarbage() {
+        if (brickGarbage.size() != 0) {
+            stillObjects.removeAll(brickGarbage);
+            brickGarbage.clear();
+        }
+        if (enemieGarbage.size() != 0) {
+            enemies.removeAll(enemieGarbage);
+            enemieGarbage.clear();
+        }
     }
 }

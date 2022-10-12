@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.ExplosionType;
 import uet.oop.bomberman.entities.enemy.Enemy;
@@ -30,7 +31,7 @@ public class Bomb extends AnimatedEntity {
     Explosion[] explosionsLeft;
     Explosion[] explosionsUp;
     Explosion[] explosionsDown;
-
+    AudioManager bombExplode = new AudioManager("res/audio/boom.mp3");
     GameViewManager game;
 
     public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
@@ -173,7 +174,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
+            // Destroy bomberman right
             for (Explosion explosion : explosionsRight) {
                 if (explosion != null) {
                     if (explosion.isColliding(game.getBomberman())) {
@@ -188,9 +189,6 @@ public class Bomb extends AnimatedEntity {
             //Destroy brick left
             for (Entity entity : game.getStillObjects()) {
                 if (entity instanceof Brick) {
-                    System.out.println("entity X: " + entity.getGridX() + "\t Y: " + entity.getGridY());
-                    System.out.println("this X: " + this.getGridX() + "\t Y: " + this.getGridY());
-                    System.out.println("max = " + maxLeft);
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {
@@ -208,7 +206,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
+            // Destroy bomberman left
             for (Explosion explosion : explosionsLeft) {
                 if (explosion != null) {
                     if (explosion.isColliding(game.getBomberman())) {
@@ -239,7 +237,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
+            // Destroy bomberman up
             for (Explosion explosion : explosionsUp) {
                 if (explosion != null) {
                     if (explosion.isColliding(game.getBomberman())) {
@@ -270,7 +268,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-            // Destroy bomberman
+            // Destroy bomberman down
             for (Explosion explosion : explosionsDown) {
                 if (explosion != null) {
                     if (explosion.isColliding(game.getBomberman())) {
@@ -285,7 +283,7 @@ public class Bomb extends AnimatedEntity {
                     ((Enemy)entity).dead();
                 }
             }
-            // Destroy bomberman
+            // Destroy bomberman center
             if (this.isColliding(game.getBomberman())) {
                 game.getBomberman().setFatalHit(true);
             }
@@ -295,6 +293,7 @@ public class Bomb extends AnimatedEntity {
     private void chooseSprite() {
         if (time == 75 * elapsedTime) {
             bombStatus = BombStatus.EXPLODE;
+            bombExplode.play(1);
             this.setAnimation(0);
         }
         if (time == 90 * elapsedTime) {
@@ -337,7 +336,6 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsLeft) {
                     if (explosion != null) explosion.render(gc);
                 }
-
             }
             gc.drawImage(currentSprite.getFxImage(), x, y);
         }

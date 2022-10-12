@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uet.oop.bomberman.constants.GlobalConstants;
-import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.gui.MenuViewManager;
 
 public class BombermanGame extends Application {

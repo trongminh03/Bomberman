@@ -12,12 +12,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.model.GameButton;
 import uet.oop.bomberman.model.GameSubScene;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,8 @@ public class MenuViewManager {
     private AnchorPane menuPane;
     private static Scene menuScene;
     private Stage menuStage;
+
+    AudioManager menuSong = new AudioManager("res/audio/menu_song.mp3");
 
     private final static int MENU_BUTTON_START_X = 30;
     private final static int MENU_BUTTON_START_Y = 80;
@@ -38,6 +43,11 @@ public class MenuViewManager {
 
     private GameSubScene sceneToHide;
 
+//    boolean soundOn = true;
+//    ImageView speaker = new ImageView();
+//    Image speakerOn = new Image("/model/sound-on.png");
+//    Image silent = new Image("/model/silent.png");
+
 
     public MenuViewManager() {
         menuButtons = new ArrayList<Button>();
@@ -46,10 +56,16 @@ public class MenuViewManager {
                                 Sprite.SCALED_SIZE * GameViewManager.HEIGHT);
         menuStage = new Stage();
         menuStage.setScene(menuScene);
+        createBackground();
         createLogo();
         createSubScene();
         createButton();
-        createBackground();
+        createSoundButton();
+        if (AudioManager.isSoundEnabled()) {
+            playMenuMusic();
+        } else {
+            menuSong.stop();
+        }
     }
 
     public Stage getMenuStage() {
@@ -58,6 +74,10 @@ public class MenuViewManager {
 
     public Scene getMenuScene() {
         return menuScene;
+    }
+
+    public void playMenuMusic() {
+        menuSong.play(MediaPlayer.INDEFINITE);
     }
 
     private void addMenuButton(Button button, int index) {
@@ -94,6 +114,35 @@ public class MenuViewManager {
         menuPane.getChildren().add(scoreSubScene);
     }
 
+    private void createSoundButton() {
+        ImageView speaker = new ImageView();
+        Image speakerOn = new Image("/model/sound-on.png");
+        Image silent = new Image("/model/silent.png");
+        if (AudioManager.isSoundEnabled()) {
+            speaker.setImage(speakerOn);
+        } else {
+            speaker.setImage(silent);
+        }
+        speaker.setLayoutX(100);
+        speaker.setLayoutY(30);
+
+        speaker.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (AudioManager.isSoundEnabled()) {
+                    speaker.setImage(silent);
+                    AudioManager.setSoundOn(false);
+                    menuSong.stop();
+                } else {
+                    speaker.setImage(speakerOn);
+                    AudioManager.setSoundOn(true);
+                    menuSong.play(MediaPlayer.INDEFINITE);
+                }
+            }
+        });
+        menuPane.getChildren().add(speaker);
+    }
+
     private void createStartButton() {
         GameButton startButton = new GameButton("PLAY GAME");
         addMenuButton(startButton, 0);
@@ -103,6 +152,7 @@ public class MenuViewManager {
             public void handle(ActionEvent actionEvent) {
                 GameViewManager gameView = new GameViewManager();
 //                gameView.createNewGame();
+                menuSong.stop();
                 menuStage.close();
                 BombermanGame.switchScene(gameView.getScene());
             }
