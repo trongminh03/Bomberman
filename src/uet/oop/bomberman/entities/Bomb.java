@@ -404,6 +404,7 @@ public class Bomb extends AnimatedEntity {
     public void setBomb(Bomb other) {
         this.x = other.x;
         this.y = other.y;
+        this.size = other.size;
         this.bombStatus = other.bombStatus;
         this.isThroughBomb = other.isThroughBomb;
         this.explosionsRight = other.explosionsRight;

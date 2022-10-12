@@ -10,6 +10,7 @@ import uet.oop.bomberman.constants.ItemType;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Portal;
 import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -117,29 +118,30 @@ public class Bomber extends Character {
             }
             ////Colliding with item
             if (entity instanceof Item) {
-                if (!(entity instanceof Portal)) {
-                    if (this.getX() == entity.getX() && this.getY() == entity.getY()) {
-                        game.getItemGarbage().add((Item) entity);
-                        powerUp((Item) entity);
-                    }
-                }else {
-                    if (this.getX() == entity.getX() && this.getY() == entity.getY() && game.getEnemies().size() == 0) {
-                        game.getItemGarbage().add((Item) entity);
-                        //Navigate screen
-                        System.out.println("navigate screen");
-                    }
+                if (this.getX() == entity.getX() && this.getY() == entity.getY()) {
+                    game.getItemGarbage().add((Item) entity);
+                    powerUp((Item) entity);
+                }
+            }
+            if (entity instanceof Portal) {
+                if (this.getX() == entity.getX() && this.getY() == entity.getY()
+                        && game.getEnemies().size() == 0) {
+                    //Navigate screen
+                    System.out.println("navigate screen");
                 }
             }
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                if (!bomb.getThroughBomb()) {
+                if (!items[ItemType.BOMB_PASS.ordinal()]) {
                     if (!isColliding(bomb)) {
                         bomb.setThroughBomb(false);
                     }
                     if (isColliding(bomb) && !bomb.getThroughBomb()) {
                         return true;
                     }
+                } else {
+                    return false;
                 }
             }
         }
@@ -218,7 +220,7 @@ public class Bomber extends Character {
                 if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
                     Bomb bomb = new Bomb(xUnit, yUnit, numFlameItem + 1, Sprite.bomb.getFxImage(), game);
                     bombs[i].setBomb(bomb);
-                    if (items[ItemType.BOMB_PASS.ordinal()]) bombs[i].setThroughBomb(true);
+//                    if (items[ItemType.BOMB_PASS.ordinal()]) bombs[i].setThroughBomb(true);
                     break;
                 }
             }
