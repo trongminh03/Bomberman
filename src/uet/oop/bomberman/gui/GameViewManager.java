@@ -5,8 +5,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.entities.Brick;
@@ -47,6 +49,7 @@ public class GameViewManager {
     private double t = 0;
     private final static double FPS = 62;
     private KeyManager keys = new KeyManager();
+    AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3");
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
@@ -78,6 +81,9 @@ public class GameViewManager {
         createMap();
 //        createBomberman();
         createGameLoop();
+        if (AudioManager.isSoundEnabled()) {
+            playBackgroundMusic();
+        } else backgroundMusic.stop();
 //        mainStage.show();
     }
 
@@ -264,7 +270,6 @@ public class GameViewManager {
         stillObjects.forEach(g -> g.render(gc));
         bomberman.render(gc);
         enemies.forEach(g -> g.render(gc));
-
     }
 
     private void createGameLoop() {
@@ -276,19 +281,29 @@ public class GameViewManager {
                 if (l - lastTick > 1000000000 / FPS) {
                     lastTick = l;
                     moveBackground();
-                    update();
                     render();
+                    update();
+                    if (bomberman.checkFatalHit()) {
+                        backgroundMusic.stop();
+                    }
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
+                        MenuViewManager menuView = new MenuViewManager();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
+//                        BombermanGame.switchScene(MenuViewManager.getScene());
+
                     clearGarbage();
                 }
 //                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();
+    }
+
+    public void playBackgroundMusic() {
+        backgroundMusic.play(MediaPlayer.INDEFINITE);
     }
 
     public List<Entity> getEnemies() {
@@ -350,7 +365,6 @@ public class GameViewManager {
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
-
     public List<Enemy> getEnemieGarbage() {
         return enemieGarbage;
     }

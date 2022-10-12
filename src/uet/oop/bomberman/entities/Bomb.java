@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.ExplosionType;
 import uet.oop.bomberman.entities.enemy.Enemy;
@@ -30,10 +31,10 @@ public class Bomb extends AnimatedEntity {
     Explosion[] explosionsLeft;
     Explosion[] explosionsUp;
     Explosion[] explosionsDown;
-
+    AudioManager bombExplode = new AudioManager("res/audio/boom.mp3");
     GameViewManager game;
 
-    public Bomb(int xUnit, int yUnit, int size, Image img, GameViewManager gameViewManager) {
+    public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
         this.size = size;
         maxRight = size;
@@ -151,6 +152,7 @@ public class Bomb extends AnimatedEntity {
                     Sprite.explosion_vertical_down_last.getFxImage(), ExplosionType.LAST_DOWN);
             explosionsDown[0] = explosion;
         }
+//        System.out.println("right = " + maxRight + "\t left = " + maxLeft + "\t up = " + maxUp + "\t down = " + maxDown);
     }
 
     private void explosion() {
@@ -186,13 +188,15 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-        }
 
         //Explosion Left
         {
             //Destroy brick left
             for (Entity entity : game.getStillObjects()) {
                 if (entity instanceof Brick) {
+                    System.out.println("entity X: " + entity.getGridX() + "\t Y: " + entity.getGridY());
+                    System.out.println("this X: " + this.getGridX() + "\t Y: " + this.getGridY());
+                    System.out.println("max = " + maxLeft);
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {
@@ -347,7 +351,6 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsLeft) {
                     if (explosion != null) explosion.render(gc);
                 }
-
             }
             gc.drawImage(currentSprite.getFxImage(), x, y);
         }
@@ -406,7 +409,6 @@ public class Bomb extends AnimatedEntity {
         this.explosionsDown = other.explosionsDown;
         this.explosionsUp = other.explosionsUp;
         this.bombBoundary = other.bombBoundary;
-        this.size = other.size;
         this.maxLeft = other.maxLeft;
         this.maxDown = other.maxDown;
         this.maxUp = other.maxUp;
