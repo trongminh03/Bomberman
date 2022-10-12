@@ -22,7 +22,7 @@ public class Bomb extends AnimatedEntity {
     private BombStatus bombStatus;
     private boolean isThroughBomb = true;   /*Check through bomb:   false: bomber and bomb can't go on top of each other
                                                                     true:  bomber and bomb can go on top of each other*/
-    private final double elapsedTime = 1/30f;
+    private final double elapsedTime = 1 / 30f;
     private double time;
 
     Sprite currentSprite;
@@ -34,7 +34,7 @@ public class Bomb extends AnimatedEntity {
     AudioManager bombExplode = new AudioManager("res/audio/boom.mp3");
     GameViewManager game;
 
-    public Bomb(int xUnit, int yUnit, Image img, GameViewManager gameViewManager) {
+    public Bomb(int xUnit, int yUnit, int size, Image img, GameViewManager gameViewManager) {
         super(xUnit, yUnit, img);
         this.size = size;
         maxRight = size;
@@ -164,7 +164,7 @@ public class Bomb extends AnimatedEntity {
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() + maxRight + 1
                             && maxRight < size) {
-                        ((Brick)entity).setAlive(false);
+                        ((Brick) entity).setAlive(false);
                     }
                 }
             }
@@ -173,7 +173,7 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsRight) {
                     if (explosion != null) {
                         if (explosion.isColliding(entity)) {
-                            ((Enemy)entity).dead();
+                            ((Enemy) entity).dead();
                         }
                     }
                 }
@@ -188,7 +188,7 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-
+        }
         //Explosion Left
         {
             //Destroy brick left
@@ -200,7 +200,7 @@ public class Bomb extends AnimatedEntity {
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {
-                        ((Brick)entity).setAlive(false);
+                        ((Brick) entity).setAlive(false);
                     }
                 }
             }
@@ -209,7 +209,7 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsLeft) {
                     if (explosion != null) {
                         if (explosion.isColliding(entity)) {
-                            ((Enemy)entity).dead();
+                            ((Enemy) entity).dead();
                         }
                     }
                 }
@@ -233,7 +233,7 @@ public class Bomb extends AnimatedEntity {
                     if (entity.getGridX() == this.getGridX()
                             && entity.getGridY() == this.getGridY() - maxUp - 1
                             && maxUp < size) {
-                        ((Brick)entity).setAlive(false);
+                        ((Brick) entity).setAlive(false);
                     }
                 }
             }
@@ -242,7 +242,7 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsUp) {
                     if (explosion != null) {
                         if (explosion.isColliding(entity)) {
-                            ((Enemy)entity).dead();
+                            ((Enemy) entity).dead();
                         }
                     }
                 }
@@ -266,7 +266,7 @@ public class Bomb extends AnimatedEntity {
                     if (entity.getGridX() == this.getGridX()
                             && entity.getGridY() == this.getGridY() + maxDown + 1
                             && maxDown < size) {
-                        ((Brick)entity).setAlive(false);
+                        ((Brick) entity).setAlive(false);
                     }
                 }
             }
@@ -275,7 +275,7 @@ public class Bomb extends AnimatedEntity {
                 for (Explosion explosion : explosionsDown) {
                     if (explosion != null) {
                         if (explosion.isColliding(entity)) {
-                            ((Enemy)entity).dead();
+                            ((Enemy) entity).dead();
                         }
                     }
                 }
@@ -290,11 +290,13 @@ public class Bomb extends AnimatedEntity {
                     }
                 }
             }
-
+        }
+        //Explosion Center
+        {
             //Destroy enemy center
             for (Entity entity : game.getEnemies()) {
                 if (this.isColliding(entity)) {
-                    ((Enemy)entity).dead();
+                    ((Enemy) entity).dead();
                 }
             }
             // Destroy bomberman center
@@ -326,7 +328,7 @@ public class Bomb extends AnimatedEntity {
         }
     }
 
-    public boolean isThroughBomb() {
+    public boolean getThroughBomb() {
         return isThroughBomb;
     }
 
@@ -358,7 +360,7 @@ public class Bomb extends AnimatedEntity {
 
     @Override
     public void update() {
-        if (bombStatus == BombStatus.EXPLODE){
+        if (bombStatus == BombStatus.EXPLODE) {
             for (Explosion explosion : explosionsDown) {
                 if (explosion != null) explosion.update();
             }

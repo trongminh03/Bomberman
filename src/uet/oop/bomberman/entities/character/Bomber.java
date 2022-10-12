@@ -6,10 +6,10 @@ import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
+import uet.oop.bomberman.constants.ItemType;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
@@ -19,10 +19,6 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-enum ItemType {
-    BOMB, BOMB_PASS, FLAME, FLAME_PASS, SPEED, BRICK_PASS
-}
 
 public class Bomber extends Character {
     private static int velocity;
@@ -66,8 +62,8 @@ public class Bomber extends Character {
             bomb.setBombStatus(BombStatus.DESTROY);
             bombs[i] = bomb;
         }
-        for (boolean b : items) {
-            b = false;
+        for (boolean item : items) {
+            item = false;
         }
     }
 
@@ -137,11 +133,11 @@ public class Bomber extends Character {
         }
         for (Bomb bomb : bombs) {
             if (bomb.getBombStatus() != BombStatus.DESTROY) {
-                if (!bomb.isThroughBomb()) {
+                if (!bomb.getThroughBomb()) {
                     if (!isColliding(bomb)) {
                         bomb.setThroughBomb(false);
                     }
-                    if (isColliding(bomb) && !bomb.isThroughBomb()) {
+                    if (isColliding(bomb) && !bomb.getThroughBomb()) {
                         return true;
                     }
                 }
@@ -220,7 +216,7 @@ public class Bomber extends Character {
             }
             for (int i = 0; i < limitBomb; i++) {
                 if (bombs[i].getBombStatus() == BombStatus.DESTROY) {
-                    Bomb bomb = new Bomb(xUnit, yUnit, 1 + numFlameItem, Sprite.bomb.getFxImage(), game);
+                    Bomb bomb = new Bomb(xUnit, yUnit, numFlameItem + 1, Sprite.bomb.getFxImage(), game);
                     bombs[i].setBomb(bomb);
                     if (items[ItemType.BOMB_PASS.ordinal()]) bombs[i].setThroughBomb(true);
                     break;
