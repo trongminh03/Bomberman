@@ -3,7 +3,6 @@ package uet.oop.bomberman.entities.character;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.MediaPlayer;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
@@ -39,6 +38,7 @@ public class Bomber extends Character {
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
     private GameViewManager game;
+
     AudioManager deadAudio = new AudioManager("res/audio/dead.mp3");
     AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav");
 
@@ -49,7 +49,6 @@ public class Bomber extends Character {
         direction = Direction.RIGHT;
         velocity = 2;
         time = 10;
-//        moving = true;
         currentSprite = Sprite.player_right;
         playerBoundary = new RectBoundedBox(x, y, BOMBER_WIDTH, BOMBER_HEIGHT);
         for (int i = 0; i < maxBomb; i++) {
