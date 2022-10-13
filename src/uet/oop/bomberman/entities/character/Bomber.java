@@ -45,8 +45,8 @@ public class Bomber extends Character {
     //    private boolean resetAnimation = false;
     private GameViewManager game;
 
-    AudioManager deadAudio = new AudioManager("res/audio/dead.mp3");
-    AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav");
+    AudioManager deadAudio = new AudioManager("res/audio/dead.mp3", AudioManager.GAMEPLAY_MUSIC);
+    AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav", AudioManager.GAMEPLAY_MUSIC);
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
         super(x, y, img);
@@ -187,7 +187,7 @@ public class Bomber extends Character {
         }
 
         if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb /*&& time >= 60 * elapsedTime*/) {
-            dropBombAudio.play(1);
+            System.out.println("Press Space");
             createBomb();
             isPlacedBomb = true;
 //            time = 0;
@@ -206,6 +206,9 @@ public class Bomber extends Character {
         }
 
         if (numBomb < limitBomb) {
+            if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
+                dropBombAudio.play(1);
+            }
             int xUnit = (this.x + BOMBER_WIDTH / 2) / Sprite.SCALED_SIZE;
             int yUnit = (this.y + BOMBER_HEIGHT / 2) / Sprite.SCALED_SIZE;
             for (Entity entity : game.getStillObjects()) {
@@ -310,7 +313,9 @@ public class Bomber extends Character {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
-                deadAudio.play(1);
+                if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
+                    deadAudio.play(1);
+                }
             }
             velocity = 0;
 //            moving = false;

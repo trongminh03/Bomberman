@@ -15,8 +15,6 @@ public class Explosion extends AnimatedEntity {
     private ExplosionType explosionType = ExplosionType.DEFAULT;
     Sprite currentSprite;
     RectBoundedBox explosionBoundary;
-//    AudioManager bombExplode = new AudioManager("res/audio/boom.mp3");
-
     public Explosion(int xUnit, int yUnit, Image img, ExplosionType explosionType) {
         super(xUnit, yUnit, img);
         this.explosionType = explosionType;
@@ -54,7 +52,6 @@ public class Explosion extends AnimatedEntity {
     }
 
     private void chooseSprite() {
-//        bombExplode.play(1);
         switch (explosionType) {
             case LAST_DOWN:
                 currentSprite = Sprite.movingSprite(Sprite.explosion_vertical_down_last, Sprite.explosion_vertical_down_last1,

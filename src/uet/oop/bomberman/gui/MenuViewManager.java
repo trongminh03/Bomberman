@@ -1,17 +1,20 @@
 package uet.oop.bomberman.gui;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
@@ -19,9 +22,9 @@ import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.model.GameButton;
 import uet.oop.bomberman.model.GameSubScene;
+import uet.oop.bomberman.model.InfoLabel;
+import uet.oop.bomberman.model.OptionController;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,18 +33,21 @@ public class MenuViewManager {
     private static Scene menuScene;
     private Stage menuStage;
 
-    AudioManager menuSong = new AudioManager("res/audio/menu_song.mp3");
+    public static AudioManager menuSong = new AudioManager("res/audio/menu_song.mp3", AudioManager.BACKGROUND_MUSIC);
 
     private final static int MENU_BUTTON_START_X = 30;
-    private final static int MENU_BUTTON_START_Y = 80;
+    private final static int MENU_BUTTON_START_Y = 40;
 
     List<Button> menuButtons;
-
     private GameSubScene creditsSubScene;
     private GameSubScene helpSubScene;
+    private GameSubScene optionSubScene;
+    private OptionController backgroundMusic;
+    private OptionController gameplayMusic;
     private GameSubScene scoreSubScene;
 
     private GameSubScene sceneToHide;
+//    MenuViewManager menu;
 
 //    boolean soundOn = true;
 //    ImageView speaker = new ImageView();
@@ -60,12 +66,8 @@ public class MenuViewManager {
         createLogo();
         createSubScene();
         createButton();
-        createSoundButton();
-        if (AudioManager.isSoundEnabled()) {
-            playMenuMusic();
-        } else {
-            menuSong.stop();
-        }
+        playMenuMusic();
+//        createSoundButton();
     }
 
     public Stage getMenuStage() {
@@ -76,13 +78,18 @@ public class MenuViewManager {
         return menuScene;
     }
 
-    public void playMenuMusic() {
-        menuSong.play(MediaPlayer.INDEFINITE);
+    // phải truyền được hàm này vào trong handle của OptionController
+    public static void playMenuMusic() {
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
+            menuSong.play(MediaPlayer.INDEFINITE);
+        } else {
+            menuSong.pause();
+        }
     }
 
     private void addMenuButton(Button button, int index) {
         button.setLayoutX(MENU_BUTTON_START_X);
-        button.setLayoutY(MENU_BUTTON_START_Y + index * 100);
+        button.setLayoutY(MENU_BUTTON_START_Y + index * 70);
         menuButtons.add(button);
         menuPane.getChildren().add(button);
     }
@@ -91,7 +98,9 @@ public class MenuViewManager {
         createStartButton();
         createScoreButton();
         createHelpButton();
+        createOptionButton();
         createCreditsButton();
+        createExitButton();
     }
 
     private void showSubScene(GameSubScene subScene) {
@@ -110,42 +119,47 @@ public class MenuViewManager {
         helpSubScene = new GameSubScene();
         menuPane.getChildren().add(helpSubScene);
 
+        optionSubScene = new GameSubScene();
+        menuPane.getChildren().add(optionSubScene);
+        optionSubScene.getPane().getChildren().add(createOptions());
+
         scoreSubScene = new GameSubScene();
         menuPane.getChildren().add(scoreSubScene);
     }
 
-    private void createSoundButton() {
-        ImageView speaker = new ImageView();
-        Image speakerOn = new Image("/model/sound-on.png");
-        Image silent = new Image("/model/silent.png");
-        if (AudioManager.isSoundEnabled()) {
-            speaker.setImage(speakerOn);
-        } else {
-            speaker.setImage(silent);
-        }
-        speaker.setLayoutX(100);
-        speaker.setLayoutY(30);
-
-        speaker.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (AudioManager.isSoundEnabled()) {
-                    speaker.setImage(silent);
-                    AudioManager.setSoundOn(false);
-                    menuSong.stop();
-                } else {
-                    speaker.setImage(speakerOn);
-                    AudioManager.setSoundOn(true);
-                    menuSong.play(MediaPlayer.INDEFINITE);
-                }
-            }
-        });
-        menuPane.getChildren().add(speaker);
-    }
+//    private void createSoundButton() {
+//        ImageView speaker = new ImageView();
+//        Image speakerOn = new Image("/model/sound-on.png");
+//        Image silent = new Image("/model/silent.png");
+//        if (AudioManager.isSoundEnabled()) {
+//            speaker.setImage(speakerOn);
+//        } else {
+//            speaker.setImage(silent);
+//        }
+//        speaker.setLayoutX(100);
+//        speaker.setLayoutY(30);
+//
+//        speaker.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                if (AudioManager.isSoundEnabled()) {
+//                    speaker.setImage(silent);
+//                    AudioManager.setSoundOn(false);
+//                    menuSong.stop();
+//                } else {
+//                    speaker.setImage(speakerOn);
+//                    AudioManager.setSoundOn(true);
+//                    menuSong.play(MediaPlayer.INDEFINITE);
+//                }
+//            }
+//        });
+//        menuPane.getChildren().add(speaker);
+//    }
 
     private void createStartButton() {
         GameButton startButton = new GameButton("PLAY GAME");
         addMenuButton(startButton, 0);
+//        menu = this;
 
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -153,7 +167,7 @@ public class MenuViewManager {
                 GameViewManager gameView = new GameViewManager();
 //                gameView.createNewGame();
                 menuSong.stop();
-                menuStage.close();
+//                menuStage.close();
                 BombermanGame.switchScene(gameView.getScene());
             }
         });
@@ -184,14 +198,59 @@ public class MenuViewManager {
         });
     }
 
+    private void createOptionButton() {
+        GameButton optionButton = new GameButton("OPTION");
+        addMenuButton(optionButton, 3);
+
+        optionButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(optionSubScene);
+            }
+        });
+    }
+
+    private VBox createOptions() {
+        VBox box = new VBox();
+        box.setSpacing(10);
+        box.setAlignment(Pos.CENTER);
+        InfoLabel label1 = new InfoLabel("Background Music: ");
+        backgroundMusic = new OptionController(AudioManager.BACKGROUND_MUSIC);
+        backgroundMusic.changeVolume(menuSong);
+        InfoLabel label2 = new InfoLabel("Gameplay Music: ");
+        gameplayMusic = new OptionController(AudioManager.GAMEPLAY_MUSIC);
+        gameplayMusic.changeVolume(AudioManager.GAMEPLAY_MUSIC);
+
+        box.getChildren().add(label1);
+        box.getChildren().add(backgroundMusic);
+        box.getChildren().add(label2);
+        box.getChildren().add(gameplayMusic);
+//        box.setAlignment(Pos.CENTER);
+        box.setLayoutX(50);
+        box.setLayoutY(50);
+        return box;
+    }
+
     private void createCreditsButton() {
         GameButton creditsButton = new GameButton("CREDITS");
-        addMenuButton(creditsButton, 3);
+        addMenuButton(creditsButton, 4);
 
         creditsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 showSubScene(creditsSubScene);
+            }
+        });
+    }
+
+    private void createExitButton() {
+        GameButton exitButton = new GameButton("EXIT");
+        addMenuButton(exitButton, 5);
+
+        exitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.exit(0);
             }
         });
     }

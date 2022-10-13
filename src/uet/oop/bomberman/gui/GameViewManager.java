@@ -46,7 +46,8 @@ public class GameViewManager {
     private double t = 0;
     private final static double FPS = 62;
     private KeyManager keys = new KeyManager();
-    AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3");
+    AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3",
+                                                        AudioManager.BACKGROUND_MUSIC);
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager() {
@@ -78,7 +79,7 @@ public class GameViewManager {
         createMap();
 //        createBomberman();
         createGameLoop();
-        if (AudioManager.isSoundEnabled()) {
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
             playBackgroundMusic();
         } else backgroundMusic.stop();
 //        mainStage.show();
@@ -286,7 +287,8 @@ public class GameViewManager {
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
-                        MenuViewManager menuView = new MenuViewManager();
+//                        MenuViewManager menuView = new MenuViewManager();
+                        MenuViewManager.playMenuMusic();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
 //                        BombermanGame.switchScene(MenuViewManager.getScene());
