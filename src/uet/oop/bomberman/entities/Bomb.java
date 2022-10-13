@@ -31,7 +31,7 @@ public class Bomb extends AnimatedEntity {
     Explosion[] explosionsLeft;
     Explosion[] explosionsUp;
     Explosion[] explosionsDown;
-    AudioManager bombExplode = new AudioManager("res/audio/boom.mp3");
+    AudioManager bombExplode = new AudioManager("res/audio/boom.mp3", AudioManager.GAMEPLAY_MUSIC);
     GameViewManager game;
 
     public Bomb(int xUnit, int yUnit, int size, Image img, GameViewManager gameViewManager) {
@@ -311,6 +311,9 @@ public class Bomb extends AnimatedEntity {
     private void chooseSprite() {
         if (time == 75 * elapsedTime) {
             bombStatus = BombStatus.EXPLODE;
+            if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
+                bombExplode.play(1);
+            }
             this.setAnimation(0);
         }
         if (time == 90 * elapsedTime) {
