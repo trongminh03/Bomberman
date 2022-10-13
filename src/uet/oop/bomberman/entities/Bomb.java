@@ -194,9 +194,6 @@ public class Bomb extends AnimatedEntity {
             //Destroy brick left
             for (Entity entity : game.getStillObjects()) {
                 if (entity instanceof Brick) {
-                    System.out.println("entity X: " + entity.getGridX() + "\t Y: " + entity.getGridY());
-                    System.out.println("this X: " + this.getGridX() + "\t Y: " + this.getGridY());
-                    System.out.println("max = " + maxLeft);
                     if (entity.getGridY() == this.getGridY()
                             && entity.getGridX() == this.getGridX() - maxLeft - 1
                             && maxLeft < size) {

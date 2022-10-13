@@ -187,7 +187,6 @@ public class Bomber extends Character {
         }
 
         if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb /*&& time >= 60 * elapsedTime*/) {
-            System.out.println("Press Space");
             createBomb();
             isPlacedBomb = true;
 //            time = 0;
