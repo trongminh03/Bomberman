@@ -164,11 +164,13 @@ public class MenuViewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                GameViewManager gameView = new GameViewManager();
+                /*GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
 //                gameView.createNewGame();
-                menuSong.stop();
 //                menuStage.close();
-                BombermanGame.switchScene(gameView.getScene());
+                BombermanGame.switchScene(gameView.getScene());*/
+                WaitViewManager waitView = new WaitViewManager();
+                menuSong.stop();
+                BombermanGame.switchScene(waitView.getWaitScene());
             }
         });
     }

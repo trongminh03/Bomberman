@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
@@ -18,6 +19,7 @@ import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.gui.WaitViewManager;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
@@ -130,8 +132,9 @@ public class Bomber extends Character {
             if (entity instanceof Portal) {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
-                    //Navigate screen
-                    System.out.println("navigate screen");
+                    BombermanGame.numStage++;
+                    WaitViewManager waitView = new WaitViewManager();
+                    BombermanGame.switchScene(waitView.getWaitScene());
                 }
             }
         }

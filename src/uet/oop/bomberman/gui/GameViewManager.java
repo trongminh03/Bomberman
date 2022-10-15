@@ -50,11 +50,10 @@ public class GameViewManager {
                                                         AudioManager.BACKGROUND_MUSIC);
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
-    public GameViewManager() {
-        createNewGame();
+    public GameViewManager(int numStage) {
+        createNewGame(numStage);
         initializeStage();
         createKeyListener();
-//        createMap();
     }
 
     private void initializeStage() {
@@ -71,10 +70,13 @@ public class GameViewManager {
         mainStage.setScene(scene);
     }
 
-    public void createNewGame() {
+    public void createNewGame(int numStage) {
         enemies = new ArrayList<>();
         stillObjects = new ArrayList<>();
-        createMap();
+//        this.menuStage = menuStage;
+//        this.menuStage.hide();
+        createMap(numStage);
+//        createBomberman();
         createGameLoop();
         if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
             playBackgroundMusic();
@@ -86,8 +88,8 @@ public class GameViewManager {
         scene.setOnKeyReleased(event -> keys.released(event));
     }
 
-    public void createMap() {
-        File file = new File("res/levels/Level2.txt");
+    public void createMap(int numStage) {
+        File file = new File("res/levels/Level" + numStage + ".txt");
         try {
             BufferedReader bf = new BufferedReader(new FileReader(file));
             String line = bf.readLine();
@@ -283,12 +285,15 @@ public class GameViewManager {
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
+//                        MenuViewManager menuView = new MenuViewManager();
                         MenuViewManager.playMenuMusic();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
+//                        BombermanGame.switchScene(MenuViewManager.getScene());
 
                     clearGarbage();
                 }
+//                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();
