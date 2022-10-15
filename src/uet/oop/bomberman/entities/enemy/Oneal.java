@@ -152,7 +152,7 @@ public class Oneal extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
-                game.getEnemieGarbage().add(this);
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

@@ -7,7 +7,6 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
-import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
@@ -159,7 +158,7 @@ public class Kondoria extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
-                game.getEnemieGarbage().add(this);
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

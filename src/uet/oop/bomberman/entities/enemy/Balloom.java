@@ -1,14 +1,7 @@
 package uet.oop.bomberman.entities.enemy;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.util.Duration;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
@@ -19,8 +12,6 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.sql.Time;
 
 public class Balloom extends Enemy {
     private int velocity;
@@ -152,7 +143,7 @@ public class Balloom extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
-                game.getEnemieGarbage().add(this);
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

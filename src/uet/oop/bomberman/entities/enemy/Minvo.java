@@ -13,8 +13,6 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
-import javax.print.attribute.standard.Finishings;
-
 public class Minvo extends Enemy {
     private int velocity = 1;
 
@@ -144,7 +142,7 @@ public class Minvo extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
-                game.getEnemieGarbage().add(this);
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

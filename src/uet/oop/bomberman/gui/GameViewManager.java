@@ -32,7 +32,7 @@ public class GameViewManager {
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
-    private List<Enemy> enemieGarbage = new ArrayList<>();
+    private List<Enemy> enemiesGarbage = new ArrayList<>();
     private List<Item> itemGarbage = new ArrayList<>();
 
     private Stage mainStage;
@@ -362,8 +362,8 @@ public class GameViewManager {
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
-    public List<Enemy> getEnemieGarbage() {
-        return enemieGarbage;
+    public List<Enemy> getEnemiesGarbage() {
+        return enemiesGarbage;
     }
 
     private void clearGarbage() {
@@ -371,9 +371,9 @@ public class GameViewManager {
             stillObjects.removeAll(brickGarbage);
             brickGarbage.clear();
         }
-        if (enemieGarbage.size() != 0) {
-            enemies.removeAll(enemieGarbage);
-            enemieGarbage.clear();
+        if (enemiesGarbage.size() != 0) {
+            enemies.removeAll(enemiesGarbage);
+            enemiesGarbage.clear();
         }
         if (itemGarbage.size() != 0) {
             stillObjects.removeAll(itemGarbage);
