@@ -26,9 +26,9 @@ public class GameButton extends Button {
         initializeButtonListener();
     }
 
-//    public void setMainFont() {
-//        setFont(Font.font(mainFont, 23));
-//    }
+    /*public void setMainFont() {
+        setFont(Font.font(mainFont, 23));
+    }*/
 
     public void setButtonReleasedStyle() {
         setStyle(BUTTON_FREE_STYLE);
