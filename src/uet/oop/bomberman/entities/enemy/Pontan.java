@@ -21,20 +21,20 @@ public class Pontan extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.pontan_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox pontanBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     AStarAlgorithm pathFinding;
 
     public Pontan(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         brickPass = true;
         currentSprite = Sprite.pontan_right1;
         FINDING_SCOPE = 7;
         velocity = 2;
+        SCORE = 8000;
         moving = true;
         pontanBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
     }
 
@@ -145,6 +145,7 @@ public class Pontan extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
+                showScore(SCORE);
                 game.getEnemieGarbage().add(this);
             }
         }

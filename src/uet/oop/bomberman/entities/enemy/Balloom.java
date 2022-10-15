@@ -1,7 +1,14 @@
 package uet.oop.bomberman.entities.enemy;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
@@ -13,6 +20,8 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
+import java.sql.Time;
+
 public class Balloom extends Enemy {
     private int velocity;
 
@@ -20,14 +29,14 @@ public class Balloom extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox balloomBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
     private RandomMove randomMove;
 
     public Balloom(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
-        this.game = game;
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         velocity = 1;
+        SCORE = 100;
         currentSprite = Sprite.balloom_right1;
         moving = true;
         balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -132,7 +141,7 @@ public class Balloom extends Enemy {
                             Sprite.balloom_right3, animation, 60);
                     break;
             }
-        }else {
+        } else {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
@@ -142,6 +151,7 @@ public class Balloom extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
+                showScore(SCORE);
                 game.getEnemieGarbage().add(this);
             }
         }

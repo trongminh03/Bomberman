@@ -7,8 +7,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class GameButton extends Button {
-//    private final String mainFont = "/model/KaushanScript-Regular.otf";
+    private final String mainFont = "res/model/PixelEmulator-xq08.ttf";
     private final String BUTTON_FREE_STYLE
             = "-fx-background-color: transparent; -fx-background-image: url('/model/yellow_button.png');";
     private final String BUTTON_PRESSED_STYLE
@@ -18,17 +21,21 @@ public class GameButton extends Button {
 
     public GameButton(String text) {
         setText(text);
-        setFont(Font.font("Verdana", 23));
-//        setMainFont();
+//        setFont(Font.font("Verdana", 23));
+        setMainFont();
         setPrefWidth(BUTTON_WIDTH);
         setPrefHeight(BUTTON_HEIGHT);
         setStyle(BUTTON_FREE_STYLE);
         initializeButtonListener();
     }
 
-//    public void setMainFont() {
-//        setFont(Font.font(mainFont, 23));
-//    }
+    public void setMainFont() {
+        try {
+            setFont(Font.loadFont(new FileInputStream(mainFont), 20));
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot load font");
+        }
+    }
 
     public void setButtonReleasedStyle() {
         setStyle(BUTTON_FREE_STYLE);

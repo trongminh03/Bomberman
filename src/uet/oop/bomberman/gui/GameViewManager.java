@@ -74,15 +74,11 @@ public class GameViewManager {
     public void createNewGame() {
         enemies = new ArrayList<>();
         stillObjects = new ArrayList<>();
-//        this.menuStage = menuStage;
-//        this.menuStage.hide();
         createMap();
-//        createBomberman();
         createGameLoop();
         if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
             playBackgroundMusic();
         } else backgroundMusic.stop();
-//        mainStage.show();
     }
 
     private void createKeyListener() {
@@ -287,15 +283,12 @@ public class GameViewManager {
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
-//                        MenuViewManager menuView = new MenuViewManager();
                         MenuViewManager.playMenuMusic();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
-//                        BombermanGame.switchScene(MenuViewManager.getScene());
 
                     clearGarbage();
                 }
-//                System.out.println(System.currentTimeMillis());
             }
         };
         timer.start();
@@ -381,5 +374,13 @@ public class GameViewManager {
             stillObjects.removeAll(itemGarbage);
             itemGarbage.clear();
         }
+    }
+
+    public Group getRoot() {
+        return root;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 }

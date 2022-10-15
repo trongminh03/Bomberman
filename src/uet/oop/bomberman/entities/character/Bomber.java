@@ -1,8 +1,11 @@
 package uet.oop.bomberman.entities.character;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
 import uet.oop.bomberman.constants.Direction;
@@ -18,6 +21,7 @@ import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
 
+import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,15 +47,15 @@ public class Bomber extends Character {
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
     //    private boolean resetAnimation = false;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     AudioManager deadAudio = new AudioManager("res/audio/dead.mp3", AudioManager.GAMEPLAY_MUSIC);
     AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav", AudioManager.GAMEPLAY_MUSIC);
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
-        super(x, y, img);
+        super(x, y, img, game);
         this.keyInput = keyInput;
-        this.game = game;
+//        this.game = game;
         direction = Direction.RIGHT;
         velocity = 2;
         time = 10;
@@ -231,16 +235,12 @@ public class Bomber extends Character {
 
     @Override
     public void dead() {
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                alive = false;
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 1700);
+        new Timeline(new KeyFrame(
+                Duration.millis(1900),
+                event -> {
+                    alive = false;
+                }
+        )).play();
     }
 
     public void moveUp() {
@@ -319,7 +319,7 @@ public class Bomber extends Character {
             velocity = 0;
 //            moving = false;
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
-                    Sprite.player_dead3, animation, 60);
+                    Sprite.player_dead3, animation, 75);
         }
     }
 

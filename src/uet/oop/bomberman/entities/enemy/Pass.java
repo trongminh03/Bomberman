@@ -20,18 +20,19 @@ public class Pass extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.pass_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox passBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     AStarAlgorithm pathFinding;
 
     public Pass(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
         velocity = 2;
+        SCORE = 4000;
         passBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
+//        this.game = game;
         pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
         FINDING_SCOPE = 5;
     }
@@ -143,6 +144,7 @@ public class Pass extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
+                showScore(SCORE);
                 game.getEnemieGarbage().add(this);
             }
         }

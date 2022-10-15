@@ -22,18 +22,16 @@ public class Minvo extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.minvo_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox minvoBoundary;
-    private GameViewManager game;
-
     PathFindingLv2 pathFinding;
 
     public Minvo(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
         velocity = 1;
+        SCORE = 800;
         minvoBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
         FINDING_SCOPE = 5;
     }
@@ -145,6 +143,7 @@ public class Minvo extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
+                showScore(SCORE);
                 game.getEnemieGarbage().add(this);
             }
         }

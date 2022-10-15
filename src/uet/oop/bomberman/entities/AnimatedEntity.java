@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.gui.GameViewManager;
 
 public abstract class AnimatedEntity extends Entity {
     protected int animation = 0;
