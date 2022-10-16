@@ -53,6 +53,7 @@ public class Bomber extends Character {
 
     AudioManager deadAudio = new AudioManager("res/audio/dead.mp3", AudioManager.GAMEPLAY_MUSIC);
     AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav", AudioManager.GAMEPLAY_MUSIC);
+    AudioManager powerupAudio = new AudioManager("res/audio/power_up.wav", AudioManager.GAMEPLAY_MUSIC);
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
         super(x, y, img, game);
@@ -126,6 +127,9 @@ public class Bomber extends Character {
             if (entity instanceof Item) {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()) {
                     game.getItemGarbage().add((Item) entity);
+                    if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
+                        powerupAudio.play(1);
+                    }
                     powerUp((Item) entity);
                 }
             }
@@ -133,6 +137,7 @@ public class Bomber extends Character {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
                     BombermanGame.numStage++;
+                    game.getBackgroundMusic().stop();
                     WaitViewManager waitView = new WaitViewManager();
                     BombermanGame.switchScene(waitView.getWaitScene());
                 }

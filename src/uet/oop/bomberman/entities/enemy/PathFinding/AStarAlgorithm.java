@@ -49,7 +49,6 @@ public class AStarAlgorithm extends RandomMove {
             // Check exact grid
             if (enemy.getX() % Sprite.SCALED_SIZE == 0 && enemy.getY() % Sprite.SCALED_SIZE == 0) {
                 List<Node> path = findPath();
-                System.out.println(path.size());
                 if (path.size() == 0) {
                     return EnemyDirection.DETECT_FAILED;
                 }

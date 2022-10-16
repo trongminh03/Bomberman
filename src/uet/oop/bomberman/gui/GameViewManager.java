@@ -285,7 +285,7 @@ public class GameViewManager {
                     if (!bomberman.isAlive()) {
                         mainStage.close();
                         timer.stop();
-//                        MenuViewManager menuView = new MenuViewManager();
+                        BombermanGame.numStage = 2;
                         MenuViewManager.playMenuMusic();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
@@ -387,5 +387,9 @@ public class GameViewManager {
 
     public Canvas getCanvas() {
         return canvas;
+    }
+
+    public AudioManager getBackgroundMusic () {
+        return backgroundMusic;
     }
 }

@@ -32,11 +32,16 @@ public class AudioManager {
     public void play(int loop) {
         if (this.type.equals(BACKGROUND_MUSIC)) {
             mediaPlayer.setVolume(BGVolume);
-            mediaPlayer.setCycleCount(loop);
-            mediaPlayer.play();
+            if (loop == MediaPlayer.INDEFINITE) {
+                mediaPlayer.setCycleCount(loop);
+                mediaPlayer.play();
+            } else {
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.play();
+            }
         } else {
             mediaPlayer.setVolume(GPVolume);
-            mediaPlayer.setCycleCount(loop);
+//            mediaPlayer.setCycleCount(loop);
             mediaPlayer.seek(Duration.ZERO);
             mediaPlayer.play();
         }
