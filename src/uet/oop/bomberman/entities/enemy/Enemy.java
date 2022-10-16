@@ -81,7 +81,7 @@ public abstract class Enemy extends AnimatedEntity {
         labelScore.setFont(Font.font("Comic Sans MS", FontWeight.EXTRA_BOLD, 15));
         labelScore.setTextFill(Color.WHITE);
         labelScore.setLayoutX(getX() + game.getCanvas().getLayoutX());
-        labelScore.setLayoutY(getY() + game.getCanvas().getLayoutY());
+        labelScore.setLayoutY(getY() + 32 + game.getCanvas().getLayoutY());
         game.getRoot().getChildren().add(labelScore);
         new Timeline(new KeyFrame(
                 Duration.millis(700),

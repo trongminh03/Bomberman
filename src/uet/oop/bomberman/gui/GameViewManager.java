@@ -1,11 +1,20 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
@@ -17,6 +26,7 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +39,8 @@ public class GameViewManager {
 
     private GraphicsContext gc;
     private Canvas canvas;
+
+    Pane pane;
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
@@ -36,7 +48,6 @@ public class GameViewManager {
     private List<Item> itemGarbage = new ArrayList<>();
 
     private Stage mainStage;
-    //    private Stage menuStage;
     private Group root;
     private Scene scene;
 
@@ -50,6 +61,9 @@ public class GameViewManager {
                                                         AudioManager.BACKGROUND_MUSIC);
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
+
+    private Text level, bomb, time, lives;
+
     public GameViewManager(int numStage) {
         createNewGame(numStage);
         initializeStage();
@@ -57,17 +71,62 @@ public class GameViewManager {
     }
 
     private void initializeStage() {
+        createGameInfo();
         canvas = new Canvas(Sprite.SCALED_SIZE * getColumns(), Sprite.SCALED_SIZE * getRows());
+        canvas.setTranslateY(32);
         gc = canvas.getGraphicsContext2D();
+
         // Tao root container
         root = new Group();
         root.getChildren().add(canvas);
+        root.getChildren().add(pane);
         // Tao scene
         scene = new Scene(root, Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
 
         // Tao stage
         mainStage = new Stage();
         mainStage.setScene(scene);
+    }
+
+    private void createGameInfo() {
+        level = new Text("Level 1");
+        level.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        level.setFill(Color.WHITE);
+        level.setX(150);
+        level.setY(20);
+
+        bomb = new Text("Bombs: 20");
+        bomb.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        bomb.setFill(Color.WHITE);
+        bomb.setX(250);
+        bomb.setY(20);
+
+        Image bomber = new Image("/model/bomberman.png");
+        ImageView bomberIcon = new ImageView(bomber);
+        bomberIcon.setX(350);
+        bomberIcon.setY(5);
+        lives = new Text("3");
+        lives.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lives.setFill(Color.WHITE);
+        lives.setX(400);
+        lives.setY(20);
+
+        Image timer = new Image("/model/stopwatch.png");
+        ImageView timerView = new ImageView(timer);
+        timerView.setX(450);
+        timerView.setY(5);
+        time = new Text("120");
+        time.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        time.setFill(Color.WHITE);
+        time.setX(500);
+        time.setY(20);
+
+
+        pane = new Pane();
+        pane.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+        pane.getChildren().addAll(level, bomb, bomberIcon, lives, timerView, time);
+        pane.setMinSize(640, 32);
+        pane.setMaxSize(640, 480);
     }
 
     public void createNewGame(int numStage) {
@@ -337,7 +396,7 @@ public class GameViewManager {
         }
 
         // check if bomberman is in the middle of the screen height
-        int midVerticalPosition = (HEIGHT * Sprite.SCALED_SIZE) / 2;
+        int midVerticalPosition = ((HEIGHT - 1) * Sprite.SCALED_SIZE) / 2;
         if (bomberman.getY() >= midVerticalPosition
                 && bomberman.getY() <= getRows() * Sprite.SCALED_SIZE - midVerticalPosition) {
             // move background upon bomberman position
@@ -345,7 +404,7 @@ public class GameViewManager {
         } else if (bomberman.getY() < midVerticalPosition) { // set camera upon bomberman position
             canvas.setLayoutY(0);
         } else { // set camera upon bomberman position
-            canvas.setLayoutY((HEIGHT - getRows()) * Sprite.SCALED_SIZE);
+            canvas.setLayoutY((HEIGHT - 1 - getRows()) * Sprite.SCALED_SIZE);
         }
     }
 

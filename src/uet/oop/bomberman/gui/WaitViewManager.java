@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 public class WaitViewManager {
     private AudioManager nextlevelAudio =
             new AudioManager("res/audio/next_level.mp3", AudioManager.BACKGROUND_MUSIC);
-    private String fontPath = "res/model/PixelEmulator-xq08.ttf";
+    private final static String fontPath = "res/model/PixelEmulator-xq08.ttf";
     private StackPane pane;
     private Label message;
     private Scene scene;

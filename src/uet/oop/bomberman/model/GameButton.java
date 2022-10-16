@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class GameButton extends Button {
-    private final String mainFont = "res/model/PixelEmulator-xq08.ttf";
+    private final static String mainFont = "res/model/PixelEmulator-xq08.ttf";
     private final String BUTTON_FREE_STYLE
             = "-fx-background-color: transparent; -fx-background-image: url('/model/yellow_button.png');";
     private final String BUTTON_PRESSED_STYLE

@@ -2,6 +2,7 @@ package uet.oop.bomberman;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import uet.oop.bomberman.constants.GlobalConstants;
 import uet.oop.bomberman.gui.MenuViewManager;
@@ -19,13 +20,9 @@ public class BombermanGame extends Application {
         this.stage = primaryStage;
         MenuViewManager menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
+        stage.getIcons().add(new Image("/model/gameicon.png"));
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
         stage.show();
-
-        /*this.stage = primaryStage;
-        WaitViewManager waitView = new WaitViewManager();
-        stage.setScene(waitView.getWaitScene());
-        stage.show();*/
     }
 
     public static void switchScene(Scene scene) {
