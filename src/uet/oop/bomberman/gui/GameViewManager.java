@@ -1,12 +1,10 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -28,7 +26,6 @@ import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.info.Timer;
 import uet.oop.bomberman.input.KeyManager;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +104,7 @@ public class GameViewManager {
         score.setX(250);
         score.setY(20);
 
-        Image bomber = new Image("/model/bomberman.png");
+        Image bomber = new Image("/model/img/bomberman.png");
         ImageView bomberIcon = new ImageView(bomber);
         bomberIcon.setX(350);
         bomberIcon.setY(5);
@@ -117,7 +114,7 @@ public class GameViewManager {
         lives.setX(400);
         lives.setY(20);
 
-        Image watch = new Image("/model/stopwatch.png");
+        Image watch = new Image("/model/img/stopwatch.png");
         ImageView timerView = new ImageView(watch);
         timerView.setX(450);
         timerView.setY(5);

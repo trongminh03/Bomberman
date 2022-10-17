@@ -1,7 +1,7 @@
 package uet.oop.bomberman.info;
 
 public class Timer {
-    private static final int DEFAULT_TIMER = 5;
+    private static final int DEFAULT_TIMER = 120;
     private long timeValue;
     private long timeStart;
 

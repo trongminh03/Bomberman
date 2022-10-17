@@ -11,11 +11,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class GameButton extends Button {
-    private final static String mainFont = "res/model/PixelEmulator-xq08.ttf";
+    private final static String mainFont = "res/model/font/PixelEmulator-xq08.ttf";
     private final String BUTTON_FREE_STYLE
-            = "-fx-background-color: transparent; -fx-background-image: url('/model/yellow_button.png');";
+            = "-fx-background-color: transparent; -fx-background-image: url('/model/img/yellow_button.png');";
     private final String BUTTON_PRESSED_STYLE
-            = "-fx-background-color: transparent; -fx-background-image: url('/model/yellow_button_pressed.png');";
+            = "-fx-background-color: transparent; -fx-background-image: url('/model/img/yellow_button_pressed.png');";
     private final int BUTTON_WIDTH = 190;
     private final int BUTTON_HEIGHT = 49;
 

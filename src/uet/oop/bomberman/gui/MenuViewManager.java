@@ -1,10 +1,5 @@
 package uet.oop.bomberman.gui;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -223,7 +218,7 @@ public class MenuViewManager {
     }
 
     private void createLogo() {
-        ImageView logo = new ImageView("/model/logo.png");
+        ImageView logo = new ImageView("/model/img/logo.png");
         logo.setLayoutX(280);
         logo.setLayoutY(5);
 
@@ -245,7 +240,7 @@ public class MenuViewManager {
     }
 
     private void createBackground() {
-        Image backgroundImage = new Image("/model/background.png", 800, 600, false, true);
+        Image backgroundImage = new Image("/model/img/background.png", 800, 600, false, true);
         BackgroundImage background = new BackgroundImage(backgroundImage, null,
                         null, BackgroundPosition.DEFAULT, null);
         menuPane.setBackground(new Background(background));

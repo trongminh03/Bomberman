@@ -1,19 +1,13 @@
 package uet.oop.bomberman.model;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.MediaPlayer;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.gui.MenuViewManager;
-
-import javax.swing.text.html.Option;
 
 
 public class OptionController extends HBox {
@@ -28,8 +22,8 @@ public class OptionController extends HBox {
     }
 
     public OptionController(String type) {
-        speakerOn = new Image("/model/sound-on.png");
-        silent = new Image("/model/silent.png");
+        speakerOn = new Image("/model/img/sound-on.png");
+        silent = new Image("/model/img/silent.png");
         speaker = new ImageView();
         speaker.setImage(speakerOn);
 //        this.setAlignment(Pos.CENTER);
