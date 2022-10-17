@@ -20,12 +20,9 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.gui.WaitViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.sql.Time;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Bomber extends Character {
     private static int velocity;
