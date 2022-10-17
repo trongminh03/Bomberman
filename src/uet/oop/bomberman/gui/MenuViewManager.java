@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.GameButton;
 import uet.oop.bomberman.model.GameSubScene;
 import uet.oop.bomberman.model.InfoLabel;
@@ -55,6 +56,7 @@ public class MenuViewManager {
                                 Sprite.SCALED_SIZE * GameViewManager.HEIGHT);
         menuStage = new Stage();
         menuStage.setScene(menuScene);
+        Score.resetScore();
         createBackground();
         createLogo();
         createSubScene();

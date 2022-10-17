@@ -24,6 +24,8 @@ import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.info.Score;
+import uet.oop.bomberman.info.Timer;
 import uet.oop.bomberman.input.KeyManager;
 
 import java.awt.*;
@@ -51,7 +53,7 @@ public class GameViewManager {
     private Group root;
     private Scene scene;
 
-    private AnimationTimer timer;
+    private AnimationTimer animationTimer;
     private int L, R, C;
 
     private double t = 0;
@@ -62,7 +64,10 @@ public class GameViewManager {
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
 
-    private Text level, bomb, time, lives;
+    private Text level, score, time, lives;
+    private Timer timer;
+
+    private boolean TIMEUP = false;
 
     public GameViewManager(int numStage) {
         createNewGame(numStage);
@@ -89,17 +94,18 @@ public class GameViewManager {
     }
 
     private void createGameInfo() {
-        level = new Text("Level 1");
+        level = new Text("Level: " + BombermanGame.numStage);
         level.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         level.setFill(Color.WHITE);
         level.setX(150);
         level.setY(20);
 
-        bomb = new Text("Bombs: 20");
-        bomb.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        bomb.setFill(Color.WHITE);
-        bomb.setX(250);
-        bomb.setY(20);
+        score = new Text();
+        score.setText("Score: " + Integer.toString(Score.getScore()));
+        score.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        score.setFill(Color.WHITE);
+        score.setX(250);
+        score.setY(20);
 
         Image bomber = new Image("/model/bomberman.png");
         ImageView bomberIcon = new ImageView(bomber);
@@ -111,11 +117,12 @@ public class GameViewManager {
         lives.setX(400);
         lives.setY(20);
 
-        Image timer = new Image("/model/stopwatch.png");
-        ImageView timerView = new ImageView(timer);
+        Image watch = new Image("/model/stopwatch.png");
+        ImageView timerView = new ImageView(watch);
         timerView.setX(450);
         timerView.setY(5);
-        time = new Text("120");
+        time = new Text();
+        time.setText(Long.toString(timer.getTimeValue()));
         time.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         time.setFill(Color.WHITE);
         time.setX(500);
@@ -124,7 +131,7 @@ public class GameViewManager {
 
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
-        pane.getChildren().addAll(level, bomb, bomberIcon, lives, timerView, time);
+        pane.getChildren().addAll(level, score, bomberIcon, lives, timerView, time);
         pane.setMinSize(640, 32);
         pane.setMaxSize(640, 480);
     }
@@ -132,6 +139,8 @@ public class GameViewManager {
     public void createNewGame(int numStage) {
         enemies = new ArrayList<>();
         stillObjects = new ArrayList<>();
+        timer = new Timer();
+        TIMEUP = false;
 //        this.menuStage = menuStage;
 //        this.menuStage.hide();
         createMap(numStage);
@@ -318,6 +327,8 @@ public class GameViewManager {
             }
         }
         bomberman.update();
+        updateGameInfo();
+        timer.update();
     }
 
     public void render() {
@@ -328,9 +339,8 @@ public class GameViewManager {
     }
 
     private void createGameLoop() {
-        timer = new AnimationTimer() {
+        animationTimer = new AnimationTimer() {
             long lastTick = 0;
-
             @Override
             public void handle(long l) {
                 if (l - lastTick > 1000000000 / FPS) {
@@ -343,8 +353,9 @@ public class GameViewManager {
                     }
                     if (!bomberman.isAlive()) {
                         mainStage.close();
-                        timer.stop();
+                        animationTimer.stop();
                         BombermanGame.numStage = 2;
+                        Score.resetScore();
                         MenuViewManager.playMenuMusic();
                         BombermanGame.switchScene(MenuViewManager.getScene());
                     }
@@ -355,7 +366,7 @@ public class GameViewManager {
 //                System.out.println(System.currentTimeMillis());
             }
         };
-        timer.start();
+        animationTimer.start();
     }
 
     public void playBackgroundMusic() {
@@ -450,5 +461,17 @@ public class GameViewManager {
 
     public AudioManager getBackgroundMusic () {
         return backgroundMusic;
+    }
+
+    private void updateGameInfo() {
+        level.setText("Level: " + BombermanGame.numStage);
+        score.setText("Score: " + Integer.toString(Score.getScore()));
+        time.setText(Long.toString(timer.getTimeValue()));
+
+        if (timer.getTimeValue() == 0 && !TIMEUP) {
+            TIMEUP = true;
+            enemies.replaceAll(enemy -> new Pontan(enemy.getGridX(),
+                    enemy.getGridY(), Sprite.pontan_right1.getFxImage(), this));
+        }
     }
 }
