@@ -11,6 +11,7 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Doll extends Enemy {
@@ -145,6 +146,7 @@ public class Doll extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
+                Score.addScore(getScore());
                 game.getEnemiesGarbage().add(this);
             }
         }

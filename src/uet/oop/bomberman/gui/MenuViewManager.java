@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.GameButton;
 import uet.oop.bomberman.model.GameSubScene;
 import uet.oop.bomberman.model.InfoLabel;
@@ -47,13 +48,6 @@ public class MenuViewManager {
     private GameSubScene scoreSubScene;
 
     private GameSubScene sceneToHide;
-//    MenuViewManager menu;
-
-//    boolean soundOn = true;
-//    ImageView speaker = new ImageView();
-//    Image speakerOn = new Image("/model/sound-on.png");
-//    Image silent = new Image("/model/silent.png");
-
 
     public MenuViewManager() {
         menuButtons = new ArrayList<Button>();
@@ -62,12 +56,12 @@ public class MenuViewManager {
                                 Sprite.SCALED_SIZE * GameViewManager.HEIGHT);
         menuStage = new Stage();
         menuStage.setScene(menuScene);
+        Score.resetScore();
         createBackground();
         createLogo();
         createSubScene();
         createButton();
         playMenuMusic();
-//        createSoundButton();
     }
 
     public Stage getMenuStage() {
@@ -126,35 +120,6 @@ public class MenuViewManager {
         scoreSubScene = new GameSubScene();
         menuPane.getChildren().add(scoreSubScene);
     }
-
-//    private void createSoundButton() {
-//        ImageView speaker = new ImageView();
-//        Image speakerOn = new Image("/model/sound-on.png");
-//        Image silent = new Image("/model/silent.png");
-//        if (AudioManager.isSoundEnabled()) {
-//            speaker.setImage(speakerOn);
-//        } else {
-//            speaker.setImage(silent);
-//        }
-//        speaker.setLayoutX(100);
-//        speaker.setLayoutY(30);
-//
-//        speaker.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                if (AudioManager.isSoundEnabled()) {
-//                    speaker.setImage(silent);
-//                    AudioManager.setSoundOn(false);
-//                    menuSong.stop();
-//                } else {
-//                    speaker.setImage(speakerOn);
-//                    AudioManager.setSoundOn(true);
-//                    menuSong.play(MediaPlayer.INDEFINITE);
-//                }
-//            }
-//        });
-//        menuPane.getChildren().add(speaker);
-//    }
 
     private void createStartButton() {
         GameButton startButton = new GameButton("PLAY GAME");

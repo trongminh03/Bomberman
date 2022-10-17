@@ -10,6 +10,7 @@ import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv2;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Ovapi extends Enemy {
@@ -144,6 +145,7 @@ public class Ovapi extends Enemy {
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
                 showScore(SCORE);
+                Score.addScore(getScore());
                 game.getEnemiesGarbage().add(this);
             }
         }
