@@ -2,6 +2,7 @@ package uet.oop.bomberman.gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
@@ -21,6 +23,7 @@ import uet.oop.bomberman.model.GameSubScene;
 import uet.oop.bomberman.model.InfoLabel;
 import uet.oop.bomberman.model.OptionController;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +48,7 @@ public class MenuViewManager {
     private GameSubScene sceneToHide;
 
     public MenuViewManager() {
+        Score.readScoreListFile();
         menuButtons = new ArrayList<Button>();
         menuPane = new AnchorPane();
         menuScene = new Scene(menuPane, Sprite.SCALED_SIZE * GameViewManager.WIDTH,
@@ -104,9 +108,11 @@ public class MenuViewManager {
     private void createSubScene() {
         creditsSubScene = new GameSubScene();
         menuPane.getChildren().add(creditsSubScene);
+        creditsSubScene.getPane().getChildren().add(createCreditsPane());
 
         helpSubScene = new GameSubScene();
         menuPane.getChildren().add(helpSubScene);
+        helpSubScene.getPane().getChildren().add(createInstruction());
 
         optionSubScene = new GameSubScene();
         menuPane.getChildren().add(optionSubScene);
@@ -114,6 +120,7 @@ public class MenuViewManager {
 
         scoreSubScene = new GameSubScene();
         menuPane.getChildren().add(scoreSubScene);
+        scoreSubScene.getPane().getChildren().add(createLeaderboard());
     }
 
     private void createStartButton() {
@@ -148,6 +155,57 @@ public class MenuViewManager {
         });
     }
 
+    private AnchorPane createLeaderboard() {
+        AnchorPane pane = new AnchorPane();
+
+        BackgroundImage backgroundLabel =
+                new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+
+        InfoLabel leaderboard = new InfoLabel("LEADERBOARD");
+        leaderboard.setLayoutX(37);
+        leaderboard.setLayoutY(15);
+        leaderboard.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        leaderboard.setBackground(new Background(backgroundLabel));
+        leaderboard.setAlignment(Pos.CENTER);
+
+        HBox top1 = new HBox();
+        top1.setSpacing(20);
+        HBox top2 = new HBox();
+        top2.setSpacing(20);
+        HBox top3 = new HBox();
+        top3.setSpacing(20);
+
+        VBox vbox = new VBox();
+        vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER);
+        ImageView goldMedal = new ImageView(new Image("/model/img/gold_medal.png"));
+        ImageView silverMedal = new ImageView(new Image("/model/img/silver_medal.png"));
+        ImageView bronzeMedal = new ImageView(new Image("/model/img/bronze_medal.png"));
+        InfoLabel score1 = new InfoLabel(Integer.toString(Score.scoreList.get(0)));
+        InfoLabel score2 = new InfoLabel(Integer.toString(Score.scoreList.get(1)));
+        InfoLabel score3 = new InfoLabel(Integer.toString(Score.scoreList.get(2)));
+        score1.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        score1.setPadding(new Insets(10, 10, 10, 10));
+        score2.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        score2.setPadding(new Insets(10, 10, 10, 10));
+        score3.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        score3.setPadding(new Insets(10, 10, 10, 10));
+        top1.getChildren().addAll(goldMedal, score1);
+        top2.getChildren().addAll(silverMedal, score2);
+        top3.getChildren().addAll(bronzeMedal, score3);
+
+        vbox.getChildren().add(top1);
+        vbox.getChildren().add(top2);
+        vbox.getChildren().add(top3);
+        vbox.setLayoutX(70);
+        vbox.setLayoutY(70);
+
+        pane.getChildren().add(leaderboard);
+        pane.getChildren().add(vbox);
+        return pane;
+    }
+
     private void createHelpButton() {
         GameButton helpButton = new GameButton("HELP");
         addMenuButton(helpButton, 2);
@@ -158,6 +216,22 @@ public class MenuViewManager {
                 showSubScene(helpSubScene);
             }
         });
+    }
+
+    private AnchorPane createInstruction() {
+        AnchorPane pane = new AnchorPane();
+        BackgroundImage backgroundLabel =
+                new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+
+        InfoLabel instruction = new InfoLabel("HOW TO PLAY");
+        instruction.setLayoutX(37);
+        instruction.setLayoutY(15);
+        instruction.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        instruction.setBackground(new Background(backgroundLabel));
+        instruction.setAlignment(Pos.CENTER);
+        pane.getChildren().add(instruction);
+        return pane;
     }
 
     private void createOptionButton() {
@@ -172,7 +246,19 @@ public class MenuViewManager {
         });
     }
 
-    private VBox createOptions() {
+    private AnchorPane createOptions() {
+        AnchorPane pane = new AnchorPane();
+        BackgroundImage backgroundLabel =
+                new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+
+        InfoLabel setting = new InfoLabel("SETTING");
+        setting.setLayoutX(37);
+        setting.setLayoutY(15);
+        setting.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        setting.setBackground(new Background(backgroundLabel));
+        setting.setAlignment(Pos.CENTER);
+
         VBox box = new VBox();
         box.setSpacing(10);
         box.setAlignment(Pos.CENTER);
@@ -189,8 +275,10 @@ public class MenuViewManager {
         box.getChildren().add(gameplayMusic);
 //        box.setAlignment(Pos.CENTER);
         box.setLayoutX(50);
-        box.setLayoutY(50);
-        return box;
+        box.setLayoutY(70);
+        pane.getChildren().add(setting);
+        pane.getChildren().add(box);
+        return pane;
     }
 
     private void createCreditsButton() {
@@ -203,6 +291,22 @@ public class MenuViewManager {
                 showSubScene(creditsSubScene);
             }
         });
+    }
+
+    private AnchorPane createCreditsPane() {
+        AnchorPane pane = new AnchorPane();
+        BackgroundImage backgroundLabel =
+                new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+
+        InfoLabel credits= new InfoLabel("CREDITS");
+        credits.setLayoutX(37);
+        credits.setLayoutY(15);
+        credits.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        credits.setBackground(new Background(backgroundLabel));
+        credits.setAlignment(Pos.CENTER);
+        pane.getChildren().add(credits);
+        return pane;
     }
 
     private void createExitButton() {
