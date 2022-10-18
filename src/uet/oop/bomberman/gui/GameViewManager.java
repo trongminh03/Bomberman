@@ -26,6 +26,7 @@ import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.info.Timer;
 import uet.oop.bomberman.input.KeyManager;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -345,22 +346,9 @@ public class GameViewManager {
                     moveBackground();
                     render();
                     update();
-                    if (bomberman.checkFatalHit()) {
-                        backgroundMusic.stop();
-                    }
-                    if (!bomberman.isAlive()) {
-                        mainStage.close();
-                        animationTimer.stop();
-                        BombermanGame.numStage = 2;
-                        Score.resetScore();
-                        MenuViewManager.playMenuMusic();
-                        BombermanGame.switchScene(MenuViewManager.getScene());
-                    }
-//                        BombermanGame.switchScene(MenuViewManager.getScene());
-
+                    afterDead();
                     clearGarbage();
                 }
-//                System.out.println(System.currentTimeMillis());
             }
         };
         animationTimer.start();
@@ -469,6 +457,20 @@ public class GameViewManager {
             TIMEUP = true;
             enemies.replaceAll(enemy -> new Pontan(enemy.getGridX(),
                     enemy.getGridY(), Sprite.pontan_right1.getFxImage(), this));
+        }
+    }
+
+    private void afterDead() {
+        if (bomberman.checkFatalHit()) {
+            backgroundMusic.stop();
+        }
+        if (!bomberman.isAlive()) {
+            mainStage.close();
+            animationTimer.stop();
+            BombermanGame.numStage = 2;
+            MenuViewManager.updateLeaderboard();
+            MenuViewManager.playMenuMusic();
+            BombermanGame.switchScene(MenuViewManager.getScene());
         }
     }
 }

@@ -32,7 +32,8 @@ public class MenuViewManager {
     private static Scene menuScene;
     private Stage menuStage;
 
-    public static AudioManager menuSong = new AudioManager("res/audio/menu_song.mp3", AudioManager.BACKGROUND_MUSIC);
+    public static AudioManager menuSong =
+            new AudioManager("res/audio/menu_song.mp3", AudioManager.BACKGROUND_MUSIC);
 
     private final static int MENU_BUTTON_START_X = 30;
     private final static int MENU_BUTTON_START_Y = 40;
@@ -44,6 +45,9 @@ public class MenuViewManager {
     private OptionController backgroundMusic;
     private OptionController gameplayMusic;
     private GameSubScene scoreSubScene;
+    private static InfoLabel score1;
+    private static InfoLabel score2;
+    private static InfoLabel score3;
 
     private GameSubScene sceneToHide;
 
@@ -182,9 +186,9 @@ public class MenuViewManager {
         ImageView goldMedal = new ImageView(new Image("/model/img/gold_medal.png"));
         ImageView silverMedal = new ImageView(new Image("/model/img/silver_medal.png"));
         ImageView bronzeMedal = new ImageView(new Image("/model/img/bronze_medal.png"));
-        InfoLabel score1 = new InfoLabel(Integer.toString(Score.scoreList.get(0)));
-        InfoLabel score2 = new InfoLabel(Integer.toString(Score.scoreList.get(1)));
-        InfoLabel score3 = new InfoLabel(Integer.toString(Score.scoreList.get(2)));
+        score1 = new InfoLabel(Integer.toString(Score.scoreList.get(0)));
+        score2 = new InfoLabel(Integer.toString(Score.scoreList.get(1)));
+        score3 = new InfoLabel(Integer.toString(Score.scoreList.get(2)));
         score1.setFont("res/model/font/PixelEmulator-xq08.ttf");
         score1.setPadding(new Insets(10, 10, 10, 10));
         score2.setFont("res/model/font/PixelEmulator-xq08.ttf");
@@ -206,6 +210,15 @@ public class MenuViewManager {
         return pane;
     }
 
+    public static void updateLeaderboard() {
+        Score.updateTopScore();
+        Score.resetScore();
+        Score.readScoreListFile();
+        score1.setText(Integer.toString(Score.scoreList.get(0)));
+        score2.setText(Integer.toString(Score.scoreList.get(1)));
+        score3.setText(Integer.toString(Score.scoreList.get(2)));
+    }
+
     private void createHelpButton() {
         GameButton helpButton = new GameButton("HELP");
         addMenuButton(helpButton, 2);
@@ -222,7 +235,7 @@ public class MenuViewManager {
         AnchorPane pane = new AnchorPane();
         BackgroundImage backgroundLabel =
                 new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
-                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
 
         InfoLabel instruction = new InfoLabel("HOW TO PLAY");
         instruction.setLayoutX(37);
@@ -297,7 +310,7 @@ public class MenuViewManager {
         AnchorPane pane = new AnchorPane();
         BackgroundImage backgroundLabel =
                 new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
-                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
 
         InfoLabel credits= new InfoLabel("CREDITS");
         credits.setLayoutX(37);
