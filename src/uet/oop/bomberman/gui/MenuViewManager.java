@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
@@ -174,11 +175,14 @@ public class MenuViewManager {
         leaderboard.setAlignment(Pos.CENTER);
 
         HBox top1 = new HBox();
-        top1.setSpacing(20);
+        top1.setSpacing(30);
+        top1.setAlignment(Pos.CENTER);
         HBox top2 = new HBox();
-        top2.setSpacing(20);
+        top2.setSpacing(30);
+        top2.setAlignment(Pos.CENTER);
         HBox top3 = new HBox();
-        top3.setSpacing(20);
+        top3.setSpacing(30);
+        top3.setAlignment(Pos.CENTER);
 
         VBox vbox = new VBox();
         vbox.setSpacing(20);
@@ -190,11 +194,11 @@ public class MenuViewManager {
         score2 = new InfoLabel(Integer.toString(Score.scoreList.get(1)));
         score3 = new InfoLabel(Integer.toString(Score.scoreList.get(2)));
         score1.setFont("res/model/font/PixelEmulator-xq08.ttf");
-        score1.setPadding(new Insets(10, 10, 10, 10));
+//        score1.setPadding(new Insets(10, 10, 10, 10));
         score2.setFont("res/model/font/PixelEmulator-xq08.ttf");
-        score2.setPadding(new Insets(10, 10, 10, 10));
+//        score2.setPadding(new Insets(10, 10, 10, 10));
         score3.setFont("res/model/font/PixelEmulator-xq08.ttf");
-        score3.setPadding(new Insets(10, 10, 10, 10));
+//        score3.setPadding(new Insets(10, 10, 10, 10));
         top1.getChildren().addAll(goldMedal, score1);
         top2.getChildren().addAll(silverMedal, score2);
         top3.getChildren().addAll(bronzeMedal, score3);
@@ -233,6 +237,7 @@ public class MenuViewManager {
 
     private AnchorPane createInstruction() {
         AnchorPane pane = new AnchorPane();
+        // create label
         BackgroundImage backgroundLabel =
                 new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
@@ -243,7 +248,39 @@ public class MenuViewManager {
         instruction.setFont("res/model/font/PixelEmulator-xq08.ttf");
         instruction.setBackground(new Background(backgroundLabel));
         instruction.setAlignment(Pos.CENTER);
+
+        // create arrows instruction
+        HBox box1 = new HBox();
+        box1.setSpacing(20);
+        box1.setAlignment(Pos.CENTER);
+        ImageView arrows = new ImageView(new Image("/model/img/arrows.png"));
+        InfoLabel control = new InfoLabel("CONTROL");
+        box1.getChildren().addAll(arrows, control);
+
+        // create space bar instruction
+        HBox box2 = new HBox();
+        box2.setSpacing(20);
+        box2.setAlignment(Pos.CENTER);
+        ImageView spacebar = new ImageView(new Image("/model/img/spacebar.png"));
+        InfoLabel setBomb = new InfoLabel("PLACE BOMB");
+        box2.getChildren().addAll(spacebar, setBomb);
+
+        // create esc key instruction
+        HBox box3 = new HBox();
+        box3.setSpacing(20);
+        box3.setAlignment(Pos.CENTER);
+        ImageView escKey = new ImageView(new Image("/model/img/escape.png"));
+        InfoLabel gamePause = new InfoLabel("PAUSE GAME");
+        box3.getChildren().addAll(escKey, gamePause);
+
+        VBox vbox = new VBox();
+        vbox.setSpacing(10);
+        vbox.getChildren().addAll(box1, box2, box3);
+        vbox.setLayoutX(50);
+        vbox.setLayoutY(70);
+
         pane.getChildren().add(instruction);
+        pane.getChildren().add(vbox);
         return pane;
     }
 
@@ -318,7 +355,21 @@ public class MenuViewManager {
         credits.setFont("res/model/font/PixelEmulator-xq08.ttf");
         credits.setBackground(new Background(backgroundLabel));
         credits.setAlignment(Pos.CENTER);
+
+        VBox vbox = new VBox();
+        vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER);
+        InfoLabel label = new InfoLabel("A game created and developed by Le Trong Minh\n & Nguyen Hoai Nam");
+        label.setPrefWidth(270);
+        label.setPrefHeight(70);
+        label.setTextAlignment(TextAlignment.CENTER);
+        ImageView bombermanIcon = new ImageView(new Image("/model/img/bomberman2.png"));
+        vbox.getChildren().addAll(label, bombermanIcon);
+        vbox.setLayoutX(25);
+        vbox.setLayoutY(60);
+
         pane.getChildren().add(credits);
+        pane.getChildren().add(vbox);
         return pane;
     }
 
