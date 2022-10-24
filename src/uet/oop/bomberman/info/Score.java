@@ -28,13 +28,11 @@ public class Score {
     public static void readScoreListFile() {
         File file = new File(path);
         scoreList.clear();
-        try {
-            Scanner sc = new Scanner(file);
+        try (Scanner sc = new Scanner(file)) {
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
                 scoreList.add(Integer.parseInt(line));
             }
-            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (NumberFormatException e) {

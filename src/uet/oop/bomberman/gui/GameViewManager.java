@@ -1,6 +1,8 @@
 package uet.oop.bomberman.gui;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -25,6 +27,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.info.Timer;
 import uet.oop.bomberman.input.KeyManager;
+import uet.oop.bomberman.model.InfoLabel;
 
 import java.awt.*;
 import java.io.*;
@@ -58,7 +61,7 @@ public class GameViewManager {
     private final static double FPS = 62;
     private KeyManager keys = new KeyManager();
     AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3",
-                                                        AudioManager.BACKGROUND_MUSIC);
+            AudioManager.BACKGROUND_MUSIC);
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
 
@@ -92,44 +95,65 @@ public class GameViewManager {
     }
 
     private void createGameInfo() {
+        HBox gameInfoBox = new HBox();
+        gameInfoBox.setSpacing(100);
         level = new Text("Level: " + BombermanGame.numStage);
-        level.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+//        level.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        try {
+            level.setFont(Font.loadFont(new FileInputStream(InfoLabel.font), 27));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         level.setFill(Color.WHITE);
-        level.setX(150);
-        level.setY(20);
 
         score = new Text();
-        score.setText("Score: " + Integer.toString(Score.getScore()));
-        score.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        score.setText("Score: " + Score.getScore());
+//        score.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        try {
+            score.setFont(Font.loadFont(new FileInputStream(InfoLabel.font), 27));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         score.setFill(Color.WHITE);
-        score.setX(250);
-        score.setY(20);
 
-        Image bomber = new Image("/model/img/bomberman.png");
-        ImageView bomberIcon = new ImageView(bomber);
-        bomberIcon.setX(350);
-        bomberIcon.setY(5);
-        lives = new Text("3");
-        lives.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        HBox livesBox = new HBox();
+        livesBox.setSpacing(10);
+        ImageView bomberIcon = new ImageView(new Image("/model/img/bomberman.png"));
+        lives = new Text(Integer.toString(Bomber.LIVES));
+//        lives.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        try {
+            lives.setFont(Font.loadFont(new FileInputStream(InfoLabel.font), 27));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         lives.setFill(Color.WHITE);
-        lives.setX(400);
-        lives.setY(20);
+        livesBox.getChildren().addAll(bomberIcon, lives);
+        livesBox.setAlignment(Pos.CENTER);
 
-        Image watch = new Image("/model/img/stopwatch.png");
-        ImageView timerView = new ImageView(watch);
-        timerView.setX(450);
-        timerView.setY(5);
+        HBox timerBox = new HBox();
+        timerBox.setSpacing(10);
+        ImageView timerView = new ImageView(new Image("/model/img/stopwatch.png"));
         time = new Text();
         time.setText(Long.toString(timer.getTimeValue()));
-        time.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+//        time.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        try {
+            time.setFont(Font.loadFont(new FileInputStream(InfoLabel.font), 27));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         time.setFill(Color.WHITE);
-        time.setX(500);
-        time.setY(20);
+        timerBox.getChildren().addAll(timerView, time);
+        timerBox.setAlignment(Pos.CENTER);
+
+        gameInfoBox.getChildren().addAll(level, score, livesBox, timerBox);
+        gameInfoBox.setAlignment(Pos.CENTER);
+        gameInfoBox.setPadding(new Insets(5, 0, 0, 20));
 
 
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
-        pane.getChildren().addAll(level, score, bomberIcon, lives, timerView, time);
+//        pane.getChildren().addAll(level, score, bomberIcon, lives, timerView, time);
+        pane.getChildren().add(gameInfoBox);
         pane.setMinSize(640, 32);
         pane.setMaxSize(640, 480);
     }
@@ -339,6 +363,7 @@ public class GameViewManager {
     private void createGameLoop() {
         animationTimer = new AnimationTimer() {
             long lastTick = 0;
+
             @Override
             public void handle(long l) {
                 if (l - lastTick > 1000000000 / FPS) {
@@ -408,7 +433,9 @@ public class GameViewManager {
         return stillObjects;
     }
 
-    public List<Item> getItemGarbage() { return itemGarbage;}
+    public List<Item> getItemGarbage() {
+        return itemGarbage;
+    }
 
     public Scene getScene() {
         return scene;
@@ -417,6 +444,7 @@ public class GameViewManager {
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
+
     public List<Enemy> getEnemiesGarbage() {
         return enemiesGarbage;
     }
@@ -444,7 +472,7 @@ public class GameViewManager {
         return canvas;
     }
 
-    public AudioManager getBackgroundMusic () {
+    public AudioManager getBackgroundMusic() {
         return backgroundMusic;
     }
 
@@ -461,16 +489,25 @@ public class GameViewManager {
     }
 
     private void afterDead() {
-        if (bomberman.checkFatalHit()) {
+        if (bomberman.checkFatalHit() && Bomber.LIVES != 0) {
             backgroundMusic.stop();
         }
+
+        System.out.println(Bomber.LIVES);
         if (!bomberman.isAlive()) {
-            mainStage.close();
-            animationTimer.stop();
-            BombermanGame.numStage = 2;
-            MenuViewManager.updateLeaderboard();
-            MenuViewManager.playMenuMusic();
-            BombermanGame.switchScene(MenuViewManager.getScene());
+            if (Bomber.LIVES != 0) {
+                mainStage.close();
+                animationTimer.stop();
+                WaitViewManager waitView = new WaitViewManager();
+                BombermanGame.switchScene(waitView.getWaitScene());
+            } else {
+                mainStage.close();
+                animationTimer.stop();
+                BombermanGame.numStage = 2;
+                MenuViewManager.updateLeaderboard();
+                MenuViewManager.playMenuMusic();
+                BombermanGame.switchScene(MenuViewManager.getScene());
+            }
         }
     }
 }

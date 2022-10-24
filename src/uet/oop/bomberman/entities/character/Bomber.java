@@ -28,6 +28,8 @@ public class Bomber extends Character {
     private static int velocity;
     private final static int BOMBER_WIDTH = 24;
     private final static int BOMBER_HEIGHT = 32;
+
+    public static int LIVES = 3;
     private int numBomb = 0;
     private int limitBomb = 1;
     private int maxBomb = 10;
@@ -36,7 +38,6 @@ public class Bomber extends Character {
     private int numItem = 6;
     private boolean[] items = new boolean[numItem];
     private int numFlameItem = 0; // The number of flame items bomber got
-    private int numBombItem = 0; // The number of bomb items bomber got
 
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
@@ -75,9 +76,6 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
-//        if (isMoving()) {
-//            move();
-//        }
         move();
         animate();
         if (checkFatalCollision() || checkFatalHit()) {
@@ -241,7 +239,7 @@ public class Bomber extends Character {
     @Override
     public void dead() {
         new Timeline(new KeyFrame(
-                Duration.millis(1900),
+                Duration.millis(2000),
                 event -> {
                     alive = false;
                 }
@@ -284,32 +282,32 @@ public class Bomber extends Character {
                     currentSprite = Sprite.player_up;
                     if (isMoving()) {
 //                    System.out.println("UP");
-                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
-                                Sprite.player_up_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,Sprite.player_up,
+                                Sprite.player_up_2, animation, 32);
                     }
                     break;
                 case DOWN:
                     currentSprite = Sprite.player_down;
                     if (isMoving()) {
 //                    System.out.println("DOWN");
-                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
-                                Sprite.player_down_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,Sprite.player_down,
+                                Sprite.player_down_2, animation, 32);
                     }
                     break;
                 case LEFT:
                     currentSprite = Sprite.player_left;
                     if (isMoving()) {
 //                    System.out.println("LEFT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
-                                Sprite.player_left_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,Sprite.player_left,
+                                Sprite.player_left_2, animation, 32);
                     }
                     break;
                 case RIGHT:
                     currentSprite = Sprite.player_right;
                     if (isMoving()) {
 //                    System.out.println("RIGHT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
-                                Sprite.player_right_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,Sprite.player_right,
+                                Sprite.player_right_2, animation, 32);
                     }
                     break;
             }
@@ -317,6 +315,7 @@ public class Bomber extends Character {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
+                LIVES--;
                 if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
                     deadAudio.play(1);
                 }

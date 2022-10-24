@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class InfoLabel extends Label {
-    private final static String font = "res/model/font/SVN-Coder's Crux.otf";
+    public final static String font = "res/model/font/SVN-Coder's Crux.otf";
 
     public InfoLabel(String text) {
         setPrefWidth(250);

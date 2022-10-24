@@ -22,7 +22,7 @@ public class OptionController extends HBox {
     }
 
     public OptionController(String type) {
-        speakerOn = new Image("/model/img/sound-on.png");
+        speakerOn = new Image("/model/img/sound.png");
         silent = new Image("/model/img/silent.png");
         speaker = new ImageView();
         speaker.setImage(speakerOn);

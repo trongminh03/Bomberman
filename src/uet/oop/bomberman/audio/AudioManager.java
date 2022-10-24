@@ -79,6 +79,10 @@ public class AudioManager {
         }
     }
 
+    public MediaPlayer.Status getStatus() {
+        return mediaPlayer.getStatus();
+    }
+
     public String getType() {
         return type;
     }

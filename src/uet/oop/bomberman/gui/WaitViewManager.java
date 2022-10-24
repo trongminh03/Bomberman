@@ -46,7 +46,8 @@ public class WaitViewManager {
     }
 
     public Scene getWaitScene() {
-        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
+        && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
             nextlevelAudio.play(1);
         }
         navigateGame();

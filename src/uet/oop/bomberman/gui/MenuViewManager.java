@@ -366,7 +366,7 @@ public class MenuViewManager {
         ImageView bombermanIcon = new ImageView(new Image("/model/img/bomberman2.png"));
         vbox.getChildren().addAll(label, bombermanIcon);
         vbox.setLayoutX(25);
-        vbox.setLayoutY(60);
+        vbox.setLayoutY(70);
 
         pane.getChildren().add(credits);
         pane.getChildren().add(vbox);
