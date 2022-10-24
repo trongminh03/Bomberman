@@ -19,7 +19,7 @@ public class BombermanGame extends Application {
         this.stage = primaryStage;
         MenuViewManager menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
-        stage.getIcons().add(new Image("/model/img/gameicon.png"));
+        stage.getIcons().add(new Image("model/img/gameicon.png"));
 //        stage.setResizable(false);
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
         stage.show();
