@@ -42,9 +42,9 @@ public class MenuViewManager {
     private GameSubScene creditsSubScene;
     private GameSubScene helpSubScene;
     private GameSubScene optionSubScene;
+    private GameSubScene scoreSubScene;
     private OptionController backgroundMusic;
     private OptionController gameplayMusic;
-    private GameSubScene scoreSubScene;
 
     private GameSubScene sceneToHide;
 //    MenuViewManager menu;

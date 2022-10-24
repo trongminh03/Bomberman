@@ -40,7 +40,6 @@ public class GameSubScene extends SubScene {
             transition.setToX(0);
             isHidden = true;
         }
-
         transition.play();
     }
 

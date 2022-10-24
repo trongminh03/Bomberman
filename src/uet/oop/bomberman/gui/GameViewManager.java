@@ -5,6 +5,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
@@ -18,6 +20,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyManager;
 
 import java.io.*;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,21 +28,18 @@ public class GameViewManager {
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
 
-    public static boolean running;
-
     private GraphicsContext gc;
     private Canvas canvas;
     private List<Entity> enemies = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
     private List<Enemy> enemieGarbage = new ArrayList<>();
-    private List<Item> itemGarbage = new ArrayList<>();
-
+    private List<Item>  itemGarbage = new ArrayList<>();
+    private PauseViewManager pauseViewManager = new PauseViewManager();
     private Stage mainStage;
-    //    private Stage menuStage;
     private Group root;
     private Scene scene;
-
+    private boolean isCanPressPause = true;
     private AnimationTimer timer;
     private int L, R, C;
 
@@ -47,7 +47,7 @@ public class GameViewManager {
     private final static double FPS = 62;
     private KeyManager keys = new KeyManager();
     AudioManager backgroundMusic = new AudioManager("res/audio/background_song.mp3",
-                                                        AudioManager.BACKGROUND_MUSIC);
+            AudioManager.BACKGROUND_MUSIC);
     private Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage(), keys, this);
 
     public GameViewManager(int numStage) {
@@ -253,13 +253,24 @@ public class GameViewManager {
     }
 
     public void update() {
-        enemies.forEach(Entity::update);
-        for (Entity entity : stillObjects) {
-            if (entity instanceof Brick) {
-                entity.update();
+        pauseGame();
+        if (!pauseViewManager.isShow()) {
+//            System.out.println();
+            enemies.forEach(Entity::update);
+            for (Entity entity : stillObjects) {
+                if (entity instanceof Brick) {
+                    entity.update();
+                }
+            }
+            bomberman.update();
+            if (root.getChildren().contains(pauseViewManager)) {
+                root.getChildren().remove(pauseViewManager);
+            }
+        }else {
+            if (!root.getChildren().contains(pauseViewManager)) {
+                root.getChildren().add(pauseViewManager);
             }
         }
-        bomberman.update();
     }
 
     public void render() {
@@ -354,7 +365,9 @@ public class GameViewManager {
         return stillObjects;
     }
 
-    public List<Item> getItemGarbage() { return itemGarbage;}
+    public List<Item> getItemGarbage() {
+        return itemGarbage;
+    }
 
     public Scene getScene() {
         return scene;
@@ -363,6 +376,7 @@ public class GameViewManager {
     public List<Brick> getBrickGarbage() {
         return brickGarbage;
     }
+
     public List<Enemy> getEnemieGarbage() {
         return enemieGarbage;
     }
@@ -379,6 +393,16 @@ public class GameViewManager {
         if (itemGarbage.size() != 0) {
             stillObjects.removeAll(itemGarbage);
             itemGarbage.clear();
+        }
+    }
+
+    public void pauseGame() {
+        if (keys.isPressed(KeyCode.ESCAPE) && isCanPressPause) {
+            pauseViewManager.setShow(!pauseViewManager.isShow());
+            isCanPressPause = false;
+        }
+        if (!keys.isPressed(KeyCode.ESCAPE) && !isCanPressPause) {
+            isCanPressPause = true;
         }
     }
 }

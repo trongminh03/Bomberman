@@ -21,7 +21,8 @@ public class WaitViewManager {
     private String fontPath = "res/model/PixelEmulator-xq08.ttf";
     private StackPane pane;
     private Label message;
-    private Scene scene;
+
+    private static Scene scene;
     private Stage stage;
 
     public WaitViewManager() {
@@ -41,18 +42,23 @@ public class WaitViewManager {
         stage.setScene(scene);
     }
 
-    public Scene getWaitScene() {
+    public static Scene getWaitScene() {
         navigateGame();
         return scene;
     }
 
-    public void navigateGame() {
+    public static void navigateGame() {
         new Timeline(new KeyFrame(
-                Duration.millis(1000),
-                event -> {
-                    GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
-                    BombermanGame.switchScene(gameView.getScene());
-                }
+            Duration.millis(1000),
+            event -> {
+                GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
+                System.out.println(gameView.toString());
+                BombermanGame.switchScene(gameView.getScene());
+            }
         )).play();
+    }
+
+    public static void reset() {
+
     }
 }

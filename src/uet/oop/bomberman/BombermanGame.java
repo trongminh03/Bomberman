@@ -10,6 +10,7 @@ import uet.oop.bomberman.gui.WaitViewManager;
 public class BombermanGame extends Application {
     private static Stage stage;
     public static int numStage = 2;
+    private MenuViewManager menuView;
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -17,20 +18,14 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        MenuViewManager menuView = new MenuViewManager();
+        menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
         stage.show();
-
-        /*this.stage = primaryStage;
-        WaitViewManager waitView = new WaitViewManager();
-        stage.setScene(waitView.getWaitScene());
-        stage.show();*/
     }
 
     public static void switchScene(Scene scene) {
         stage.setScene(scene);
     }
-
 
 }

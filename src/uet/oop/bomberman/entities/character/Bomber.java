@@ -40,7 +40,7 @@ public class Bomber extends Character {
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
 
-    KeyManager keyInput;
+    private KeyManager keyInput;
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
@@ -189,7 +189,7 @@ public class Bomber extends Character {
             moving = true;
         }
 
-        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb /*&& time >= 60 * elapsedTime*/) {
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb) {
             createBomb();
             isPlacedBomb = true;
 //            time = 0;
