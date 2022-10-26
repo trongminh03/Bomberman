@@ -1,8 +1,11 @@
 package uet.oop.bomberman.entities.character;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.constants.BombStatus;
@@ -17,16 +20,16 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 import uet.oop.bomberman.gui.WaitViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.input.KeyManager;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Bomber extends Character {
     private static int velocity;
     private final static int BOMBER_WIDTH = 24;
     private final static int BOMBER_HEIGHT = 32;
+
+    public static int LIVES = 3;
     private int numBomb = 0;
     private int limitBomb = 1;
     private int maxBomb = 10;
@@ -35,7 +38,6 @@ public class Bomber extends Character {
     private int numItem = 6;
     private boolean[] items = new boolean[numItem];
     private int numFlameItem = 0; // The number of flame items bomber got
-    private int numBombItem = 0; // The number of bomb items bomber got
 
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
@@ -45,15 +47,16 @@ public class Bomber extends Character {
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
     //    private boolean resetAnimation = false;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     AudioManager deadAudio = new AudioManager("res/audio/dead.mp3", AudioManager.GAMEPLAY_MUSIC);
     AudioManager dropBombAudio = new AudioManager("res/audio/dropbomb.wav", AudioManager.GAMEPLAY_MUSIC);
+    AudioManager powerupAudio = new AudioManager("res/audio/power_up.wav", AudioManager.GAMEPLAY_MUSIC);
 
     public Bomber(int x, int y, Image img, KeyManager keyInput, GameViewManager game) {
-        super(x, y, img);
+        super(x, y, img, game);
         this.keyInput = keyInput;
-        this.game = game;
+//        this.game = game;
         direction = Direction.RIGHT;
         velocity = 2;
         time = 10;
@@ -73,9 +76,6 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
-//        if (isMoving()) {
-//            move();
-//        }
         move();
         animate();
         if (checkFatalCollision() || checkFatalHit()) {
@@ -122,6 +122,9 @@ public class Bomber extends Character {
             if (entity instanceof Item) {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()) {
                     game.getItemGarbage().add((Item) entity);
+                    if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
+                        powerupAudio.play(1);
+                    }
                     powerUp((Item) entity);
                 }
             }
@@ -129,6 +132,7 @@ public class Bomber extends Character {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
                     BombermanGame.numStage++;
+                    game.getBackgroundMusic().stop();
                     WaitViewManager waitView = new WaitViewManager();
                     BombermanGame.switchScene(waitView.getWaitScene());
                 }
@@ -234,16 +238,12 @@ public class Bomber extends Character {
 
     @Override
     public void dead() {
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                alive = false;
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 1700);
+        new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                event -> {
+                    alive = false;
+                }
+        )).play();
     }
 
     public void moveUp() {
@@ -282,32 +282,32 @@ public class Bomber extends Character {
                     currentSprite = Sprite.player_up;
                     if (isMoving()) {
 //                    System.out.println("UP");
-                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
-                                Sprite.player_up_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,Sprite.player_up,
+                                Sprite.player_up_2, animation, 32);
                     }
                     break;
                 case DOWN:
                     currentSprite = Sprite.player_down;
                     if (isMoving()) {
 //                    System.out.println("DOWN");
-                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
-                                Sprite.player_down_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,Sprite.player_down,
+                                Sprite.player_down_2, animation, 32);
                     }
                     break;
                 case LEFT:
                     currentSprite = Sprite.player_left;
                     if (isMoving()) {
 //                    System.out.println("LEFT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
-                                Sprite.player_left_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,Sprite.player_left,
+                                Sprite.player_left_2, animation, 32);
                     }
                     break;
                 case RIGHT:
                     currentSprite = Sprite.player_right;
                     if (isMoving()) {
 //                    System.out.println("RIGHT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
-                                Sprite.player_right_2, animation, 15);
+                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,Sprite.player_right,
+                                Sprite.player_right_2, animation, 32);
                     }
                     break;
             }
@@ -315,6 +315,7 @@ public class Bomber extends Character {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
+                LIVES--;
                 if (AudioManager.isSoundEnabled(AudioManager.GAMEPLAY_MUSIC)) {
                     deadAudio.play(1);
                 }
@@ -322,7 +323,7 @@ public class Bomber extends Character {
             velocity = 0;
 //            moving = false;
             currentSprite = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2,
-                    Sprite.player_dead3, animation, 60);
+                    Sprite.player_dead3, animation, 75);
         }
     }
 

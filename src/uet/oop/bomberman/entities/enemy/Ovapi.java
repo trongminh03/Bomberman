@@ -7,10 +7,10 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv2;
-import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Ovapi extends Enemy {
@@ -20,18 +20,18 @@ public class Ovapi extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.ovapi_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox ovapiBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     PathFindingLv2 pathFinding;
 
     public Ovapi(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
         velocity = 1;
+        SCORE = 1000;
         ovapiBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
         FINDING_SCOPE = 5;
         brickPass = true;
@@ -144,7 +144,9 @@ public class Ovapi extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

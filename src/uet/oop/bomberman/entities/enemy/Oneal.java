@@ -11,6 +11,7 @@ import uet.oop.bomberman.entities.enemy.PathFinding.PathFindingLv1;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 import java.util.Random;
@@ -22,19 +23,18 @@ public class Oneal extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.oneal_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox onealBoundary;
-    private GameViewManager game;
 
     private final PathFindingLv1 pathFinding;
 
     public Oneal(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
+        velocity = 1;
+        SCORE = 200;
         currentSprite = Sprite.balloom_right1;
         moving = true;
         onealBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new PathFindingLv1(this, game.getBomberman(), game);
-        velocity = 1;
         FINDING_SCOPE = 5;
     }
 
@@ -152,7 +152,9 @@ public class Oneal extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

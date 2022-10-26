@@ -9,7 +9,7 @@ import javafx.scene.layout.*;
 import javafx.util.Duration;
 
 public class GameSubScene extends SubScene {
-    private final static String BACKGROUND_IMAGE = "/model/yellow_panel.png";
+    private final static String BACKGROUND_IMAGE = "/model/img/yellow_panel.png";
     private boolean isHidden;
 
     public GameSubScene(Parent parent, double v, double v1, boolean b, SceneAntialiasing sceneAntialiasing) {

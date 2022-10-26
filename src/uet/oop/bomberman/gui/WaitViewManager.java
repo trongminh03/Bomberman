@@ -7,18 +7,22 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.audio.AudioManager;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class WaitViewManager {
-    private String fontPath = "res/model/PixelEmulator-xq08.ttf";
+    private AudioManager nextlevelAudio =
+            new AudioManager("res/audio/next_level.mp3", AudioManager.BACKGROUND_MUSIC);
+    private final static String fontPath = "res/model/font/PixelEmulator-xq08.ttf";
     private StackPane pane;
     private Label message;
 
@@ -38,6 +42,10 @@ public class WaitViewManager {
         }
         message.setTextFill(Color.WHITE);
         pane.getChildren().add(message);
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
+                && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
+            nextlevelAudio.play(1);
+        }
         stage = new Stage();
         stage.setScene(scene);
     }

@@ -11,6 +11,7 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Balloom extends Enemy {
@@ -20,14 +21,14 @@ public class Balloom extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.balloom_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox balloomBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
     private RandomMove randomMove;
 
     public Balloom(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
-        this.game = game;
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         velocity = 1;
+        SCORE = 100;
         currentSprite = Sprite.balloom_right1;
         moving = true;
         balloomBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -132,7 +133,7 @@ public class Balloom extends Enemy {
                             Sprite.balloom_right3, animation, 60);
                     break;
             }
-        }else {
+        } else {
             if (!resetAnimation) {
                 animation = 0;
                 resetAnimation = true;
@@ -142,7 +143,9 @@ public class Balloom extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

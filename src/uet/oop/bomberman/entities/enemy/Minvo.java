@@ -11,9 +11,8 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
-
-import javax.print.attribute.standard.Finishings;
 
 public class Minvo extends Enemy {
     private int velocity = 1;
@@ -22,18 +21,16 @@ public class Minvo extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.minvo_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox minvoBoundary;
-    private GameViewManager game;
-
     PathFindingLv2 pathFinding;
 
     public Minvo(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         currentSprite = Sprite.minvo_right1;
         moving = true;
         velocity = 1;
+        SCORE = 800;
         minvoBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new PathFindingLv2(this, game.getBomberman(), game);
         FINDING_SCOPE = 5;
     }
@@ -145,7 +142,9 @@ public class Minvo extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

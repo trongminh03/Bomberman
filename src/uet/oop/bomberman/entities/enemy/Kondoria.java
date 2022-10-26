@@ -7,10 +7,10 @@ import uet.oop.bomberman.constants.Direction;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.PathFinding.AStarAlgorithm;
-import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Kondoria extends Enemy {
@@ -19,20 +19,20 @@ public class Kondoria extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.kondoria_right1.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox kondoriaBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     AStarAlgorithm pathFinding;
 
     public Kondoria(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         brickPass = true;
         currentSprite = Sprite.kondoria_right1;
         FINDING_SCOPE = 7;
         moving = true;
         velocity = 1;
+        SCORE = 2000;
         kondoriaBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         pathFinding = new AStarAlgorithm(this, game.getBomberman(), game);
     }
 
@@ -158,7 +158,9 @@ public class Kondoria extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }

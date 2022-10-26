@@ -11,6 +11,7 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Doll extends Enemy {
@@ -21,18 +22,18 @@ public class Doll extends Enemy {
     private final static int SPRITE_HEIGHT = Sprite.doll_right2.getSpriteHeight();
     private Sprite currentSprite;
     private RectBoundedBox dollBoundary;
-    private GameViewManager game;
+//    private GameViewManager game;
 
     RandomMove randomMove;
 
     public Doll(int xUnit, int yUnit, Image img, GameViewManager game) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, game);
         direction = Direction.RIGHT;
         currentSprite = Sprite.doll_right1;
         velocity = 2;
+        SCORE = 400;
         moving = true;
         dollBoundary = new RectBoundedBox(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-        this.game = game;
         randomMove = new RandomMove(this);
     }
 
@@ -144,7 +145,9 @@ public class Doll extends Enemy {
                     Sprite.mob_dead3, animation, 40);
             time += elapsedTime;
             if (time == 35 * elapsedTime) {
-                game.getEnemieGarbage().add(this);
+                showScore(SCORE);
+                Score.addScore(getScore());
+                game.getEnemiesGarbage().add(this);
             }
         }
     }
