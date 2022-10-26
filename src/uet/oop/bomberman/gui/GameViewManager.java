@@ -512,8 +512,8 @@ public class GameViewManager {
             if (Bomber.LIVES != 0) {
                 mainStage.close();
                 animationTimer.stop();
-                WaitViewManager waitView = new WaitViewManager();
-                BombermanGame.switchScene(waitView.getWaitScene());
+//                WaitViewManager waitView = new WaitViewManager();
+                BombermanGame.switchScene(WaitViewManager.getWaitScene());
             } else {
                 mainStage.close();
                 animationTimer.stop();

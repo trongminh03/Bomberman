@@ -26,7 +26,7 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Bomber extends Character {
     private static int velocity;
-    private final static int BOMBER_WIDTH = 24;
+    private final static int BOMBER_WIDTH = 28;
     private final static int BOMBER_HEIGHT = 32;
 
     public static int LIVES = 3;
@@ -282,32 +282,32 @@ public class Bomber extends Character {
                     currentSprite = Sprite.player_up;
                     if (isMoving()) {
 //                    System.out.println("UP");
-                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,Sprite.player_up,
-                                Sprite.player_up_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
+                                Sprite.player_up_2, animation, 15);
                     }
                     break;
                 case DOWN:
                     currentSprite = Sprite.player_down;
                     if (isMoving()) {
 //                    System.out.println("DOWN");
-                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,Sprite.player_down,
-                                Sprite.player_down_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
+                                Sprite.player_down_2, animation, 15);
                     }
                     break;
                 case LEFT:
                     currentSprite = Sprite.player_left;
                     if (isMoving()) {
 //                    System.out.println("LEFT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,Sprite.player_left,
-                                Sprite.player_left_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
+                                Sprite.player_left_2, animation, 15);
                     }
                     break;
                 case RIGHT:
                     currentSprite = Sprite.player_right;
                     if (isMoving()) {
 //                    System.out.println("RIGHT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,Sprite.player_right,
-                                Sprite.player_right_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
+                                Sprite.player_right_2, animation, 15);
                     }
                     break;
             }

@@ -57,10 +57,9 @@ public class WaitViewManager {
 
     public static void navigateGame() {
         new Timeline(new KeyFrame(
-            Duration.millis(1000),
+            Duration.millis(3000),
             event -> {
                 GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
-                System.out.println(gameView.toString());
                 BombermanGame.switchScene(gameView.getScene());
             }
         )).play();
