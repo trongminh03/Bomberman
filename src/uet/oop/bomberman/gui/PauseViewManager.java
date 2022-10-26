@@ -128,10 +128,10 @@ public class PauseViewManager extends SubScene {
         resetButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                BombermanGame.switchScene(WaitViewManager.getWaitScene());
                 game.getBackgroundMusic().stop();
                 Bomber.LIVES = 3;
                 Score.resetScore();
+                BombermanGame.switchScene(WaitViewManager.getWaitScene());
                 System.out.println("reset");
             }
         });
@@ -146,6 +146,8 @@ public class PauseViewManager extends SubScene {
             @Override
             public void handle(ActionEvent actionEvent) {
 //                setShow(false);
+                game.reconfigureSettings();
+                game.getBackgroundMusic().stop();
                 BombermanGame.switchScene(MenuViewManager.getScene());
                 System.out.println("home");
             }
