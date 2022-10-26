@@ -41,15 +41,15 @@ public class WaitViewManager {
         }
         message.setTextFill(Color.WHITE);
         pane.getChildren().add(message);
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
+                && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
+            nextlevelAudio.play(1);
+        }
         stage = new Stage();
         stage.setScene(scene);
     }
 
     public Scene getWaitScene() {
-        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
-        && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
-            nextlevelAudio.play(1);
-        }
         navigateGame();
         return scene;
     }
