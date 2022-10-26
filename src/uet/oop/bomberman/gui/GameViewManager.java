@@ -270,6 +270,7 @@ public class GameViewManager {
             if (!root.getChildren().contains(pauseViewManager)) {
                 root.getChildren().add(pauseViewManager);
             }
+            backgroundMusic.stop();
         }
     }
 

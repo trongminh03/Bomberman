@@ -165,8 +165,8 @@ public class MenuViewManager {
             @Override
             public void handle(ActionEvent actionEvent) {
                 /*GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
-//                gameView.createNewGame();
-//                menuStage.close();
+                gameView.createNewGame();
+                menuStage.close();
                 BombermanGame.switchScene(gameView.getScene());*/
                 WaitViewManager waitView = new WaitViewManager();
                 menuSong.stop();
