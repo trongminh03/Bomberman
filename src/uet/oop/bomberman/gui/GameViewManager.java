@@ -50,7 +50,7 @@ public class GameViewManager {
     private List<Brick> brickGarbage = new ArrayList<>();
     private List<Enemy> enemiesGarbage = new ArrayList<>();
     private List<Item>  itemGarbage = new ArrayList<>();
-    private PauseViewManager pauseViewManager = new PauseViewManager();
+    private PauseViewManager pauseViewManager = new PauseViewManager(this);
     private Stage mainStage;
     private Group root;
     private Scene scene;
@@ -353,6 +353,8 @@ public class GameViewManager {
                 }
             }
             bomberman.update();
+            updateGameInfo();
+            timer.update();
             if (root.getChildren().contains(pauseViewManager)) {
                 root.getChildren().remove(pauseViewManager);
             }
@@ -360,11 +362,8 @@ public class GameViewManager {
             if (!root.getChildren().contains(pauseViewManager)) {
                 root.getChildren().add(pauseViewManager);
             }
-            backgroundMusic.stop();
+//            backgroundMusic.stop();
         }
-        bomberman.update();
-        updateGameInfo();
-        timer.update();
     }
 
     public void render() {
@@ -518,6 +517,7 @@ public class GameViewManager {
                 mainStage.close();
                 animationTimer.stop();
                 BombermanGame.numStage = 2;
+                Bomber.LIVES = 3;
                 MenuViewManager.updateLeaderboard();
                 MenuViewManager.playMenuMusic();
                 BombermanGame.switchScene(MenuViewManager.getScene());

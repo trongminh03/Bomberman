@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.character.Bomber;
+import uet.oop.bomberman.info.Score;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,8 +70,10 @@ public class PauseViewManager extends SubScene {
     private Label infor;
     private HBox buttonBox;
     private boolean isShow;
-    public PauseViewManager() {
+    GameViewManager game;
+    public PauseViewManager(GameViewManager game) {
         super(new AnchorPane(), 250, 150);
+        this.game = game;
         BackgroundImage image = new BackgroundImage(new Image(BACKGROUND_IMAGE, 250, 150, false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
         isShow = false;
@@ -125,6 +129,9 @@ public class PauseViewManager extends SubScene {
             @Override
             public void handle(ActionEvent actionEvent) {
                 BombermanGame.switchScene(WaitViewManager.getWaitScene());
+                game.getBackgroundMusic().stop();
+                Bomber.LIVES = 3;
+                Score.resetScore();
                 System.out.println("reset");
             }
         });

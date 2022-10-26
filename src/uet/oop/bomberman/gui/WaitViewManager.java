@@ -20,7 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class WaitViewManager {
-    private AudioManager nextlevelAudio =
+    private static AudioManager nextlevelAudio =
             new AudioManager("res/audio/next_level.mp3", AudioManager.BACKGROUND_MUSIC);
     private final static String fontPath = "res/model/font/PixelEmulator-xq08.ttf";
     private StackPane pane;
@@ -42,15 +42,14 @@ public class WaitViewManager {
         }
         message.setTextFill(Color.WHITE);
         pane.getChildren().add(message);
-        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
-                && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
-            nextlevelAudio.play(1);
-        }
         stage = new Stage();
         stage.setScene(scene);
     }
 
     public static Scene getWaitScene() {
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
+            nextlevelAudio.play(1);
+        }
         navigateGame();
         return scene;
     }
