@@ -60,8 +60,8 @@ class ImgButton extends Button {
 }
 
 public class PauseViewManager extends SubScene {
-    private final static String BACKGROUND_IMAGE = "/model/yellow_panel.png";
-    private String fontPath = "res/model/PixelEmulator-xq08.ttf";
+    private final static String BACKGROUND_IMAGE = "/model/img/background.png";
+    private String fontPath = "res/model/font/PixelEmulator-xq08.ttf";
     private ImgButton homeButton;
     private ImgButton resetButton;
     private Label message;

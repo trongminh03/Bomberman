@@ -55,7 +55,7 @@ public class GameViewManager {
     private Group root;
     private Scene scene;
     private boolean isCanPressPause = true;
-    private AnimationTimer timer;
+    private AnimationTimer animationTimer;
     private int L, R, C;
 
     private double t = 0;
@@ -522,7 +522,9 @@ public class GameViewManager {
                 MenuViewManager.playMenuMusic();
                 BombermanGame.switchScene(MenuViewManager.getScene());
             }
-    public void pauseGame() {
+        }
+    }
+    public void pauseGame () {
         if (keys.isPressed(KeyCode.ESCAPE) && isCanPressPause) {
             pauseViewManager.setShow(!pauseViewManager.isShow());
             isCanPressPause = false;

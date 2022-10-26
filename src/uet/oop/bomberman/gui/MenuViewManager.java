@@ -46,7 +46,6 @@ public class MenuViewManager {
     private GameSubScene scoreSubScene;
     private OptionController backgroundMusic;
     private OptionController gameplayMusic;
-    private GameSubScene scoreSubScene;
     private static InfoLabel score1;
     private static InfoLabel score2;
     private static InfoLabel score3;
