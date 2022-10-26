@@ -493,7 +493,7 @@ public class GameViewManager {
             backgroundMusic.stop();
         }
 
-        System.out.println(Bomber.LIVES);
+//        System.out.println(Bomber.LIVES);
         if (!bomberman.isAlive()) {
             if (Bomber.LIVES != 0) {
                 mainStage.close();
