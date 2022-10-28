@@ -143,7 +143,7 @@ public class MenuViewManager {
                 BombermanGame.switchScene(gameView.getScene());*/
                 WaitViewManager waitView = new WaitViewManager();
                 menuSong.stop();
-                BombermanGame.switchScene(waitView.getWaitScene());
+                BombermanGame.switchScene(waitView.getGamePlayScene());
             }
         });
     }
@@ -356,7 +356,6 @@ public class MenuViewManager {
         credits.setFont("res/model/font/PixelEmulator-xq08.ttf");
         credits.setBackground(new Background(backgroundLabel));
         credits.setAlignment(Pos.CENTER);
-
         VBox vbox = new VBox();
         vbox.setSpacing(20);
         vbox.setAlignment(Pos.CENTER);

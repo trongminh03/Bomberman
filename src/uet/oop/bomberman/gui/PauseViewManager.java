@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -17,9 +16,6 @@ import uet.oop.bomberman.info.Score;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 enum TypeButton {
     HOME, RESET
@@ -42,6 +38,7 @@ class ImgButton extends Button {
         } else if (this.type == TypeButton.RESET) {
             setStyle(RESET_BUTTON);
         }
+        initializeButtonListener();
     }
 
     public void initializeButtonListener() {
@@ -78,10 +75,10 @@ public class PauseViewManager extends SubScene {
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
         isShow = false;
         initLabel();
-        creatButtonReset();
-        creatButtonHome();
+        createButtonReset();
+        createButtonHome();
         buttonBox = new HBox();
-        creatButton();
+        createButton();
         AnchorPane root = (AnchorPane) this.getRoot();
         root.setBackground(new Background(image));
         root.getChildren().add(buttonBox);
@@ -111,9 +108,9 @@ public class PauseViewManager extends SubScene {
         }
     }
 
-    private void creatButton() {
-        creatButtonHome();
-        creatButtonReset();
+    private void createButton() {
+        createButtonHome();
+        createButtonReset();
         buttonBox.getChildren().add(resetButton);
         buttonBox.getChildren().add(homeButton);
         buttonBox.setSpacing(50);
@@ -121,7 +118,7 @@ public class PauseViewManager extends SubScene {
         buttonBox.setLayoutY(40);
     }
 
-    private void creatButtonReset() {
+    private void createButtonReset() {
         resetButton = new ImgButton(TypeButton.RESET);
         resetButton.setLayoutX(0);
         resetButton.setLayoutY(30);
@@ -131,14 +128,14 @@ public class PauseViewManager extends SubScene {
                 game.getBackgroundMusic().stop();
                 Bomber.LIVES = 3;
                 Score.resetScore();
-                BombermanGame.switchScene(WaitViewManager.getWaitScene());
+                BombermanGame.switchScene(WaitViewManager.getGamePlayScene());
                 System.out.println("reset");
             }
         });
 
     }
 
-    private void creatButtonHome() {
+    private void createButtonHome() {
         homeButton = new ImgButton(TypeButton.HOME);
         homeButton.setLayoutX(50);
         homeButton.setLayoutY(30);
@@ -148,6 +145,7 @@ public class PauseViewManager extends SubScene {
 //                setShow(false);
                 game.reconfigureSettings();
                 game.getBackgroundMusic().stop();
+                MenuViewManager.playMenuMusic();
                 BombermanGame.switchScene(MenuViewManager.getScene());
                 System.out.println("home");
             }

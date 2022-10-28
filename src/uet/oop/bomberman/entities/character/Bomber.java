@@ -131,10 +131,17 @@ public class Bomber extends Character {
             if (entity instanceof Portal) {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
-                    BombermanGame.numStage++;
-                    game.getBackgroundMusic().stop();
-                    WaitViewManager waitView = new WaitViewManager();
-                    BombermanGame.switchScene(waitView.getWaitScene());
+                    if (BombermanGame.numStage == BombermanGame.maxStage) {
+                        BombermanGame.numStage = 0;
+                        game.getBackgroundMusic().stop();
+                        BombermanGame.switchScene(WaitViewManager.getWinGameScene());
+                    } else {
+                        BombermanGame.numStage++;
+                        game.getBackgroundMusic().stop();
+//                    WaitViewManager waitView = new WaitViewManager();
+                        BombermanGame.switchScene(WaitViewManager.getGamePlayScene());
+                    }
+
                 }
             }
         }
