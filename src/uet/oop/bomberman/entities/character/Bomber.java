@@ -42,7 +42,7 @@ public class Bomber extends Character {
     private boolean isPlacedBomb = false;   /* Check place bomb: true: bomber placed bomb, can't place bombs after a short amount of time
                                                                  false: bomber no bomb yet, can place bombs now */
 
-    KeyManager keyInput;
+    private KeyManager keyInput;
     private Sprite currentSprite;
     private RectBoundedBox playerBoundary;
     private boolean fatalHit = false;
@@ -131,6 +131,9 @@ public class Bomber extends Character {
             if (entity instanceof Portal) {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
+                    if (BombermanGame.numStage == BombermanGame.maxStage) {
+
+                    }
                     BombermanGame.numStage++;
                     game.getBackgroundMusic().stop();
                     WaitViewManager waitView = new WaitViewManager();
@@ -193,7 +196,7 @@ public class Bomber extends Character {
             moving = true;
         }
 
-        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb /*&& time >= 60 * elapsedTime*/) {
+        if (keyInput.isPressed(KeyCode.SPACE) && !isPlacedBomb) {
             createBomb();
             isPlacedBomb = true;
 //            time = 0;
@@ -282,32 +285,32 @@ public class Bomber extends Character {
                     currentSprite = Sprite.player_up;
                     if (isMoving()) {
 //                    System.out.println("UP");
-                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,Sprite.player_up,
-                                Sprite.player_up_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
+                                Sprite.player_up_2, animation, 15);
                     }
                     break;
                 case DOWN:
                     currentSprite = Sprite.player_down;
                     if (isMoving()) {
 //                    System.out.println("DOWN");
-                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,Sprite.player_down,
-                                Sprite.player_down_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
+                                Sprite.player_down_2, animation, 15);
                     }
                     break;
                 case LEFT:
                     currentSprite = Sprite.player_left;
                     if (isMoving()) {
 //                    System.out.println("LEFT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,Sprite.player_left,
-                                Sprite.player_left_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
+                                Sprite.player_left_2, animation, 15);
                     }
                     break;
                 case RIGHT:
                     currentSprite = Sprite.player_right;
                     if (isMoving()) {
 //                    System.out.println("RIGHT");
-                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,Sprite.player_right,
-                                Sprite.player_right_2, animation, 32);
+                        currentSprite = Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
+                                Sprite.player_right_2, animation, 15);
                     }
                     break;
             }

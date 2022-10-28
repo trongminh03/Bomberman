@@ -7,6 +7,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -31,14 +33,13 @@ import uet.oop.bomberman.model.InfoLabel;
 
 import java.awt.*;
 import java.io.*;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameViewManager {
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
-
-    public static boolean running;
 
     private GraphicsContext gc;
     private Canvas canvas;
@@ -48,12 +49,12 @@ public class GameViewManager {
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> brickGarbage = new ArrayList<>();
     private List<Enemy> enemiesGarbage = new ArrayList<>();
-    private List<Item> itemGarbage = new ArrayList<>();
-
+    private List<Item>  itemGarbage = new ArrayList<>();
+    private PauseViewManager pauseViewManager = new PauseViewManager(this);
     private Stage mainStage;
     private Group root;
     private Scene scene;
-
+    private boolean isCanPressPause = true;
     private AnimationTimer animationTimer;
     private int L, R, C;
 
@@ -342,15 +343,27 @@ public class GameViewManager {
     }
 
     public void update() {
-        enemies.forEach(Entity::update);
-        for (Entity entity : stillObjects) {
-            if (entity instanceof Brick) {
-                entity.update();
+        pauseGame();
+        if (!pauseViewManager.isShow()) {
+//            System.out.println();
+            enemies.forEach(Entity::update);
+            for (Entity entity : stillObjects) {
+                if (entity instanceof Brick) {
+                    entity.update();
+                }
             }
+            bomberman.update();
+            updateGameInfo();
+            timer.update();
+            if (root.getChildren().contains(pauseViewManager)) {
+                root.getChildren().remove(pauseViewManager);
+            }
+        }else {
+            if (!root.getChildren().contains(pauseViewManager)) {
+                root.getChildren().add(pauseViewManager);
+            }
+//            backgroundMusic.stop();
         }
-        bomberman.update();
-        updateGameInfo();
-        timer.update();
     }
 
     public void render() {
@@ -498,16 +511,29 @@ public class GameViewManager {
             if (Bomber.LIVES != 0) {
                 mainStage.close();
                 animationTimer.stop();
-                WaitViewManager waitView = new WaitViewManager();
-                BombermanGame.switchScene(waitView.getWaitScene());
+                BombermanGame.switchScene(WaitViewManager.getWaitScene());
             } else {
                 mainStage.close();
                 animationTimer.stop();
-                BombermanGame.numStage = 2;
-                MenuViewManager.updateLeaderboard();
-                MenuViewManager.playMenuMusic();
+                reconfigureSettings();
                 BombermanGame.switchScene(MenuViewManager.getScene());
             }
         }
+    }
+    public void pauseGame () {
+        if (keys.isPressed(KeyCode.ESCAPE) && isCanPressPause) {
+            pauseViewManager.setShow(!pauseViewManager.isShow());
+            isCanPressPause = false;
+        }
+        if (!keys.isPressed(KeyCode.ESCAPE) && !isCanPressPause) {
+            isCanPressPause = true;
+        }
+    }
+
+    public void reconfigureSettings() {
+        BombermanGame.numStage = 1;
+        Bomber.LIVES = 3;
+        MenuViewManager.updateLeaderboard();
+        MenuViewManager.playMenuMusic();
     }
 }

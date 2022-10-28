@@ -20,12 +20,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class WaitViewManager {
-    private AudioManager nextlevelAudio =
+    private static AudioManager nextlevelAudio =
             new AudioManager("res/audio/next_level.mp3", AudioManager.BACKGROUND_MUSIC);
     private final static String fontPath = "res/model/font/PixelEmulator-xq08.ttf";
     private StackPane pane;
     private Label message;
-    private Scene scene;
+
+    private static Scene scene;
     private Stage stage;
 
     public WaitViewManager() {
@@ -41,26 +42,29 @@ public class WaitViewManager {
         }
         message.setTextFill(Color.WHITE);
         pane.getChildren().add(message);
-        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)
-                && nextlevelAudio.getStatus() != MediaPlayer.Status.PLAYING) {
-            nextlevelAudio.play(1);
-        }
         stage = new Stage();
         stage.setScene(scene);
     }
 
-    public Scene getWaitScene() {
+    public static Scene getWaitScene() {
+        if (AudioManager.isSoundEnabled(AudioManager.BACKGROUND_MUSIC)) {
+            nextlevelAudio.play(1);
+        }
         navigateGame();
         return scene;
     }
 
-    public void navigateGame() {
+    public static void navigateGame() {
         new Timeline(new KeyFrame(
-                Duration.millis(3000),
-                event -> {
-                    GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
-                    BombermanGame.switchScene(gameView.getScene());
-                }
+            Duration.millis(3000),
+            event -> {
+                GameViewManager gameView = new GameViewManager(BombermanGame.numStage);
+                BombermanGame.switchScene(gameView.getScene());
+            }
         )).play();
+    }
+
+    public static void reset() {
+
     }
 }

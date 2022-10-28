@@ -10,6 +10,8 @@ import uet.oop.bomberman.gui.MenuViewManager;
 public class BombermanGame extends Application {
     private static Stage stage;
     public static int numStage = 2;
+    public final static int maxStage = 5;
+    private MenuViewManager menuView;
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -17,9 +19,9 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        MenuViewManager menuView = new MenuViewManager();
+        menuView = new MenuViewManager();
         stage.setScene(menuView.getMenuScene());
-        stage.getIcons().add(new Image("/model/img/gameicon.png"));
+        stage.getIcons().add(new Image("model/img/gameicon.png"));
 //        stage.setResizable(false);
         stage.setTitle(GlobalConstants.GAME_NAME + GlobalConstants.GAME_VERSION);
         stage.show();
@@ -28,6 +30,5 @@ public class BombermanGame extends Application {
     public static void switchScene(Scene scene) {
         stage.setScene(scene);
     }
-
 
 }
