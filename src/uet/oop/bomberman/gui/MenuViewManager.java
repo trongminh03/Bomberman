@@ -2,22 +2,21 @@ package uet.oop.bomberman.gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.audio.AudioManager;
-import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.model.GameButton;
@@ -25,7 +24,6 @@ import uet.oop.bomberman.model.GameSubScene;
 import uet.oop.bomberman.model.InfoLabel;
 import uet.oop.bomberman.model.OptionController;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +39,7 @@ public class MenuViewManager {
     private final static int MENU_BUTTON_START_Y = 40;
 
     List<Button> menuButtons;
+    private GameSubScene startSubScene;
     private GameSubScene creditsSubScene;
     private GameSubScene helpSubScene;
     private GameSubScene optionSubScene;
@@ -112,6 +111,10 @@ public class MenuViewManager {
     }
 
     private void createSubScene() {
+        startSubScene = new GameSubScene();
+        menuPane.getChildren().add(startSubScene);
+        startSubScene.getPane().getChildren().add(createMapChooser());
+
         creditsSubScene = new GameSubScene();
         menuPane.getChildren().add(creditsSubScene);
         creditsSubScene.getPane().getChildren().add(createCreditsPane());
@@ -141,11 +144,78 @@ public class MenuViewManager {
                 gameView.createNewGame();
                 menuStage.close();
                 BombermanGame.switchScene(gameView.getScene());*/
+//                WaitViewManager waitView = new WaitViewManager();
+//                menuSong.stop();
+//                BombermanGame.switchScene(waitView.getWaitScene());
+                showSubScene(startSubScene);
+            }
+        });
+    }
+
+    private AnchorPane createMapChooser() {
+        AnchorPane pane = new AnchorPane();
+
+        BackgroundImage backgroundLabel =
+                new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
+
+        InfoLabel startGame = new InfoLabel("START GAME");
+        startGame.setLayoutX(37);
+        startGame.setLayoutY(15);
+        startGame.setFont("res/model/font/PixelEmulator-xq08.ttf");
+        startGame.setBackground(new Background(backgroundLabel));
+        startGame.setAlignment(Pos.CENTER);
+
+        GameButton newGameButton = new GameButton("New Game");
+        newGameButton.setLayoutX(65);
+        newGameButton.setLayoutY(80);
+        newGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
                 WaitViewManager waitView = new WaitViewManager();
                 menuSong.stop();
                 BombermanGame.switchScene(waitView.getWaitScene());
             }
         });
+
+        VBox box = new VBox();
+        box.setSpacing(5);
+        InfoLabel levelChooser = new InfoLabel("Choose a level");
+        levelChooser.setAlignment(Pos.CENTER);
+        levelChooser.setLayoutX(20);
+        levelChooser.setLayoutY(20);
+        FlowPane flowPane = new FlowPane(10,10);
+        Button[] levelButton = new Button[BombermanGame.maxStage];
+        for (int i = 0; i < BombermanGame.maxStage; i++) {
+            Label label = new Label();
+            label.setText(Integer.toString(i + 1));
+            levelButton[i] = new Button(Integer.toString(i + 1));
+            levelButton[i].setFont(Font.font("MV Boli", 20));
+            int finalI = i;
+            levelButton[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    BombermanGame.numStage = finalI + 1;
+                    WaitViewManager waitView = new WaitViewManager();
+                    menuSong.stop();
+                    BombermanGame.switchScene(waitView.getWaitScene());
+                }
+            });
+            flowPane.getChildren().add(levelButton[i]);
+        }
+
+        flowPane.setPrefWrapLength(200);
+        flowPane.setPrefWidth(200);
+        flowPane.setPrefHeight(100);
+        flowPane.setAlignment(Pos.TOP_CENTER);
+
+        box.setLayoutX(35);
+        box.setLayoutY(150);
+        box.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(levelChooser, flowPane);
+
+        pane.getChildren().addAll(startGame, newGameButton, box);
+        return pane;
     }
 
     private void createScoreButton() {
@@ -163,7 +233,7 @@ public class MenuViewManager {
 
     private AnchorPane createLeaderboard() {
         AnchorPane pane = new AnchorPane();
-
+        
         BackgroundImage backgroundLabel =
                 new BackgroundImage(new Image("/model/img/red_info_label.png", 250, 35, false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, null);
@@ -311,8 +381,8 @@ public class MenuViewManager {
         setting.setAlignment(Pos.CENTER);
 
         VBox box = new VBox();
-        box.setSpacing(10);
-        box.setAlignment(Pos.CENTER);
+        box.setSpacing(5);
+//        box.setAlignment(Pos.CENTER);
         InfoLabel label1 = new InfoLabel("Background Music: ");
         backgroundMusic = new OptionController(AudioManager.BACKGROUND_MUSIC);
         backgroundMusic.changeVolume(menuSong);
@@ -324,8 +394,12 @@ public class MenuViewManager {
         box.getChildren().add(backgroundMusic);
         box.getChildren().add(label2);
         box.getChildren().add(gameplayMusic);
+//        box.getChildren().add(setLevelLabel);
+//        box.getChildren().add(inputLevel);
+//        box.getChildren().add(submitButton);
+//        box.getChildren().add(notification);
 //        box.setAlignment(Pos.CENTER);
-        box.setLayoutX(50);
+        box.setLayoutX(70);
         box.setLayoutY(70);
         pane.getChildren().add(setting);
         pane.getChildren().add(box);
