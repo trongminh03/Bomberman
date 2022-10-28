@@ -381,7 +381,7 @@ public class MenuViewManager {
         setting.setAlignment(Pos.CENTER);
 
         VBox box = new VBox();
-        box.setSpacing(5);
+        box.setSpacing(10);
 //        box.setAlignment(Pos.CENTER);
         InfoLabel label1 = new InfoLabel("Background Music: ");
         backgroundMusic = new OptionController(AudioManager.BACKGROUND_MUSIC);
@@ -399,7 +399,7 @@ public class MenuViewManager {
 //        box.getChildren().add(submitButton);
 //        box.getChildren().add(notification);
 //        box.setAlignment(Pos.CENTER);
-        box.setLayoutX(70);
+        box.setLayoutX(60);
         box.setLayoutY(70);
         pane.getChildren().add(setting);
         pane.getChildren().add(box);
