@@ -533,7 +533,7 @@ public class GameViewManager {
     }
 
     public void reconfigureSettings() {
-        BombermanGame.numStage = 2;
+        BombermanGame.numStage = 1;
         Bomber.LIVES = 3;
         MenuViewManager.updateLeaderboard();
 //        MenuViewManager.playMenuMusic();

@@ -26,7 +26,7 @@ import uet.oop.bomberman.model.RectBoundedBox;
 
 public class Bomber extends Character {
     private static int velocity;
-    private final static int BOMBER_WIDTH = 28;
+    private final static int BOMBER_WIDTH = 24;
     private final static int BOMBER_HEIGHT = 32;
 
     public static int LIVES = 3;
