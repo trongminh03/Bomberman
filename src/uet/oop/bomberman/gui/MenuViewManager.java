@@ -174,7 +174,7 @@ public class MenuViewManager {
             public void handle(ActionEvent actionEvent) {
                 WaitViewManager waitView = new WaitViewManager();
                 menuSong.stop();
-                BombermanGame.switchScene(waitView.getWaitScene());
+                BombermanGame.switchScene(waitView.getGamePlayScene());
             }
         });
 
@@ -198,7 +198,7 @@ public class MenuViewManager {
                     BombermanGame.numStage = finalI + 1;
                     WaitViewManager waitView = new WaitViewManager();
                     menuSong.stop();
-                    BombermanGame.switchScene(waitView.getWaitScene());
+                    BombermanGame.switchScene(waitView.getGamePlayScene());
                 }
             });
             flowPane.getChildren().add(levelButton[i]);
@@ -287,7 +287,6 @@ public class MenuViewManager {
 
     public static void updateLeaderboard() {
         Score.updateTopScore();
-        Score.resetScore();
         Score.readScoreListFile();
         score1.setText(Integer.toString(Score.scoreList.get(0)));
         score2.setText(Integer.toString(Score.scoreList.get(1)));
@@ -430,7 +429,6 @@ public class MenuViewManager {
         credits.setFont("res/model/font/PixelEmulator-xq08.ttf");
         credits.setBackground(new Background(backgroundLabel));
         credits.setAlignment(Pos.CENTER);
-
         VBox vbox = new VBox();
         vbox.setSpacing(20);
         vbox.setAlignment(Pos.CENTER);

@@ -511,12 +511,14 @@ public class GameViewManager {
             if (Bomber.LIVES != 0) {
                 mainStage.close();
                 animationTimer.stop();
-                BombermanGame.switchScene(WaitViewManager.getWaitScene());
+                BombermanGame.switchScene(WaitViewManager.getGamePlayScene());
+//                BombermanGame.switchScene(WaitViewManager.getGameOverScene());
             } else {
                 mainStage.close();
                 animationTimer.stop();
                 reconfigureSettings();
-                BombermanGame.switchScene(MenuViewManager.getScene());
+                BombermanGame.switchScene(WaitViewManager.getGameOverScene());
+
             }
         }
     }
@@ -534,6 +536,6 @@ public class GameViewManager {
         BombermanGame.numStage = 1;
         Bomber.LIVES = 3;
         MenuViewManager.updateLeaderboard();
-        MenuViewManager.playMenuMusic();
+//        MenuViewManager.playMenuMusic();
     }
 }
