@@ -66,7 +66,7 @@ public class WaitViewManager {
 
     public static Scene getWinGameScene() {
         messages[0].setText("You Win !!!");
-        messages[0].setLayoutX(195);
+        messages[0].setLayoutX(180);
         messages[0].setLayoutY(200);
         messages[1].setText("Your score:   " + Score.getScore());
         messages[1].setLayoutX(230);
