@@ -84,6 +84,7 @@ public class WaitViewManager {
                 Duration.millis(8000),
                 event -> {
                     BombermanGame.switchScene(MenuViewManager.getScene());
+                    MenuViewManager.playMenuMusic();
                     Score.resetScore();
                 }
         )).play();

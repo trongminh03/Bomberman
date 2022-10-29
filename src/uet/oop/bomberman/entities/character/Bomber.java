@@ -19,6 +19,7 @@ import uet.oop.bomberman.entities.item.*;
 import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
+import uet.oop.bomberman.gui.MenuViewManager;
 import uet.oop.bomberman.gui.WaitViewManager;
 import uet.oop.bomberman.info.Score;
 import uet.oop.bomberman.input.KeyManager;
@@ -132,8 +133,8 @@ public class Bomber extends Character {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
                     if (BombermanGame.numStage == BombermanGame.maxStage) {
-                        BombermanGame.numStage = 1;
                         game.getBackgroundMusic().stop();
+                        game.reconfigureSettings();
                         BombermanGame.switchScene(WaitViewManager.getWinGameScene());
                     } else {
                         BombermanGame.numStage++;
