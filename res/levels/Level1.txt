@@ -1,52 +1,16 @@
-1 13 31
-###############################
-#p     ** *  1 * 2 *  * * *   #
-# # # #*# # #*#*# # # #*#*#*# #
-#  x*     ***  *  1   * 2 * * #
-# # # # # #*# # #*#*# # # # #*#
-#f         x **  *  *   1     #
-# # # # # # # # # #*# #*# # # #
-#*  *      *  *      *        #
-# # # # #*# # # #*#*# # # # # #
-#*    **  *       *           #
-# #*# # # # # # #*# # # # # # #
-#           *   *  *          #
-###############################
-
-
-Mô tả cấu trúc tệp cấu hình màn chơi:
-1/ Dòng đầu tiên bao gồm 3 số nguyên L, R, C:
-L - số thứ tự màn chơi
-R - số hàng của bản đồ
-C - số cột của bản đồ
-
-2/ R dòng tiếp theo, mỗi dòng có C kí tự. Mỗi kí tự đại diện cho một đối tượng trên bản đồ:
-Tiles:
-# - Wall
-* - Brick
-x - Portal
-
-Character:
-p - Bomber
-1 - Balloon: speed 1, move randomly
-2 - Oneal: speed [1, 2], move according to path finding lv1, finding scope = 5
-3 - Doll: speed 2, move randomly
-4 - Minvo: speed 1, move according to path finding lv2, finding scope = 5
-5 - Ovapi: speed 1, move according to path finding lv2, can move through brick, finding scope = 5
-6 - Pass: speed 2, move according to A* algorithm, finding scope = 5
-7 - Kondoria: speed 1, can move through brick, move according to A* algorithm, finding scope = 7
-8 - Pontan: speed 2, can move through brick, move according to A* algorithm, finding scope = 7;
-
-
-Items:
-b - Bomb Item
-f - Flame Item
-s - Speed Item
-d - Detonator Item
-W - Brick pass Item
-B - Bomb pass Item
-F - Flame pass Item
-P - Portal
-
-
-Kí tự khác các kí tự trên - Grass
+1 15 25
+#########################
+#      ** * WB* b F    p#
+# # # #*# # #*#*# # # #*#
+#  x*     ***  f   s P* #
+# # # # # #*# # #*#*# # #
+#            **  *  *   #
+# # # # # # # # # #*# #*#
+#*  *      *  *         #
+# # # # #*# # # #*#*# # #
+#*    **  *       *     #
+# #*# # # # # # #*# # # #
+#           *   *  *    #
+# #*# # # # # # #*# # # #
+#           *   *  *    #
+#########################

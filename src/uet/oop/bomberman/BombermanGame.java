@@ -9,7 +9,7 @@ import uet.oop.bomberman.gui.MenuViewManager;
 
 public class BombermanGame extends Application {
     private static Stage stage;
-    public static int numStage = 2;
+    public static int numStage = 1;
     public final static int maxStage = 2;
     private MenuViewManager menuView;
     public static void main(String[] args) {

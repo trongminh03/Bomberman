@@ -132,7 +132,7 @@ public class Bomber extends Character {
                 if (this.getX() == entity.getX() && this.getY() == entity.getY()
                         && game.getEnemies().size() == 0) {
                     if (BombermanGame.numStage == BombermanGame.maxStage) {
-                        BombermanGame.numStage = 0;
+                        BombermanGame.numStage = 1;
                         game.getBackgroundMusic().stop();
                         BombermanGame.switchScene(WaitViewManager.getWinGameScene());
                     } else {
