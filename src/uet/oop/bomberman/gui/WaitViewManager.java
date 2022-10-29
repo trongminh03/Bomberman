@@ -84,6 +84,7 @@ public class WaitViewManager {
                 Duration.millis(8000),
                 event -> {
                     BombermanGame.switchScene(MenuViewManager.getScene());
+                    Score.resetScore();
                 }
         )).play();
         return scene;
@@ -124,6 +125,7 @@ public class WaitViewManager {
         scene.setOnKeyPressed(keyEvent -> {
             gameOverAudio.stop();
             BombermanGame.switchScene(MenuViewManager.getScene());
+            Score.resetScore();
             MenuViewManager.playMenuMusic();
         });
         return scene;

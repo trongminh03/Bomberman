@@ -198,7 +198,7 @@ public class MenuViewManager {
                     BombermanGame.numStage = finalI + 1;
                     WaitViewManager waitView = new WaitViewManager();
                     menuSong.stop();
-                    BombermanGame.switchScene(waitView.getWaitScene());
+                    BombermanGame.switchScene(waitView.getGamePlayScene());
                 }
             });
             flowPane.getChildren().add(levelButton[i]);
@@ -287,7 +287,6 @@ public class MenuViewManager {
 
     public static void updateLeaderboard() {
         Score.updateTopScore();
-        Score.resetScore();
         Score.readScoreListFile();
         score1.setText(Integer.toString(Score.scoreList.get(0)));
         score2.setText(Integer.toString(Score.scoreList.get(1)));

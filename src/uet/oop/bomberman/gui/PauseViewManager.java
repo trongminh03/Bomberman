@@ -147,6 +147,7 @@ public class PauseViewManager extends SubScene {
                 game.getBackgroundMusic().stop();
                 MenuViewManager.playMenuMusic();
                 BombermanGame.switchScene(MenuViewManager.getScene());
+                Score.resetScore();
                 System.out.println("home");
             }
         });
