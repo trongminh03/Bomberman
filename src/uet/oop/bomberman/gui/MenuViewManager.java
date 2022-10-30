@@ -204,12 +204,12 @@ public class MenuViewManager {
             flowPane.getChildren().add(levelButton[i]);
         }
 
-        flowPane.setPrefWrapLength(200);
-        flowPane.setPrefWidth(200);
+        flowPane.setPrefWrapLength(270);
+        flowPane.setPrefWidth(270);
         flowPane.setPrefHeight(100);
         flowPane.setAlignment(Pos.TOP_CENTER);
 
-        box.setLayoutX(35);
+        box.setLayoutX(30);
         box.setLayoutY(150);
         box.setAlignment(Pos.CENTER);
         box.getChildren().addAll(levelChooser, flowPane);
