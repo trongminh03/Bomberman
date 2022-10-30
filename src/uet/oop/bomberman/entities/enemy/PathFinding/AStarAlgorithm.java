@@ -10,9 +10,7 @@ import uet.oop.bomberman.entities.static_objects.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.gui.GameViewManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class AStarAlgorithm extends RandomMove {
     private static final int COST = 1;
@@ -22,7 +20,8 @@ public class AStarAlgorithm extends RandomMove {
     private Node goalNode;
     private Node[][] map;
     private PriorityQueue<Node> open;
-    private List<Node> closed;
+//    private List<Node> closed;
+    private Set<Node> closed;
 
     public AStarAlgorithm(Enemy enemy, Bomber bomber, GameViewManager game) {
         super(enemy);
@@ -33,7 +32,8 @@ public class AStarAlgorithm extends RandomMove {
 //        this.currentNode = this.startNode;
         map = new Node[game.getRows()][game.getColumns()];
         open = new PriorityQueue<Node>();
-        closed = new ArrayList<Node>();
+//        closed = new ArrayList<Node>();
+        closed = new HashSet<>();
         setNodes();
         setObstacles();
     }
