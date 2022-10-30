@@ -23,9 +23,9 @@ enum TypeButton {
 
 class ImgButton extends Button {
     private final String HOME_BUTTON
-            = "-fx-background-color: transparent; -fx-background-image: url('/model/home_button.png');";
+            = "-fx-background-color: transparent; -fx-background-image: url('/model/img/home_button.png');";
     private final String RESET_BUTTON
-            = "-fx-background-color: transparent; -fx-background-image: url('/model/reset_button.png');";
+            = "-fx-background-color: transparent; -fx-background-image: url('/model/img/reset_button.png');";
     private final int BUTTON_WIDTH = 64;
     private final int BUTTON_HEIGHT = 64;
     TypeButton type;
@@ -59,7 +59,7 @@ class ImgButton extends Button {
 }
 
 public class PauseViewManager extends SubScene {
-    private final static String BACKGROUND_IMAGE = "/model/img/background.png";
+    private final static String BACKGROUND_IMAGE = "/model/img/yellow_panel.png";
     private String fontPath = "res/model/font/PixelEmulator-xq08.ttf";
     private ImgButton homeButton;
     private ImgButton resetButton;

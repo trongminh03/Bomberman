@@ -481,7 +481,7 @@ public class MenuViewManager {
     }
 
     private void createBackground() {
-        Image backgroundImage = new Image("/model/img/background.png", 800, 600, false, true);
+        Image backgroundImage = new Image("/model/img/background2.png", 640, 480, false, true);
         BackgroundImage background = new BackgroundImage(backgroundImage, null,
                         null, BackgroundPosition.DEFAULT, null);
         menuPane.setBackground(new Background(background));
