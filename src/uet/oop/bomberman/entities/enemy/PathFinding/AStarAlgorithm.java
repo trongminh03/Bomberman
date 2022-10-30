@@ -20,7 +20,6 @@ public class AStarAlgorithm extends RandomMove {
     private Node goalNode;
     private Node[][] map;
     private PriorityQueue<Node> open;
-//    private List<Node> closed;
     private Set<Node> closed;
 
     public AStarAlgorithm(Enemy enemy, Bomber bomber, GameViewManager game) {
@@ -29,10 +28,8 @@ public class AStarAlgorithm extends RandomMove {
         this.bomber = bomber;
         setStartNode(new Node(enemy.getGridX(), enemy.getGridY()));
         setGoalNode(new Node(bomber.getGridX(), bomber.getGridY()));
-//        this.currentNode = this.startNode;
         map = new Node[game.getRows()][game.getColumns()];
         open = new PriorityQueue<Node>();
-//        closed = new ArrayList<Node>();
         closed = new HashSet<>();
         setNodes();
         setObstacles();
