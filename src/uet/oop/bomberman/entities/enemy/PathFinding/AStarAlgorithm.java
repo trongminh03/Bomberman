@@ -20,8 +20,6 @@ public class AStarAlgorithm extends RandomMove {
     private GameViewManager game;
     private Node startNode;
     private Node goalNode;
-
-    //    private Node currentNode;
     private Node[][] map;
     private PriorityQueue<Node> open;
     private List<Node> closed;
@@ -74,26 +72,8 @@ public class AStarAlgorithm extends RandomMove {
         setObstacles();
         List<Node> path = new ArrayList<Node>();
         setStartNode(new Node(enemy.getGridX(), enemy.getGridY()));
-//        currentNode = startNode;
         setGoalNode(new Node(bomber.getGridX(), bomber.getGridY()));
         open.add(startNode);
-//        print();
-//        closed.add(startNode);
-//        addNeighborsToOpenList();
-//        while (this.currentNode != this.goalNode) {
-//            if (this.open.isEmpty()) { // nothing to examine
-//                return null;
-//            }
-//            System.out.println(currentNode.getGridX() + " " + currentNode.getGridY());
-//            this.currentNode = open.poll();
-//            closed.add(this.currentNode);
-//            addNeighborsToOpenList();
-//        }
-//        path.add(this.currentNode);
-//        while (!this.currentNode.equals(startNode)) {
-//            this.currentNode = this.currentNode.getParent();
-//            path.add(0, this.currentNode);
-//        }
         while (!open.isEmpty()) {
             Node currentNode = open.poll();
             closed.add(currentNode);
