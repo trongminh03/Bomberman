@@ -76,3 +76,4 @@ Có 8 loại Enemy trong Bomberman
 - Điểm được lưu lại qua các màn chơi, leaderboard có thể lưu được top 3 điểm cao nhất
 - Có thể tuỳ chỉnh âm lượng tuỳ ý người chơi
 - Quái được xử lí với nhiều chế độ thông minh khác nhau từ thấp, trung bình, đến rất thông minh
+- Khi quái chết có hiện điểm của quái trên màn hình
