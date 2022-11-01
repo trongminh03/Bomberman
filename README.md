@@ -30,13 +30,19 @@ Có 8 loại Enemy trong Bomberman
 | Enemy                               | Name     | Points | Speed  | Smart   | Wallpass | Finding Scope |
 |-------------------------------------|----------|--------|--------|---------|----------|---------------|
 | ![](res/sprites/balloom_left1.png)  | Balloom  | 100    | 1      | level 1 | No       | N/A           |
-| ![](res/sprites/oneal_left1.png)    | Oneal    | 200    | 1 or 2 | level 1 | No       | N/A           |
-| ![](res/sprites/doll_left1.png)     | Doll     | 400    | 2      | level 1 | No       | N/A           |
-| ![](res/sprites/minvo_left1.png)    | Minvo    | 800    | 1      | level 2 | No       | 5             |
-| ![](res/sprites/ovapi.png)          | Ovapi    | 1000   | 1      | level 2 | Yes      | 5             |
-| ![](res/sprites/kondoria_left1.png) | Kondoria | 2000   | 1      | level 3 | Yes      | 7             |
-| ![](res/sprites/pass.png)           | Pass     | 4000   | 2      | level 3 | No       | 5             |
-| ![](res/sprites/pontan.png)         | Pontan   | 8000   | 2      | level 3 | Yes      | 7 |
+| ![](res/sprites/oneal_left1.png)    | Oneal    | 200    | 1 or 2 | level 2 | No       | N/A           |
+| ![](res/sprites/doll_left1.png)     | Doll     | 400    | 2      | level 2 | No       | N/A           |
+| ![](res/sprites/minvo_left1.png)    | Minvo    | 800    | 1      | level 3 | No       | 5             |
+| ![](res/sprites/ovapi.png)          | Ovapi    | 1000   | 1      | level 3 | Yes      | 5             |
+| ![](res/sprites/kondoria_left1.png) | Kondoria | 2000   | 1      | level 4 | Yes      | 7             |
+| ![](res/sprites/pass.png)           | Pass     | 4000   | 2      | level 4 | No       | 5             |
+| ![](res/sprites/pontan.png)         | Pontan   | 8000   | 2      | level 4 | Yes      | 7 |
+
+Độ thông minh của quái
+- Level 1: Enemy đi random 
+- Level 2: Enemy có khả năng đuổi người chơi nếu người chơi có cùng tạo độ grid x hay grid y với quái và có đường đi tới Bomber
+- Level 3: Enemy có khả năng đuổi người chơi trong phạm vi hình vuông có cạnh là finding scope * 2 với enemy là tâm của hình vuông
+- Level 4: Enemy đuổi theo Bomberman theo thuật toán A* (A* algorithm)
 
 ## Mô tả game play, xử lý va chạm và xử lý bom nổ
 - Trong một màn chơi, Bomber sẽ được người chơi di chuyển, đặt và kích hoạt Bomb với mục tiêu chính là tiêu diệt tất cả Enemy và tìm ra vị trí Portal để có thể qua màn mới
