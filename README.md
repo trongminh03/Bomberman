@@ -66,6 +66,9 @@ Có 8 loại Enemy trong Bomberman
 ![](res/demo/in_game.jpg) 
 *GamePlay*
 
+![](res/demo/adjust_volume.jpg) 
+*Thay đổi âm lượng* 
+
 ## Điểm đặc biệt của game
 - Có set up để kết nối với thiết bị điện thoại để sử dụng như 1 remote controller, giúp cho người dùng có thể dễ dàng trải nghiệm game hơn
 - Có chế độ chọn màn chơi, cho phép người chơi trải nghiệm tất cả các map 
