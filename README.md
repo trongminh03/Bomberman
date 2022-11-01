@@ -53,3 +53,23 @@ Có 8 loại Enemy trong Bomberman
 - Khi Bomb nổ, một Flame trung tâm![](res/sprites/bomb_exploded.png) tại vị trí Bomb nổ và bốn Flame tại bốn vị trí ô đơn vị xung quanh vị trí của Bomb xuất hiện theo bốn hướng trên![](res/sprites/explosion_vertical.png)/dưới![](res/sprites/explosion_vertical.png)/trái![](res/sprites/explosion_horizontal.png)/phải![](res/sprites/explosion_horizontal.png). Độ dài bốn Flame xung quanh mặc định là 1 đơn vị, được tăng lên khi Bomber sử dụng các FlameItem.
 - Khi các Flame xuất hiện, nếu có một đối tượng thuộc loại Brick/Wall nằm trên vị trí một trong các Flame thì độ dài Flame đó sẽ được giảm đi để sao cho Flame chỉ xuất hiện đến vị trí đối tượng Brick/Wall theo hướng xuất hiện. Lúc đó chỉ có đối tượng Brick/Wall bị ảnh hưởng bởi Flame, các đối tượng tiếp theo không bị ảnh hưởng. 
 
+## Ảnh demo game 
+![](res/demo/change_map.jpg) 
+*Ảnh chuyển màn*
+
+![](res/demo/choose_map.jpg) 
+*Ảnh chọn màn* 
+
+![](res/demo/credits.jpg) 
+*Credits* 
+
+![](res/demo/in_game.jpg) 
+*GamePlay*
+
+## Điểm đặc biệt của game
+- Có set up để kết nối với thiết bị điện thoại để sử dụng như 1 remote controller, giúp cho người dùng có thể dễ dàng trải nghiệm game hơn
+- Có chế độ chọn màn chơi, cho phép người chơi trải nghiệm tất cả các map 
+- Hết 120s đếm ngược thì toàn bộ quái sẽ biến thành Pontan để đuổi theo người chơi
+- Điểm được lưu lại qua các màn chơi, leaderboard có thể lưu được top 3 điểm cao nhất
+- Có thể tuỳ chỉnh âm lượng tuỳ ý người chơi
+- Quái được xử lí với nhiều chế độ thông minh khác nhau từ thấp, trung bình, đến rất thông minh
